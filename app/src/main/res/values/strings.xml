@@ -16,7 +16,6 @@
     <string name="app_registrar"> Registrando trayecto... </string>
     <string name="app_trayecto">VER TRAYECTO ACTUAL</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_trayecto">Trayecto</string>
     <string name="title_home">Home</string>
     <string name="title_atopate">Atópate</string>
