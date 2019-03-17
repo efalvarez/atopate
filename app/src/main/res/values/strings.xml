@@ -5,7 +5,8 @@
     <string name="app_destino">A Coruña - Madrid</string>
     <string name="app_horas_5">5h 18 min</string>
     <string name="app_resumen">591 km - 37.5 litros</string>
-    <string name="app_compartir">ATÓPATE | COMPARTIR</string>
+    <string name="app_atopate">ATÓPATE</string>
+    <string name="app_compartir">COMPARTIR</string>
     <string name="app_semana">Esta semana</string>
     <string name="app_horas_semana">10h 18 min</string>
     <string name="app_horas_3">3 h</string>

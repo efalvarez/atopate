@@ -3,6 +3,9 @@ package es.udc.fic.muei.atopate;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,9 +28,17 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private static final String TAG = HomeActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            Log.d(TAG, "onCreate() - HomeActivity");
+            /* restore state */
+        } else {
+            Log.d(TAG, "onCreate() - No saved HomeActivity");
+            /* initialize app */
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -35,6 +46,27 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        final Button buttonAtopate = findViewById(R.id.buttonAtopate);
+        buttonAtopate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d(TAG, "onClick - buttonAtopate");
+            }
+        });
+
+        final Button buttonCompartir = findViewById(R.id.buttonCompartir);
+        buttonCompartir.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d(TAG, "onClick - buttonCompartir");
+            }
+        });
+
+        final Button buttonVerMas = findViewById(R.id.buttonVerMas);
+        buttonVerMas.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d(TAG, "onClick - buttonVerMas");
+            }
+        });
 
 
         // Charts
