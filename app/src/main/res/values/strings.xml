@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">atopate</string>
+    <string name="app_name">Atópate</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_trayecto">Trayecto</string>
+    <string name="title_home">Home</string>
+    <string name="title_atopate">Atópate</string>
+    <string name="title_resumen">Resumen</string>
+    <string name="title_historicos" >Históricos</string>
+    <string name="title_ajustes">Ajustes</string>
+    <string name="location_direccionMock">55 km</string>
+    <string name="location_destino">1h 50 min</string>
 </resources>
