@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">atopate</string>
+    <string name="app_name">Atópate</string>
+    <string name="app_init">Conéctate a tu dispositivo OBD II para comenzar el registro de un nuevo trayecto</string>
+    <string name="app_horas">HACE 5 HORAS</string>
+    <string name="app_destino">A Coruña - Madrid</string>
+    <string name="app_horas_5">5h 18 min</string>
+    <string name="app_resumen">591 km - 37.5 litros</string>
+    <string name="app_compartir">ATÓPATE | COMPARTIR</string>
+    <string name="app_semana">Esta semana</string>
+    <string name="app_horas_semana">10h 18 min</string>
+    <string name="app_horas_3">3 h</string>
+    <string name="app_horas_2">2 h</string>
+    <string name="app_verMas">VER MÁS</string>
+
+    <string name="app_registrar"> Registrando trayecto... </string>
+    <string name="app_trayecto">VER TRAYECTO ACTUAL</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
