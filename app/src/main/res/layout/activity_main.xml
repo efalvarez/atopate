@@ -24,4 +24,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ESTADISTICAS"
+        tools:layout_editor_absoluteX="146dp"
+        tools:layout_editor_absoluteY="173dp" />
+
 </android.support.constraint.ConstraintLayout>
