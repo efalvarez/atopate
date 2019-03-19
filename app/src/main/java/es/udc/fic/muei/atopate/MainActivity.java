@@ -31,5 +31,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        Button clickButton2 = (Button) findViewById(R.id.btnAjustes);
+        clickButton2.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Redirección Ajustes");
+                Toast.makeText(MainActivity.this, "Redirección Ajustes",
+                        Toast.LENGTH_SHORT).show();
+                Intent ajustesIntent = new Intent(MainActivity.this, Ajustes.class);
+                startActivity(ajustesIntent);
+            }
+        });
     }
 }

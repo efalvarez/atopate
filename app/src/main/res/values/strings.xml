@@ -28,4 +28,14 @@
     <string name="historial">Historial</string>
     <string name="statistics">Estadisticas</string>
     <string name="period">Periodo</string>
+    <string name="title_activity_ajustes">ajustes</string>
+    <string name="ajustes">Ajustes</string>
+    <string-array name="temas_array">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="unidad_array">
+        <item>Kilómetro</item>
+        <item>Milla</item>
+    </string-array>
 </resources>
