@@ -1,11 +1,13 @@
 package es.udc.fic.muei.atopate;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,13 +34,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            Log.d(TAG, "onCreate() - HomeActivity");
-            /* restore state */
-        } else {
-            Log.d(TAG, "onCreate() - No saved HomeActivity");
-            /* initialize app */
-        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -51,6 +46,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonAtopate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonAtopate");
+                Toast.makeText(HomeActivity.this, "buttonAtopate",
+                        Toast.LENGTH_SHORT).show();
+                Intent atopateIntent = new Intent(HomeActivity.this, PruebaActivity.class);
+                startActivity(atopateIntent);
             }
         });
 
@@ -58,6 +57,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonCompartir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonCompartir");
+                Toast.makeText(HomeActivity.this, "buttonCompartir",
+                        Toast.LENGTH_SHORT).show();
+                Intent compartirIntent = new Intent(HomeActivity.this, PruebaActivity.class);
+                startActivity(compartirIntent);
             }
         });
 
@@ -65,6 +68,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonVerMas.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonVerMas");
+                Toast.makeText(HomeActivity.this, "buttonVerMas",
+                        Toast.LENGTH_SHORT).show();
+                Intent verMasIntent = new Intent(HomeActivity.this, PruebaActivity.class);
+                startActivity(verMasIntent);
             }
         });
 
