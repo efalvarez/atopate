@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +35,7 @@ import lecho.lib.hellocharts.view.PieChartView;
 
 public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private GoogleMap mMap;
     private static final String TAG = HomeActivity.class.getSimpleName();
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -93,6 +95,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonAtopate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonAtopate");
+                Toast.makeText(HomeActivity.this, "buttonAtopate",
+                        Toast.LENGTH_SHORT).show();
+                Intent atopateIntent = new Intent(HomeActivity.this, PruebaActivity.class);
+                startActivity(atopateIntent);
             }
         });
 
@@ -100,6 +106,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonCompartir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonCompartir");
+                Toast.makeText(HomeActivity.this, "buttonCompartir",
+                        Toast.LENGTH_SHORT).show();
+                Intent compartirIntent = new Intent(HomeActivity.this, PruebaActivity.class);
+                startActivity(compartirIntent);
             }
         });
 
@@ -107,8 +117,10 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonVerMas.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonVerMas");
-                Intent trayectoIntent = new Intent(HomeActivity.this, TrayectoActivity.class);
-                startActivity(trayectoIntent);
+                Toast.makeText(HomeActivity.this, "buttonVerMas",
+                        Toast.LENGTH_SHORT).show();
+                Intent verMasIntent = new Intent(HomeActivity.this, PruebaActivity.class);
+                startActivity(verMasIntent);
             }
         });
 
