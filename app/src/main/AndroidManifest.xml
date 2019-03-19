@@ -37,6 +37,8 @@
             android:label="@string/title_activity_trayecto">
         </activity>
 
+        <activity android:name=".HistorialActivity" />
+
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,6 +50,3 @@
     </application>
 
 </manifest>
-
-
-
