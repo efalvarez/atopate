@@ -1,8 +1,8 @@
 package es.udc.fic.muei.atopate;
 
-import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class HistorialActivity extends Activity {
+public class HistorialActivity extends AppCompatActivity {
 
     ArrayList<ItemHistorialActivity> historials = new ArrayList<ItemHistorialActivity>();
 

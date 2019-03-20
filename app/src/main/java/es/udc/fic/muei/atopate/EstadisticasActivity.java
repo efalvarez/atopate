@@ -22,9 +22,9 @@ import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
-public class Estadisticas extends AppCompatActivity {
+public class EstadisticasActivity extends AppCompatActivity {
 
-    private static final String TAG = Estadisticas.class.getSimpleName();
+    private static final String TAG = EstadisticasActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +52,11 @@ public class Estadisticas extends AppCompatActivity {
                 /*Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
                     Log.d(TAG, item.toString());
-                    Toast.makeText(Estadisticas.this, item.toString(),
+                    Toast.makeText(EstadisticasActivity.this, item.toString(),
                             Toast.LENGTH_SHORT).show();
                 }*/
                 Log.d(TAG, "Selected " + position);
-                Toast.makeText(Estadisticas.this, "Selected " + position,
+                Toast.makeText(EstadisticasActivity.this, "Selected " + position,
                         Toast.LENGTH_SHORT).show();
 
             }

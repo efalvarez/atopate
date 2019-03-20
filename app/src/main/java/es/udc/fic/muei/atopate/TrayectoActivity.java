@@ -1,21 +1,15 @@
-package es.udc.fic.muei.atopate.trayecto;
+package es.udc.fic.muei.atopate;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
-import es.udc.fic.muei.atopate.HomeActivity;
-import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 
 public class TrayectoActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -49,9 +43,13 @@ public class TrayectoActivity extends AppCompatActivity implements OnMapReadyCal
         MapsConfigurer.onMapsReady(googleMap);
     }
 
-
     public void onBottomButtonClick(View view) {
         Log.d(TAG, "Boton para cambio de actividad pulsado en Trayecto");
         Toast.makeText(getApplicationContext(), "Boton en trayecto pulsado", Toast.LENGTH_SHORT).show();
+    }
+
+    public void onDirectionsClick(View view) {
+        Log.d(TAG, "Boton direceciones pulsado en Trayecto");
+        Toast.makeText(getApplicationContext(), "Boton direcciones", Toast.LENGTH_SHORT).show();
     }
 }

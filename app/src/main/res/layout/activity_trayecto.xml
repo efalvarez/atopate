@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".trayecto.TrayectoActivity">
+    tools:context=".TrayectoActivity">
 
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,7 +20,7 @@
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toTopOf="parent"
-        tools:context=".trayecto.TrayectoActivity" />
+        tools:context=".TrayectoActivity" />
 
     <TextView
         android:id="@+id/location_direccion"
@@ -49,6 +49,7 @@
         android:id="@+id/floatingActionButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onDirectionsClick"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="64dp"

@@ -12,13 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
@@ -28,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
-import es.udc.fic.muei.atopate.trayecto.TrayectoActivity;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -47,12 +42,28 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case R.id.navigation_home:
                     return true;
                 case R.id.navigation_atopate:
+                    Toast.makeText(HomeActivity.this, "Atópate",
+                            Toast.LENGTH_SHORT).show();
+                    Intent atopateIntent = new Intent(HomeActivity.this, TrayectoActivity.class);
+                    startActivity(atopateIntent);
                     return true;
                 case R.id.navigation_resumen:
+                    Toast.makeText(HomeActivity.this, "Resumen",
+                            Toast.LENGTH_SHORT).show();
+                    Intent estadisticasIntent = new Intent(HomeActivity.this, EstadisticasActivity.class);
+                    startActivity(estadisticasIntent);
                     return true;
                 case R.id.navigation_historico:
+                    Toast.makeText(HomeActivity.this, "Historial",
+                            Toast.LENGTH_SHORT).show();
+                    Intent historialIntent = new Intent(HomeActivity.this, HistorialActivity.class);
+                    startActivity(historialIntent);
                     return true;
                 case R.id.navigation_ajustes:
+                    Toast.makeText(HomeActivity.this, "Ajustes",
+                            Toast.LENGTH_SHORT).show();
+                    Intent ajustesIntent = new Intent(HomeActivity.this, AjustesActivity.class);
+                    startActivity(ajustesIntent);
                     return true;
             }
             return false;
@@ -95,9 +106,9 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonAtopate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonAtopate");
-                Toast.makeText(HomeActivity.this, "buttonAtopate",
+                Toast.makeText(HomeActivity.this, "Atópate",
                         Toast.LENGTH_SHORT).show();
-                Intent atopateIntent = new Intent(HomeActivity.this, PruebaActivity.class);
+                Intent atopateIntent = new Intent(HomeActivity.this, TrayectoActivity.class);
                 startActivity(atopateIntent);
             }
         });
@@ -106,10 +117,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonCompartir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonCompartir");
-                Toast.makeText(HomeActivity.this, "buttonCompartir",
+                Toast.makeText(HomeActivity.this, "Compartir",
                         Toast.LENGTH_SHORT).show();
-                Intent compartirIntent = new Intent(HomeActivity.this, PruebaActivity.class);
-                startActivity(compartirIntent);
             }
         });
 
@@ -117,9 +126,9 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonVerMas.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonVerMas");
-                Toast.makeText(HomeActivity.this, "buttonVerMas",
+                Toast.makeText(HomeActivity.this, "Ver más",
                         Toast.LENGTH_SHORT).show();
-                Intent verMasIntent = new Intent(HomeActivity.this, PruebaActivity.class);
+                Intent verMasIntent = new Intent(HomeActivity.this, EstadisticasActivity.class);
                 startActivity(verMasIntent);
             }
         });

@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class Ajustes extends AppCompatActivity {
+public class AjustesActivity extends AppCompatActivity {
 
-    private static final String TAG = Ajustes.class.getSimpleName();
+    private static final String TAG = AjustesActivity.class.getSimpleName();
 
 
     @Override
@@ -29,7 +29,7 @@ public class Ajustes extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Exportando copia de seguridad");
-                Toast.makeText(Ajustes.this, "Exportando copia de seguridad...",
+                Toast.makeText(AjustesActivity.this, "Exportando copia de seguridad...",
                 Toast.LENGTH_SHORT).show();
             }
         });
@@ -40,7 +40,7 @@ public class Ajustes extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Importando copia de seguridad");
-                Toast.makeText(Ajustes.this, "Importando copia de seguridad...",
+                Toast.makeText(AjustesActivity.this, "Importando copia de seguridad...",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -51,7 +51,7 @@ public class Ajustes extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Eliminando registros");
-                Toast.makeText(Ajustes.this, "Eliminando registros...",
+                Toast.makeText(AjustesActivity.this, "Eliminando registros...",
                         Toast.LENGTH_SHORT).show();
             }
         });
