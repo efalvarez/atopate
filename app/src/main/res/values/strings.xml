@@ -1,3 +1,41 @@
 <resources>
-    <string name="app_name">atopate</string>
+    <string name="app_name">Atópate</string>
+    <string name="app_init">Conéctate a tu dispositivo OBD II para comenzar el registro de un nuevo trayecto</string>
+    <string name="app_horas">HACE 5 HORAS</string>
+    <string name="app_destino">A Coruña - Madrid</string>
+    <string name="app_horas_5">5h 18 min</string>
+    <string name="app_resumen">591 km - 37.5 litros</string>
+    <string name="app_atopate">ATÓPATE</string>
+    <string name="app_compartir">COMPARTIR</string>
+    <string name="app_semana">Esta semana</string>
+    <string name="app_horas_semana">10h 18 min</string>
+    <string name="app_horas_3">3 h</string>
+    <string name="app_horas_2">2 h</string>
+    <string name="app_verMas">VER MÁS</string>
+
+    <string name="app_registrar"> Registrando trayecto... </string>
+    <string name="app_trayecto">VER TRAYECTO ACTUAL</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_trayecto">Trayecto</string>
+    <string name="title_activity_historial">Historial</string>
+    <string name="title_home">Home</string>
+    <string name="title_atopate">Atópate</string>
+    <string name="title_resumen">Resumen</string>
+    <string name="title_historicos" >Históricos</string>
+    <string name="title_ajustes">Ajustes</string>
+    <string name="location_direccionMock">55 km</string>
+    <string name="location_destino">1h 50 min</string>
+    <string name="title_activity_prueba">ActivityPrueba</string>
+    <string name="statistics">Estadisticas</string>
+    <string name="period">Periodo</string>
+    <string name="title_activity_ajustes">Ajustes</string>
+    <string name="ajustes">Ajustes</string>
+    <string-array name="temas_array">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="unidad_array">
+        <item>Kilómetro</item>
+        <item>Milla</item>
+    </string-array>
 </resources>

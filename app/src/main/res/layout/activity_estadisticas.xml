@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/estadisticas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"
+        android:text="@string/statistics"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/periodo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60sp"
+        android:layout_marginLeft="20sp"
+        android:text="@string/period"
+        android:textSize="20sp"/>
+
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100sp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"/>
+
+    <TextView
+        android:id="@+id/fechas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140sp"
+        android:layout_marginLeft="20sp"
+        android:text="19/02/2019 - 26/02/2019"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/horas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140sp"
+        android:layout_marginLeft="335sp"
+        android:text="10h 8 min"
+        android:textSize="12sp"/>
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_marginTop="180sp"
+        android:layout_height="110dp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:id="@+id/graph1" />
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_marginTop="310sp"
+        android:layout_height="110dp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:id="@+id/graph2" />
+
+    <!--com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_marginTop="480sp"
+        android:layout_height="140dp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:id="@+id/graph3" /-->
+
+    <lecho.lib.hellocharts.view.PieChartView
+        android:id="@+id/graph3"
+        android:layout_width="250dp"
+        android:layout_height="130dp"
+        android:layout_marginLeft="80sp"
+        android:layout_marginTop="430sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/graph1"
+        app:layout_constraintTop_toBottomOf="@+id/graph2" />
+
+</android.support.design.widget.CoordinatorLayout>
