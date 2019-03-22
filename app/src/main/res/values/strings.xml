@@ -26,7 +26,6 @@
     <string name="location_direccionMock">55 km</string>
     <string name="location_destino">1h 50 min</string>
     <string name="title_activity_prueba">ActivityPrueba</string>
-    <string name="historial">Historial</string>
     <string name="statistics">Estadisticas</string>
     <string name="period">Periodo</string>
     <string name="title_activity_ajustes">Ajustes</string>
