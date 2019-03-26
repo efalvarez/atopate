@@ -30,6 +30,8 @@
     <string name="period">Periodo</string>
     <string name="title_activity_ajustes">Ajustes</string>
     <string name="ajustes">Ajustes</string>
+
+    <string name="cargando_texto">Cargando...</string>
     <string-array name="temas_array">
         <item>Light</item>
         <item>Dark</item>
