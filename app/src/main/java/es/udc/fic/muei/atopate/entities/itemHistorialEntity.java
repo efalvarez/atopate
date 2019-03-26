@@ -1,11 +1,11 @@
-package es.udc.fic.muei.atopate;
+package es.udc.fic.muei.atopate.entities;
 
 import android.graphics.drawable.Drawable;
 
 /*
  *
  */
-public class ItemHistorialActivity {
+public class itemHistorialEntity {
 
     private Integer itemId;
     private String tiempo;
@@ -16,7 +16,7 @@ public class ItemHistorialActivity {
 
 
     //CONSTRUCTORES
-    public ItemHistorialActivity(){
+    public itemHistorialEntity(){
         super();
         this.tiempo = "Hace x horas";
         this.lugarOrigen = "x";
@@ -25,7 +25,7 @@ public class ItemHistorialActivity {
 
     }
 
-    public ItemHistorialActivity(String tiempo, String lugarOrigen, String lugarDestino, String distancia, Drawable icono) {
+    public itemHistorialEntity(String tiempo, String lugarOrigen, String lugarDestino, String distancia, Drawable icono) {
         super();
         this.tiempo = tiempo;
         this.lugarOrigen = lugarOrigen;

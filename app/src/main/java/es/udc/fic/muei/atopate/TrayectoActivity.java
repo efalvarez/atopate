@@ -34,7 +34,7 @@ public class TrayectoActivity extends AppCompatActivity implements OnMapReadyCal
     private void configureMaps() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.home_map);
         MapsConfigurer.initializeMap(mapFragment, this);
     }
 

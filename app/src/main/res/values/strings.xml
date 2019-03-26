@@ -21,7 +21,7 @@
     <string name="title_home">Home</string>
     <string name="title_atopate">Atópate</string>
     <string name="title_resumen">Resumen</string>
-    <string name="title_historicos" >Históricos</string>
+    <string name="title_historicos">Históricos</string>
     <string name="title_ajustes">Ajustes</string>
     <string name="location_direccionMock">55 km</string>
     <string name="location_destino">1h 50 min</string>
@@ -38,4 +38,7 @@
         <item>Kilómetro</item>
         <item>Milla</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -10,9 +10,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import es.udc.fic.muei.atopate.adapter.ItemHistorialAdapter;
+import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
+
 public class HistorialActivity extends AppCompatActivity {
 
-    ArrayList<ItemHistorialActivity> historials = new ArrayList<ItemHistorialActivity>();
+    ArrayList<itemHistorialEntity> historials = new ArrayList<itemHistorialEntity>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +27,13 @@ public class HistorialActivity extends AppCompatActivity {
         Drawable icono = Drawable.createFromPath("@drawable/ic_launcher_background.xml");
 
         //TODO enlazar a la base de datos y alimentar desde ahí
-        historials.add(new ItemHistorialActivity("Hace 3 horas", "A coruña", "Madrid", "530km", icono));
-        historials.add(new ItemHistorialActivity("Lunes, 25/02/2019", "Av. dos Mallos", "Pza Pontevedra", "2km", icono));
+        historials.add(new itemHistorialEntity("Hace 3 horas", "A coruña", "Madrid", "530km", icono));
+        historials.add(new itemHistorialEntity("Lunes, 25/02/2019", "Av. dos Mallos", "Pza Pontevedra", "2km", icono));
         for (int i = 0; i<10; i++) {
-            historials.add(new ItemHistorialActivity());
+            historials.add(new itemHistorialEntity());
         }
 
-        AdapterItem adapter = new AdapterItem(this, historials);
+        ItemHistorialAdapter adapter = new ItemHistorialAdapter(this, historials);
 
         listV.setAdapter(adapter);
 
