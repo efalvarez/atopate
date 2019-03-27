@@ -15,7 +15,7 @@ import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 
 public class TrayectoFragment extends Fragment {
 
-//    private OnFragmentInteractionListener mListener;
+    MapView mapaVista;
 
     public TrayectoFragment() {
         // Required empty public constructor
@@ -31,9 +31,6 @@ public class TrayectoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            // do nothing
-//        }
     }
 
     @Override
@@ -49,26 +46,54 @@ public class TrayectoFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
+    }
+
+    // definicion de metodos con el fin de que el mapa se comporte de acorde a la vista
+
+    @Override
+    public void onResume() {
+        mapaVista.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapaVista.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        mapaVista.onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        mapaVista.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mapaVista.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        mapaVista.onLowMemory();
+        super.onLowMemory();
     }
 
     private void configureMaps(View vista, Bundle savedInstanceState) {
-        MapView vistaMapa = vista.findViewById(R.id.trayecto_mapa);
-        MapsConfigurer.initializeMap(getActivity(), vistaMapa, savedInstanceState);
+        mapaVista = vista.findViewById(R.id.trayecto_mapa);
+        MapsConfigurer.initializeMap(getActivity(), mapaVista, savedInstanceState);
     }
 
-//    public interface OnFragmentInteractionListener {
-//        void onFragmentInteraction(Uri uri);
-//    }
 }
