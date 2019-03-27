@@ -31,6 +31,7 @@ import es.udc.fic.muei.atopate.EstadisticasActivity;
 import es.udc.fic.muei.atopate.HistorialActivity;
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.TrayectoActivity;
+import es.udc.fic.muei.atopate.fragments.HistorialFragment;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
@@ -76,7 +77,7 @@ public class HomeActivity extends AppCompatActivity  {
 
                 case R.id.navigation_historico:
 
-                    fragmentToSubstitute = HomeFragment.newInstance();
+                    fragmentToSubstitute = HistorialFragment.getInstance();
 
                     validNavigationItemSelected = true;
                     break;

@@ -26,12 +26,13 @@ public class HistorialActivity extends AppCompatActivity {
 
         Drawable icono = Drawable.createFromPath("@drawable/ic_launcher_background.xml");
 
-        //TODO enlazar a la base de datos y alimentar desde ahí
+        //TODO enlazar a la base de datos y alimentar desde ahí en vez de toda esta cosa -->
         historials.add(new itemHistorialEntity("Hace 3 horas", "A coruña", "Madrid", "530km", icono));
         historials.add(new itemHistorialEntity("Lunes, 25/02/2019", "Av. dos Mallos", "Pza Pontevedra", "2km", icono));
         for (int i = 0; i<10; i++) {
             historials.add(new itemHistorialEntity());
         }
+        //  <--------------------------------------------------------
 
         ItemHistorialAdapter adapter = new ItemHistorialAdapter(this, historials);
 
