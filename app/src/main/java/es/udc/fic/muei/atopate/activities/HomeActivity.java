@@ -42,15 +42,15 @@ public class HomeActivity extends AppCompatActivity  {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+                    = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-            boolean validNavigationItemSelected = false;
-            Fragment fragmentToSubstitute = HomeFragment.newInstance();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    boolean validNavigationItemSelected = false;
+                    Fragment fragmentToSubstitute = HomeFragment.newInstance();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
@@ -101,8 +101,11 @@ public class HomeActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         configureBottomNavigation();
+        Fragment fragmentToSubstitute = HomeFragment.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.general_fragment_container, fragmentToSubstitute);
+        transaction.commit();
     }
 
 
