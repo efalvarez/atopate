@@ -22,7 +22,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.udc.fic.muei.atopate.EstadisticasActivity;
 import es.udc.fic.muei.atopate.R;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;

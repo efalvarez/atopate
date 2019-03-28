@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import es.udc.fic.muei.atopate.AjustesActivity;
 import es.udc.fic.muei.atopate.R;
 
 /**
