@@ -23,7 +23,7 @@ public class AjustesActivity extends AppCompatActivity {
         /*Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);*/
 
-        Button clickBtnExportar = (Button) findViewById(R.id.btnExportar);
+        Button clickBtnExportar = findViewById(R.id.btnExportar);
         clickBtnExportar.setOnClickListener( new View.OnClickListener() {
 
             @Override
@@ -34,7 +34,7 @@ public class AjustesActivity extends AppCompatActivity {
             }
         });
 
-        Button clickBtnImportar = (Button) findViewById(R.id.btnImportar);
+        Button clickBtnImportar = findViewById(R.id.btnImportar);
         clickBtnImportar.setOnClickListener( new View.OnClickListener() {
 
             @Override
@@ -45,7 +45,7 @@ public class AjustesActivity extends AppCompatActivity {
             }
         });
 
-        Button clickBtnEliminar = (Button) findViewById(R.id.btnEliminar);
+        Button clickBtnEliminar = findViewById(R.id.btnEliminar);
         clickBtnEliminar.setOnClickListener( new View.OnClickListener() {
 
             @Override
