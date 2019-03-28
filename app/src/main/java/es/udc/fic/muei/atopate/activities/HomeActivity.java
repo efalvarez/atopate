@@ -12,6 +12,8 @@ import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.fragments.HistorialFragment;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
+import es.udc.fic.muei.atopate.fragments.AjustesFragment;
+import es.udc.fic.muei.atopate.fragments.EstadisticasFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -52,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 case R.id.navigation_resumen:
 
-                    fragmentToSubstitute = HomeFragment.newInstance();
+                    fragmentToSubstitute = EstadisticasFragment.newInstance();
 
                     validNavigationItemSelected = true;
                     break;
@@ -66,7 +68,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 case R.id.navigation_ajustes:
 
-                    fragmentToSubstitute = HomeFragment.newInstance();
+                    fragmentToSubstitute = AjustesFragment.newInstance();
 
                     validNavigationItemSelected = true;
                     break;
