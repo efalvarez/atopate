@@ -32,10 +32,6 @@
             android:label="@string/title_activity_trayecto">
         </activity>
 
-        <activity android:name=".HistorialActivity"
-            android:label="@string/title_activity_historial">
-        </activity>
-
         <activity
             android:name=".EstadisticasActivity"
             android:label="@string/statistics">

@@ -69,6 +69,28 @@ public class HistorialFragment extends Fragment {
 
         listV.setAdapter(adapter);
 
+        //----- Redimensionando vista para que coincida a pesar del SV ----//
+        if (adapter == null)
+            return null;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listV.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+
+        View view2 = null;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            view2 = adapter.getView(i, view2, listV);
+            if (i == 0)
+                view2.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view2.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view2.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listV.getLayoutParams();
+        params.height = totalHeight + (listV.getDividerHeight() * (adapter.getCount() - 1));
+        listV.setLayoutParams(params);
+
+        //------------------------------- //
+
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

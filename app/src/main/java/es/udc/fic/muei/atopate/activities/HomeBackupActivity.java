@@ -25,7 +25,6 @@ import java.util.List;
 
 import es.udc.fic.muei.atopate.AjustesActivity;
 import es.udc.fic.muei.atopate.EstadisticasActivity;
-import es.udc.fic.muei.atopate.HistorialActivity;
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.TrayectoActivity;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
@@ -60,8 +59,8 @@ public class HomeBackupActivity extends AppCompatActivity implements OnMapReadyC
                 case R.id.navigation_historico:
                     Toast.makeText(HomeBackupActivity.this, "Historial",
                             Toast.LENGTH_SHORT).show();
-                    Intent historialIntent = new Intent(HomeBackupActivity.this, HistorialActivity.class);
-                    startActivity(historialIntent);
+                    //Intent historialIntent = new Intent(HomeBackupActivity.this, HistorialActivity.class);
+                    //startActivity(historialIntent);
                     return true;
                 case R.id.navigation_ajustes:
                     Toast.makeText(HomeBackupActivity.this, "Ajustes",
