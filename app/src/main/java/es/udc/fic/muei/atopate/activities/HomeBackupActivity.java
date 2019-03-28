@@ -1,4 +1,4 @@
-package es.udc.fic.muei.atopate;
+package es.udc.fic.muei.atopate.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,14 +23,17 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.udc.fic.muei.atopate.AjustesActivity;
+import es.udc.fic.muei.atopate.EstadisticasActivity;
+import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.TrayectoActivity;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
-public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class HomeBackupActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
     private static final String TAG = HomeActivity.class.getSimpleName();
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -42,27 +45,27 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case R.id.navigation_home:
                     return true;
                 case R.id.navigation_atopate:
-                    Toast.makeText(HomeActivity.this, "Atópate",
+                    Toast.makeText(HomeBackupActivity.this, "Atópate",
                             Toast.LENGTH_SHORT).show();
-                    Intent atopateIntent = new Intent(HomeActivity.this, TrayectoActivity.class);
+                    Intent atopateIntent = new Intent(HomeBackupActivity.this, TrayectoActivity.class);
                     startActivity(atopateIntent);
                     return true;
                 case R.id.navigation_resumen:
-                    Toast.makeText(HomeActivity.this, "Resumen",
+                    Toast.makeText(HomeBackupActivity.this, "Resumen",
                             Toast.LENGTH_SHORT).show();
-                    Intent estadisticasIntent = new Intent(HomeActivity.this, EstadisticasActivity.class);
+                    Intent estadisticasIntent = new Intent(HomeBackupActivity.this, EstadisticasActivity.class);
                     startActivity(estadisticasIntent);
                     return true;
                 case R.id.navigation_historico:
-                    Toast.makeText(HomeActivity.this, "Historial",
+                    Toast.makeText(HomeBackupActivity.this, "Historial",
                             Toast.LENGTH_SHORT).show();
-                    Intent historialIntent = new Intent(HomeActivity.this, HistorialActivity.class);
-                    startActivity(historialIntent);
+                    //Intent historialIntent = new Intent(HomeBackupActivity.this, HistorialActivity.class);
+                    //startActivity(historialIntent);
                     return true;
                 case R.id.navigation_ajustes:
-                    Toast.makeText(HomeActivity.this, "Ajustes",
+                    Toast.makeText(HomeBackupActivity.this, "Ajustes",
                             Toast.LENGTH_SHORT).show();
-                    Intent ajustesIntent = new Intent(HomeActivity.this, AjustesActivity.class);
+                    Intent ajustesIntent = new Intent(HomeBackupActivity.this, AjustesActivity.class);
                     startActivity(ajustesIntent);
                     return true;
             }
@@ -96,7 +99,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void configureMaps() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.home_map);
         MapsConfigurer.initializeMap(mapFragment, this);
     }
 
@@ -106,9 +109,9 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonAtopate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonAtopate");
-                Toast.makeText(HomeActivity.this, "Atópate",
+                Toast.makeText(HomeBackupActivity.this, "Atópate",
                         Toast.LENGTH_SHORT).show();
-                Intent atopateIntent = new Intent(HomeActivity.this, TrayectoActivity.class);
+                Intent atopateIntent = new Intent(HomeBackupActivity.this, TrayectoActivity.class);
                 startActivity(atopateIntent);
             }
         });
@@ -117,19 +120,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         buttonCompartir.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Log.d(TAG, "onClick - buttonCompartir");
-                Toast.makeText(HomeActivity.this, "Compartir",
+                Toast.makeText(HomeBackupActivity.this, "Compartir",
                         Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        final Button buttonVerMas = findViewById(R.id.buttonVerMas);
-        buttonVerMas.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.d(TAG, "onClick - buttonVerMas");
-                Toast.makeText(HomeActivity.this, "Ver más",
-                        Toast.LENGTH_SHORT).show();
-                Intent verMasIntent = new Intent(HomeActivity.this, EstadisticasActivity.class);
-                startActivity(verMasIntent);
             }
         });
 

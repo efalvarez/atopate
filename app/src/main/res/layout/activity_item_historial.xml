@@ -2,7 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ItemHistorialActivity"
+    tools:context=".entities.itemHistorialEntity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -37,22 +37,22 @@
             android:id="@+id/tiempoItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16dp"
+            android:text="@string/cargando_text"
             android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:text="TextView" />
+            android:textSize="16dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/lugarItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="@string/cargando_text" />
 
         <TextView
             android:id="@+id/distanciaItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="@string/cargando_text" />
     </LinearLayout>>
 
 </android.support.constraint.ConstraintLayout>

@@ -1,4 +1,4 @@
-package es.udc.fic.muei.atopate;
+package es.udc.fic.muei.atopate.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,14 +10,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
 
 
-public class AdapterItem extends BaseAdapter {
+public class ItemHistorialAdapter extends BaseAdapter {
 
-    protected Activity activity;
-    protected ArrayList<ItemHistorialActivity> items;
+    private Activity activity;
+    private List<itemHistorialEntity> items;
 
-    public AdapterItem (Activity activity, ArrayList<ItemHistorialActivity> items) {
+    public ItemHistorialAdapter(Activity activity, List<itemHistorialEntity> items) {
         this.activity = activity;
         this.items = items;
     }
@@ -31,10 +35,8 @@ public class AdapterItem extends BaseAdapter {
         items.clear();
     }
 
-    public void addAll(ArrayList<ItemHistorialActivity> itemHistorials) {
-        for (int i = 0; i < itemHistorials.size(); i++) {
-            items.add(itemHistorials.get(i));
-        }
+    public void addAll(List<itemHistorialEntity> itemHistorials) {
+        items.addAll(itemHistorials);
     }
 
     @Override
@@ -57,18 +59,18 @@ public class AdapterItem extends BaseAdapter {
             view = inf.inflate(R.layout.activity_item_historial, null);
         }
 
-        ItemHistorialActivity dir = items.get(position);
+        itemHistorialEntity dir = items.get(position);
 
-        TextView tiempoItem = (TextView) view.findViewById(R.id.tiempoItem);
+        TextView tiempoItem = view.findViewById(R.id.tiempoItem);
         tiempoItem.setText(dir.getTiempo());
 
-        TextView lugarItem = (TextView) view.findViewById(R.id.lugarItem);
+        TextView lugarItem =  view.findViewById(R.id.lugarItem);
         lugarItem.setText(dir.getLugarOrigen() + "-" + dir.getLugarDestino());
 
-        TextView distanciaItem = (TextView) view.findViewById(R.id.distanciaItem);
+        TextView distanciaItem =  view.findViewById(R.id.distanciaItem);
         distanciaItem.setText(dir.getDistancia());
 
-        ImageView imagen = (ImageView) view.findViewById(R.id.imageView);
+        ImageView imagen = view.findViewById(R.id.imageView);
         imagen.setImageDrawable(dir.getIcono());
 
         return view;
