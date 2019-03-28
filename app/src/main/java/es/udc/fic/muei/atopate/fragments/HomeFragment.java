@@ -1,6 +1,7 @@
 package es.udc.fic.muei.atopate.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.udc.fic.muei.atopate.EstadisticasActivity;
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import lecho.lib.hellocharts.model.PieChartData;
@@ -39,7 +42,7 @@ import lecho.lib.hellocharts.view.PieChartView;
 
 public class HomeFragment extends Fragment {
 
-
+    private static final String TAG = HomeFragment.class.getSimpleName();
 
 
     public HomeFragment() {
@@ -55,6 +58,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
     }
 
