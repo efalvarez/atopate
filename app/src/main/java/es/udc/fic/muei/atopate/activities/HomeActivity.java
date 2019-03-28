@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.fragments.HistorialFragment;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
@@ -138,6 +141,15 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+    }
+
+    // HOME FRAGMENT CLICK LISTENERS
+    public void onAtopateClick(View view) {
+        bottomNavigationView.setSelectedItemId(R.id.navigation_atopate);
+    }
+
+    public void onCompartirClick(View view) {
+        Toast.makeText(view.getContext(), "Compartir", Toast.LENGTH_SHORT).show();
     }
 
 }

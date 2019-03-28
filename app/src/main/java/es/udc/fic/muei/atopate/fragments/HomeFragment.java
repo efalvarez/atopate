@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
