@@ -40,7 +40,7 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class HomeFragment extends Fragment {
 
 
-
+    MapView mapaVista;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -52,6 +52,15 @@ public class HomeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    /*
+    * nCreate(Bundle)
+onResume()
+onPause()
+onDestroy()
+onSaveInstanceState()
+onLowMemory()
+    * */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,24 +82,54 @@ public class HomeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
     }
 
+    // serie de metodos reimplementados para que el mapa se actualice de acorde al estado de la tarea
+
+    @Override
+    public void onResume() {
+        mapaVista.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapaVista.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        mapaVista.onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        mapaVista.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mapaVista.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        mapaVista.onLowMemory();
+        super.onLowMemory();
+    }
 
     private void configureMaps(View vista, Bundle savedInstanceState) {
-        MapView vistaMapa = vista.findViewById(R.id.mapView);
-        MapsConfigurer.initializeMap(getActivity(), vistaMapa, savedInstanceState);
+        mapaVista = vista.findViewById(R.id.mapView);
+        MapsConfigurer.initializeMap(getActivity(), mapaVista, savedInstanceState);
     }
 
     private void configureCharts(View vista) {
@@ -132,7 +171,4 @@ public class HomeFragment extends Fragment {
         pieChartView.setPieChartData(pieChartData);
     }
 
-//    public interface OnFragmentInteractionListener {
-//        void onFragmentInteraction(Uri uri);
-//    }
 }
