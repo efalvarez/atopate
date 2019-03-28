@@ -129,7 +129,7 @@ public class HomeBackupActivity extends AppCompatActivity implements OnMapReadyC
 
     private void configureCharts() {
 
-        GraphView graph1 = (GraphView) findViewById(R.id.graph1);
+        GraphView graph1 = findViewById(R.id.graph1);
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
@@ -138,7 +138,7 @@ public class HomeBackupActivity extends AppCompatActivity implements OnMapReadyC
 
         graph1.addSeries(series1);
 
-        GraphView graph2 = (GraphView) findViewById(R.id.graph2);
+        GraphView graph2 = findViewById(R.id.graph2);
         BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),

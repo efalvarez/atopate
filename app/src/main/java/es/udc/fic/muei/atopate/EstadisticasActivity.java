@@ -39,8 +39,8 @@ public class EstadisticasActivity extends AppCompatActivity {
         String[] arraySpinner = new String[] {
                 "Hoy", "Ayer", "Última semana", "Último mes"
         };
-        Spinner s = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        Spinner s = findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
@@ -70,7 +70,7 @@ public class EstadisticasActivity extends AppCompatActivity {
 
         // Charts
 
-        GraphView graph1 = (GraphView) findViewById(R.id.graph1);
+        GraphView graph1 = findViewById(R.id.graph1);
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
@@ -78,7 +78,7 @@ public class EstadisticasActivity extends AppCompatActivity {
         });
         graph1.addSeries(series1);
 
-        GraphView graph2 = (GraphView) findViewById(R.id.graph2);
+        GraphView graph2 = findViewById(R.id.graph2);
         BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(2, 5),

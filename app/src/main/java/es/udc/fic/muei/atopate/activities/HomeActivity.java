@@ -21,65 +21,72 @@ public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
+    boolean isAlreadyChecked;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-            boolean isAlreadyChecked = checkIfItemIsAlreadyChecked(item, bottomNavigationView);
+            isAlreadyChecked = checkIfItemIsAlreadyChecked(item, bottomNavigationView);
 
             if (isAlreadyChecked) {
                 return true;
             }
 
-            boolean validNavigationItemSelected = false;
-            Fragment fragmentToSubstitute = HomeFragment.newInstance();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            return setFragment(item.getItemId());
 
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-
-                    fragmentToSubstitute = HomeFragment.newInstance();
-
-                    validNavigationItemSelected = true;
-                    break;
-
-                case R.id.navigation_atopate:
-
-                    fragmentToSubstitute = TrayectoFragment.newInstance();
-
-                    validNavigationItemSelected = true;
-                    break;
-
-                case R.id.navigation_resumen:
-
-                    fragmentToSubstitute = EstadisticasFragment.newInstance();
-
-                    validNavigationItemSelected = true;
-                    break;
-
-                case R.id.navigation_historico:
-
-                    fragmentToSubstitute = HistorialFragment.getInstance();
-
-                    validNavigationItemSelected = true;
-                    break;
-
-                case R.id.navigation_ajustes:
-
-                    fragmentToSubstitute = AjustesFragment.newInstance();
-
-                    validNavigationItemSelected = true;
-                    break;
-            }
-
-            transaction.replace(R.id.general_fragment_container, fragmentToSubstitute);
-            transaction.commit();
-
-            return validNavigationItemSelected;
         }
     };
+
+    public boolean setFragment(int itemId) {
+        Fragment fragmentToSubstitute = HomeFragment.newInstance();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        boolean validNavigationItemSelected = false;
+
+        switch (itemId) {
+            case R.id.navigation_home:
+
+                fragmentToSubstitute = HomeFragment.newInstance();
+
+                validNavigationItemSelected = true;
+                break;
+
+            case R.id.navigation_atopate:
+
+                fragmentToSubstitute = TrayectoFragment.newInstance();
+
+                validNavigationItemSelected = true;
+                break;
+
+            case R.id.navigation_resumen:
+
+                fragmentToSubstitute = EstadisticasFragment.newInstance();
+
+                validNavigationItemSelected = true;
+                break;
+
+            case R.id.navigation_historico:
+
+                fragmentToSubstitute = HistorialFragment.getInstance();
+
+                validNavigationItemSelected = true;
+                break;
+
+            case R.id.navigation_ajustes:
+
+                fragmentToSubstitute = AjustesFragment.newInstance();
+
+                validNavigationItemSelected = true;
+                break;
+        }
+
+        transaction.replace(R.id.general_fragment_container, fragmentToSubstitute);
+        transaction.commit();
+
+        return validNavigationItemSelected;
+    }
 
 
     @Override
@@ -87,9 +94,14 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        initializeFirstFragment();
-
         configureBottomNavigation();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setFragment(bottomNavigationView.getSelectedItemId());
     }
 
     private boolean checkIfItemIsAlreadyChecked(MenuItem checkedItem, BottomNavigationView navigationView) {
