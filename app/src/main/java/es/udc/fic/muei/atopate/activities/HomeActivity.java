@@ -24,7 +24,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
-    boolean isAlreadyChecked;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -32,7 +31,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-            isAlreadyChecked = checkIfItemIsAlreadyChecked(item, bottomNavigationView);
+            boolean isAlreadyChecked = checkIfItemIsAlreadyChecked(item, bottomNavigationView);
 
             if (isAlreadyChecked) {
                 return true;
@@ -124,16 +123,6 @@ public class HomeActivity extends AppCompatActivity {
 
         return false;
 
-    }
-
-
-    private void initializeFirstFragment() {
-        Fragment fragmentToSubstitute = HomeFragment.newInstance();
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.general_fragment_container, fragmentToSubstitute);
-        transaction.commit();
     }
 
 
