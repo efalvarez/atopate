@@ -76,7 +76,7 @@ public class EstadisticasFragment extends Fragment {
         String[] arraySpinner = new String[] {
                 "Hoy", "Ayer", "Última semana", "Último mes"
         };
-        Spinner s = (Spinner) vista.findViewById(R.id.spinner);
+        Spinner s = vista.findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(vista.getContext(),
                 android.R.layout.simple_spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,7 +109,7 @@ public class EstadisticasFragment extends Fragment {
     private void configureCharts(View vista) {
         // Charts
 
-        GraphView graph1 = (GraphView) vista.findViewById(R.id.graph1);
+        GraphView graph1 = vista.findViewById(R.id.graph1);
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
@@ -117,7 +117,7 @@ public class EstadisticasFragment extends Fragment {
         });
         graph1.addSeries(series1);
 
-        GraphView graph2 = (GraphView) vista.findViewById(R.id.graph2);
+        GraphView graph2 = vista.findViewById(R.id.graph2);
         BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(2, 5),

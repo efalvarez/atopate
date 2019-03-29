@@ -56,7 +56,7 @@ public class ItemHistorialAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inf = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inf.inflate(R.layout.activity_item_historial, null);
+            view = inf.inflate(R.layout.activity_item_historial, parent, false);
         }
 
         itemHistorialEntity dir = items.get(position);

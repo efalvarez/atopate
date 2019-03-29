@@ -73,7 +73,7 @@ public class AjustesFragment extends Fragment {
     }
 
     private void configureButtons(View vista) {
-        Button clickBtnExportar = (Button) vista.findViewById(R.id.btnExportar);
+        Button clickBtnExportar = vista.findViewById(R.id.btnExportar);
         clickBtnExportar.setOnClickListener( new View.OnClickListener() {
 
             @Override
@@ -84,7 +84,7 @@ public class AjustesFragment extends Fragment {
             }
         });
 
-        Button clickBtnImportar = (Button) vista.findViewById(R.id.btnImportar);
+        Button clickBtnImportar = vista.findViewById(R.id.btnImportar);
         clickBtnImportar.setOnClickListener( new View.OnClickListener() {
 
             @Override
@@ -95,7 +95,7 @@ public class AjustesFragment extends Fragment {
             }
         });
 
-        Button clickBtnEliminar = (Button) vista.findViewById(R.id.btnEliminar);
+        Button clickBtnEliminar = vista.findViewById(R.id.btnEliminar);
         clickBtnEliminar.setOnClickListener( new View.OnClickListener() {
 
             @Override
