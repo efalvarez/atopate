@@ -1,10 +1,14 @@
-package es.udc.fic.muei.atopate;
+package es.udc.fic.muei.atopate.fragments;
 
+import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -18,29 +22,62 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.udc.fic.muei.atopate.R;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
-public class EstadisticasActivity extends AppCompatActivity {
+public class EstadisticasFragment extends Fragment {
 
-    private static final String TAG = EstadisticasActivity.class.getSimpleName();
+    private static final String TAG = EstadisticasFragment.class.getSimpleName();
+
+    public EstadisticasFragment() {
+        // Required empty public constructor
+    }
+
+    public static EstadisticasFragment newInstance() {
+        EstadisticasFragment fragment = new EstadisticasFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_estadisticas);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View viewinflated = inflater.inflate(R.layout.fragment_estadisticas, container, false);
 
-        // ADDED
+        configureCharts(viewinflated);
+        configureSpinner(viewinflated);
 
-        // Spinner
+        return viewinflated;
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+    }
+
+    private void configureSpinner(View vista) {
         String[] arraySpinner = new String[] {
                 "Hoy", "Ayer", "Última semana", "Último mes"
         };
-        Spinner s = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        Spinner s = vista.findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(vista.getContext(),
                 android.R.layout.simple_spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
@@ -56,8 +93,8 @@ public class EstadisticasActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }*/
                 Log.d(TAG, "Selected " + position);
-                Toast.makeText(EstadisticasActivity.this, "Selected " + position,
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EstadisticasFragment.this, "Selected " + position,
+                        //Toast.LENGTH_SHORT).show();
 
             }
 
@@ -67,10 +104,12 @@ public class EstadisticasActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void configureCharts(View vista) {
         // Charts
 
-        GraphView graph1 = (GraphView) findViewById(R.id.graph1);
+        GraphView graph1 = vista.findViewById(R.id.graph1);
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
@@ -78,7 +117,7 @@ public class EstadisticasActivity extends AppCompatActivity {
         });
         graph1.addSeries(series1);
 
-        GraphView graph2 = (GraphView) findViewById(R.id.graph2);
+        GraphView graph2 = vista.findViewById(R.id.graph2);
         BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(new DataPoint[] {
                 new DataPoint(0, 1),
                 new DataPoint(2, 5),
@@ -86,7 +125,7 @@ public class EstadisticasActivity extends AppCompatActivity {
         });
         graph2.addSeries(series2);
 
-        PieChartView pieChartView = findViewById(R.id.graph3);
+        PieChartView pieChartView = vista.findViewById(R.id.graph3);
         List<SliceValue> pieData = new ArrayList<>();
         pieData.add(new SliceValue(15, Color.BLUE));
         pieData.add(new SliceValue(25, Color.GRAY));

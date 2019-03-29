@@ -27,26 +27,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".TrayectoActivity"
-            android:label="@string/title_activity_trayecto">
-        </activity>
-
-        <activity android:name=".HistorialActivity"
-            android:label="@string/title_activity_historial">
-        </activity>
-
-        <activity
-            android:name=".EstadisticasActivity"
-            android:label="@string/statistics">
-        </activity>
-
-        <activity
-            android:name=".AjustesActivity"
-            android:label="@string/title_activity_ajustes">
-        </activity>
-
-        <activity android:name=".HomeActivity">
+        <activity android:name=".activities.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
