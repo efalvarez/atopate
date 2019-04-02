@@ -55,4 +55,13 @@
             android:text="@string/cargando_text" />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/child_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"></FrameLayout>
+
 </android.support.constraint.ConstraintLayout>
