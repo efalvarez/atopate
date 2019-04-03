@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/directionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.88" />
+        app:layout_constraintGuide_percent="0.80" />
 
     <TextView
         android:id="@+id/textViewTitulo"
@@ -61,4 +61,5 @@
         android:text="@string/cargando_text"
         app:layout_constraintStart_toStartOf="@+id/textViewTitulo"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitulo" />
+
 </android.support.constraint.ConstraintLayout>
