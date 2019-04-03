@@ -51,7 +51,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/trayecto_mapa" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline" />
 
     <TextView
         android:id="@+id/textViewDestino"

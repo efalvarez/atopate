@@ -40,11 +40,7 @@ public class MapsConfigurer {
     public static LatLng getInicioTrayecto() {
         LatLng inicioTrayecto = new LatLng(43.333024, -8.410868);
 
-        /* TODO Obtener inicio del trayecto en vez de esto
-        * Probablemente sea mejor que este método no exista y tomarlo
-        * directamente en el inicioTrayecto del método onMapsReady desde la clase
-        * que lo tome para tomarlo de ahí mismo en el TrayectoFragment
-        */
+        // TODO Obtener inicio del trayecto en vez de esto
         try {
             Bundle saveInstance = new Bundle();
             saveInstance.getParcelable("location");

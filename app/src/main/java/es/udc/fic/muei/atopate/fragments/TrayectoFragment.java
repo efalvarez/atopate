@@ -134,10 +134,6 @@ public class TrayectoFragment extends Fragment {
         try {
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
             String street = addresses.get(0).getAddressLine(0);
-            /*String city = addresses.get(0).getLocality();
-            String state = addresses.get(0).getAdminArea();
-            String country = addresses.get(0).getCountryName();
-            address = String.format("%s, %s, %s - %s", street.split(",")[0], city, state, country);*/
             address = street;
 
         } catch (IOException e) {
