@@ -150,19 +150,28 @@
             android:id="@+id/photo"
             android:layout_width="91dp"
             android:layout_height="41dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp"
             android:layout_marginBottom="24dp"
             android:text="Captura"
             app:layout_constraintBottom_toTopOf="@+id/mapView"
-            app:layout_constraintEnd_toStartOf="@+id/textView13" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="85dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/topo"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/mapView"
+            app:layout_constraintEnd_toStartOf="@+id/photo"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/textView2" />
+            <!-- android:src="@drawable/topo" -->
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

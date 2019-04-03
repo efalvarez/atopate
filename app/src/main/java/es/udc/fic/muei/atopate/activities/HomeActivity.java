@@ -1,5 +1,6 @@
 package es.udc.fic.muei.atopate.activities;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ public class HomeActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private String pathFile;
     private Uri capturedImageURI;
+    private Bitmap bitMap;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -148,6 +150,10 @@ public class HomeActivity extends AppCompatActivity {
         pathFile = path;
     }
 
+    public void setBitMap(Bitmap bitmap) {
+        bitMap = bitmap;
+    }
+
     public Uri getCapturedImageURI() {
         return capturedImageURI;
     }
@@ -155,6 +161,8 @@ public class HomeActivity extends AppCompatActivity {
     public String getCurrentPhotoPath() {
         return pathFile;
     }
+
+    public Bitmap getBipMap() { return bitMap; }
 
   /*  private final static String CAPTURED_PHOTO_PATH_KEY = "mCurrentPath";
     private final static String CAPTURED_PHOTO_URI_KEY = "mCapturedImageURI";

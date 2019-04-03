@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,8 +54,8 @@ public class HomeFragment extends Fragment {
     private ImageView image;
 
     private String pictureFilePath;
-    private String deviceIdentifier;
     private static final String TAG = HomeActivity.class.getSimpleName();
+    private int contador = 0;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -66,24 +68,57 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
+    private float screen_width = new Float(0);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        screen_width = metrics.widthPixels;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        contador = 0;
 
         View viewinflated = inflater.inflate(R.layout.fragment_home, container, false);
 
         image = viewinflated.findViewById(R.id.imageView);
 
-        Button captureButton = viewinflated.findViewById(R.id.photo);
+        HomeActivity activity = (HomeActivity) getActivity();
+
+        final Button captureButton = viewinflated.findViewById(R.id.photo);
         captureButton.setOnClickListener(capture);
         if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) && captureButton != null) {
             captureButton.setEnabled(false);
         }
+
+        if (activity.getBipMap() != null && image != null) {
+            image.setImageBitmap(activity.getBipMap());
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (contador == 0 || contador%2 == 0) {
+                        captureButton.setEnabled(false);
+                    } else {
+                        captureButton.setEnabled(true);
+                    }
+
+                    float scale = screen_width / view.getWidth();
+                    if (view.getScaleX() == 1) {
+                        view.setScaleY(scale);
+                        view.setScaleX(scale);
+                    } else {
+                        view.setScaleY(1);
+                        view.setScaleX(1);
+                    }
+                    contador++;
+                }
+            });
+        }
+
 
         configureCharts(viewinflated);
         configureMaps(viewinflated, savedInstanceState);
@@ -205,10 +240,9 @@ public class HomeFragment extends Fragment {
                 Uri fileUri = FileProvider.getUriForFile(getContext(),
                         getContext().getApplicationContext().getPackageName() + ".provider", photoFile);
                 activity.setCapturedImageURI(fileUri);
-                //activity.setCurrentPhotoPath(pictureFilePath);
+                activity.setCurrentPhotoPath(photoFile.getAbsolutePath());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         activity.getCapturedImageURI());
-                activity.setResult(RESULT_OK);
                 HomeFragment homeFragment = this;
                 homeFragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
@@ -235,7 +269,7 @@ public class HomeFragment extends Fragment {
         pictureFilePath = image.getAbsolutePath();
         HomeActivity activity = (HomeActivity) getActivity();
         //activity.setCurrentPhotoPath("file:" + pictureFilePath);
-        activity.setCurrentPhotoPath("file://"+ pictureFilePath);
+        activity.setCurrentPhotoPath(pictureFilePath);
         Log.d(TAG, "valor de picture: " + pictureFilePath);
 
         return image;
@@ -259,9 +293,10 @@ public class HomeFragment extends Fragment {
         this.getActivity().sendBroadcast(galleryIntent);
     }
 
-    private void setPic(String imagePath, ImageView imageView) {
+    private void setPic(String imagePath, ImageView imageView) throws FileNotFoundException {
         int targetW = imageView.getWidth(); // Get the dimensions of the View
         int targetH = imageView.getHeight();
+        HomeActivity activity = (HomeActivity) getActivity();
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
@@ -276,6 +311,7 @@ public class HomeFragment extends Fragment {
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
+        activity.setBitMap(bitmap);
         imageView.setImageBitmap(bitmap);
     }
 
@@ -287,7 +323,11 @@ public class HomeFragment extends Fragment {
         if (requestCode == REQUEST_PICTURE_CAPTURE && resultCode == RESULT_OK) {
             HomeActivity activity = (HomeActivity) getActivity();
             addToGallery();
-            setPic(activity.getCurrentPhotoPath(), image);
+            try {
+                setPic(activity.getCurrentPhotoPath(), image);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
