@@ -55,13 +55,73 @@
             android:text="@string/cargando_text" />
     </LinearLayout>
 
-    <FrameLayout
+    <!--FrameLayout
         android:id="@+id/child_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"></FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"></FrameLayout-->
+
+    <LinearLayout
+        android:id="@+id/detallesItem"
+        android:layout_width="match_parent"
+        android:layout_height="455dp"
+        android:layout_margin="8dp"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <TextView
+            android:id="@+id/fechas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:text="19/02/2019 - 26/02/2019"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/horas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:paddingRight="@dimen/activity_vertical_margin"
+            android:text="10h 8 min"
+            android:textSize="12sp" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph1"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20sp" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph2"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20sp" />
+
+        <lecho.lib.hellocharts.view.PieChartView
+            android:id="@+id/graph3"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/graph1"
+            app:layout_constraintTop_toBottomOf="@+id/graph2" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

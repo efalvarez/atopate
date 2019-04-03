@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -80,20 +82,28 @@ public class HistorialFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(view.getContext(), "Apretado " + Integer.toString(position), Toast.LENGTH_SHORT).show();
+                LinearLayout detallesItem = view.findViewById(R.id.detallesItem);
                 if (!clicked.contains(position)) {
-                    Log.d("HERE", "Pruebas: INTENTANDO INFLAR FRAGMENT");
-                    Fragment childFragment = new DetallesHistorialFragment();
+                    Log.d("HERE", "Pruebas: INTENTANDO INFLAR");
+                    /*Fragment childFragment = new DetallesHistorialFragment();
                     Log.d("HERE", "Pruebas: " +position);
                     Log.d("HERE", "Pruebas: " +childFragment.getId());
                     FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.replace(R.id.child_fragment_container, childFragment).commit();
+                    transaction.replace(R.id.child_fragment_container, childFragment).commit();*/
+                    //detallesItem.getLayoutParams().height = 200;
+                    detallesItem.setVisibility(View.VISIBLE);
+                    Log.d("HERE", "Pruebas: height = " + detallesItem.getLayoutParams().height);
                     clicked.add(position);
                 } else {
-                    Log.d("HERE", "Pruebas: DESININFLANDO FRAGMENT");
-                    Fragment fragment = getChildFragmentManager().findFragmentById(R.id.child_fragment_container);
+                    Log.d("HERE", "Pruebas: DESININFLANDO");
+                    /* Fragment fragment = getChildFragmentManager().findFragmentById(R.id.child_fragment_container);
                     if(fragment != null)
-                        getChildFragmentManager().beginTransaction().remove(fragment).commit();
-                    clicked.remove(position);
+                        getChildFragmentManager().beginTransaction().remove(fragment).commit(); */
+                    //detallesItem.getLayoutParams().height = 0;
+                    detallesItem.setVisibility(View.GONE);
+                    Log.d("HERE", "Pruebas: height = " + detallesItem.getLayoutParams().height);
+                    int clickedPos = clicked.indexOf(position);
+                    clicked.remove(clickedPos);
                 }
             }
         });

@@ -54,14 +54,14 @@ public class DetallesHistorialFragment extends Fragment {
                              Bundle savedInstanceState) {
         View viewinflated = inflater.inflate(R.layout.fragment_detalles_historial, container, false);
 
-        FrameLayout ll = (FrameLayout) viewinflated.findViewById(R.id.child_fragment_container);
+        /*FrameLayout ll = (FrameLayout) viewinflated.findViewById(R.id.child_fragment_container);
 
         if(ll!=null) {
             ll.getLayoutParams().height = 200;
             ll.requestLayout();
         } else {
             Log.d("HERE", "Pruebas: IT'S NULL");
-        }
+        }*/
 
         configureCharts(viewinflated);
         //configureSpinner(viewinflated);
