@@ -1,5 +1,6 @@
 package es.udc.fic.muei.atopate.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -138,7 +139,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void onCompartirClick(View view) {
-        Toast.makeText(view.getContext(), "Compartir", Toast.LENGTH_SHORT).show();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "ATÓPATE - Ubicación del aparcamiento: https://goo.gl/maps/LZyRE5muqLG2");
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, "Compartir ubicación"));
     }
 
 }

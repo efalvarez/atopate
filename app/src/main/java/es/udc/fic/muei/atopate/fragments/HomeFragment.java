@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
@@ -27,7 +28,8 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class HomeFragment extends Fragment {
 
 
-    MapView mapaVista;
+    private MapView mapaVista;
+    private GoogleMap googleMap;
 
     public HomeFragment() {
         // Required empty public constructor
