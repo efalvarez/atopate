@@ -96,6 +96,7 @@ public class HomeFragment extends Fragment {
         }
 
         if (activity.getBipMap() != null && image != null) {
+
             image.setImageBitmap(activity.getBipMap());
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
