@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
 
 public class MapsConfigurer {
@@ -45,6 +46,7 @@ public class MapsConfigurer {
             Bundle saveInstance = new Bundle();
             saveInstance.getParcelable("location");
         } catch (Exception ev) {
+            Log.d(TAG, "getInicioTrayecto: Sin save instance, cargando coordenadas por defecto");
             inicioTrayecto = new LatLng(43.333024, -8.410868);
         }
         //--------------------------------------------------------------
@@ -68,11 +70,11 @@ public class MapsConfigurer {
             @Override
             public void onMapReady(GoogleMap mapa) {
                 // For dropping a marker at a point on the Map
-                LatLng fic = new LatLng(43.333024, -8.410868);
+                LatLng fic = getInicioTrayecto();
                 mapa.addMarker(new MarkerOptions().position(fic).title("FIC").snippet("Marker in FIC"));
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(fic).zoom(12).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(fic).zoom(15).build();
                 mapa.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
