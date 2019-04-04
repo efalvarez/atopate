@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
@@ -47,7 +48,8 @@ import static android.app.Activity.RESULT_OK;
 public class HomeFragment extends Fragment {
 
 
-    MapView mapaVista;
+    private MapView mapaVista;
+    private GoogleMap googleMap;
 
     static final int REQUEST_TAKE_PHOTO = 1;
 

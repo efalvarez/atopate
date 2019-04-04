@@ -1,7 +1,11 @@
 package es.udc.fic.muei.atopate.maps;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,7 +17,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
@@ -54,6 +63,10 @@ public class MapsConfigurer {
     }
 
     public static void initializeMap(Activity containerActivity, MapView vistaMapa, Bundle savedInstanceState) {
+        initializeMap(containerActivity, vistaMapa, savedInstanceState, null);
+    }
+
+    public static void initializeMap(Activity containerActivity, MapView vistaMapa, Bundle savedInstanceState, @Nullable OnMapReadyCallback callback) {
 
         vistaMapa.onCreate(savedInstanceState);
 
@@ -63,21 +76,25 @@ public class MapsConfigurer {
             MapsInitializer.initialize(containerActivity.getApplicationContext());
         } catch (Exception e) {
             Log.i(TAG, "Ha habido un problema a la hora de recuperar los datos del mapa");
-            Toast.makeText(containerActivity.getApplicationContext(), "Error al cargar el mapa.",Toast.LENGTH_LONG).show();
+            Toast.makeText(containerActivity.getApplicationContext(), "Error al cargar el mapa.", Toast.LENGTH_LONG).show();
         }
 
-        vistaMapa.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mapa) {
-                // For dropping a marker at a point on the Map
-                LatLng fic = getInicioTrayecto();
-                mapa.addMarker(new MarkerOptions().position(fic).title("FIC").snippet("Marker in FIC"));
+        if (callback != null) {
+            vistaMapa.getMapAsync(callback);
+        } else {
+            vistaMapa.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap mapa) {
+                    // For dropping a marker at a point on the Map
+                    LatLng fic = getInicioTrayecto();
+                    mapa.addMarker(new MarkerOptions().position(fic).title("FIC").snippet("Marker in FIC"));
 
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(fic).zoom(15).build();
-                mapa.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        });
+                    // For zooming automatically to the location of the marker
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(fic).zoom(15).build();
+                    mapa.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+            });
+        }
     }
 
     public static GoogleMap getmMap() {
