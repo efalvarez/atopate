@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.fragments.HistorialFragment;
@@ -92,9 +93,29 @@ public class HomeActivity extends AppCompatActivity {
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actions, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == R.id.actions_atopate) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_atopate);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         configureBottomNavigation();
     }
@@ -117,6 +138,7 @@ public class HomeActivity extends AppCompatActivity {
             boolean sameId = checkedItem.getItemId() == menuItem.getItemId();
 
             if (sameId && menuItem.isChecked()) {
+                bottomNavigationView.setSelectedItemId(R.id.navigation_atopate);
                 return true;
             }
         }
