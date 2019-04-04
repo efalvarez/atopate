@@ -13,6 +13,8 @@ public class itemHistorialEntity {
     private String lugarDestino;
     private String distancia;
     private Drawable icono;
+    private String horas;
+    private String fechas;
 
 
     //CONSTRUCTORES
@@ -22,16 +24,21 @@ public class itemHistorialEntity {
         this.lugarOrigen = "x";
         this.lugarDestino = "x";
         this.distancia = "x Km";
+        this.horas = "x horas";
+        this.fechas = "x fecha - y fecha";
 
     }
 
-    public itemHistorialEntity(String tiempo, String lugarOrigen, String lugarDestino, String distancia, Drawable icono) {
+    public itemHistorialEntity(String tiempo, String lugarOrigen, String lugarDestino, String distancia,
+                               Drawable icono, String horas, String fechas) {
         super();
         this.tiempo = tiempo;
         this.lugarOrigen = lugarOrigen;
         this.lugarDestino = lugarDestino;
         this.distancia = distancia;
         this.icono = icono;
+        this.horas = horas;
+        this.fechas = fechas;
     }
 
 
@@ -83,4 +90,21 @@ public class itemHistorialEntity {
     public void setLugarDestino(String lugarDestino) {
         this.lugarDestino = lugarDestino;
     }
+
+    public String getHoras() {
+        return horas;
+    }
+
+    public void setHoras(String horas) {
+        this.horas = horas;
+    }
+
+    public String getFechas() {
+        return fechas;
+    }
+
+    public void setFechas(String fechas) {
+        this.fechas = fechas;
+    }
+
 }

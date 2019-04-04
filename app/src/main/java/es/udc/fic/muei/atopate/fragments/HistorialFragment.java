@@ -66,9 +66,9 @@ public class HistorialFragment extends Fragment {
         Drawable icono = Drawable.createFromPath("@drawable/ic_launcher_background.xml");
 
         //TODO enlazar a la base de datos y alimentar desde ahí en vez de toda esta cosa -->
-        historials.add(new itemHistorialEntity("Hace 3 horas", "A coruña", "Madrid", "530km", icono));
-        historials.add(new itemHistorialEntity("Lunes, 25/02/2019", "Av. dos Mallos", "Pza Pontevedra", "2km", icono));
-        historials.add(new itemHistorialEntity("Domingo, 24/02/2019", "Ronda de outeiro", "Pza Pontevedra", "1km", icono));
+        historials.add(new itemHistorialEntity("Hace 3 horas", "A coruña", "Madrid", "530km", icono, "2 horas", "hoy"));
+        historials.add(new itemHistorialEntity("Lunes, 25/02/2019", "Av. dos Mallos", "Pza Pontevedra", "2km", icono, "15 minutos", "ayer"));
+        historials.add(new itemHistorialEntity("Domingo, 24/02/2019", "Ronda de outeiro", "Pza Pontevedra", "1km", icono, "20 minutos", "ayer"));
         /*for (int i = 0; i<10; i++) {
             historials.add(new itemHistorialEntity());
         }*/
@@ -85,23 +85,11 @@ public class HistorialFragment extends Fragment {
                 LinearLayout detallesItem = view.findViewById(R.id.detallesItem);
                 if (!clicked.contains(position)) {
                     Log.d("HERE", "Pruebas: INTENTANDO INFLAR");
-                    /*Fragment childFragment = new DetallesHistorialFragment();
-                    Log.d("HERE", "Pruebas: " +position);
-                    Log.d("HERE", "Pruebas: " +childFragment.getId());
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.replace(R.id.child_fragment_container, childFragment).commit();*/
-                    //detallesItem.getLayoutParams().height = 200;
                     detallesItem.setVisibility(View.VISIBLE);
-                    Log.d("HERE", "Pruebas: height = " + detallesItem.getLayoutParams().height);
                     clicked.add(position);
                 } else {
                     Log.d("HERE", "Pruebas: DESININFLANDO");
-                    /* Fragment fragment = getChildFragmentManager().findFragmentById(R.id.child_fragment_container);
-                    if(fragment != null)
-                        getChildFragmentManager().beginTransaction().remove(fragment).commit(); */
-                    //detallesItem.getLayoutParams().height = 0;
                     detallesItem.setVisibility(View.GONE);
-                    Log.d("HERE", "Pruebas: height = " + detallesItem.getLayoutParams().height);
                     int clickedPos = clicked.indexOf(position);
                     clicked.remove(clickedPos);
                 }
