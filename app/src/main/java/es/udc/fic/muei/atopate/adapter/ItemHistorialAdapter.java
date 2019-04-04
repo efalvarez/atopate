@@ -136,7 +136,7 @@ public class ItemHistorialAdapter extends BaseAdapter {
     }
 
     private void configureMaps(View vista, Bundle savedInstanceState) {
-        MapView mapaVista = vista.findViewById(R.id.mapView);
-        MapsConfigurer.initializeMap(this.activity, mapaVista, null);
+        //MapView mapaVista = vista.findViewById(R.id.mapView);
+        //MapsConfigurer.initializeMap(this.activity, mapaVista, null);
     }
 }
