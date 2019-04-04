@@ -32,9 +32,23 @@ public class MapsConfigurer {
     public static void onMapsReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng sydney = new LatLng(43.333024, -8.410868);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in FIC"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng inicioTrayecto = getInicioTrayecto();
+        mMap.addMarker(new MarkerOptions().position(inicioTrayecto).title("Marker in FIC"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(inicioTrayecto));
+    }
+
+    public static LatLng getInicioTrayecto() {
+        LatLng inicioTrayecto = new LatLng(43.333024, -8.410868);
+
+        // TODO Obtener inicio del trayecto en vez de esto
+        try {
+            Bundle saveInstance = new Bundle();
+            saveInstance.getParcelable("location");
+        } catch (Exception ev) {
+            inicioTrayecto = new LatLng(43.333024, -8.410868);
+        }
+        //--------------------------------------------------------------
+        return inicioTrayecto;
     }
 
     public static void initializeMap(Activity containerActivity, MapView vistaMapa, Bundle savedInstanceState) {
@@ -62,5 +76,9 @@ public class MapsConfigurer {
                 mapa.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
+    }
+
+    public static GoogleMap getmMap() {
+        return mMap;
     }
 }

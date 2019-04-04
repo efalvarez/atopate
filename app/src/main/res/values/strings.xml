@@ -32,6 +32,7 @@
     <string name="title_activity_ajustes">Ajustes</string>
     <string name="ajustes">Ajustes</string>
     <string name="cargando_text">Cargando...</string>
+    <string name="title_destingo">Destino</string>
     <string-array name="temas_array">
         <item>Light</item>
         <item>Dark</item>
