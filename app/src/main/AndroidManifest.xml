@@ -11,12 +11,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Solicitud de que se necesita acceso a la camara para poder hacer uso de la camara -->
     <uses-feature android:name="android.hardware.camera" android:required="true" />
-
-
 
     <application
         android:allowBackup="true"
@@ -33,11 +32,13 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity android:name=".activities.HomeActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
