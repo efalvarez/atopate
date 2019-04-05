@@ -165,7 +165,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         if (false) { // TODO: IF TRAYECTO EN CURSO (Se va marcando el trayecto según se avanza)
 
         } else { // TODO: IF MODO ATOPATE
-            LatLng fic = new LatLng(43.333024, -8.410868);
+            LatLng marineda = new LatLng(43.3441932, -8.4282207);
 
             if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -175,7 +175,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-                mMap.addMarker(new MarkerOptions().position(fic));
+                mMap.addMarker(new MarkerOptions().position(marineda));
                 return;
             }
             mMap.setMyLocationEnabled(true);
@@ -186,10 +186,10 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                 public void onSuccess(Location location) {
                     LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     if (location != null) {
-                        RouteFinder.drawRoute(latLngLocation, fic, mMap);
+                        RouteFinder.drawRoute(latLngLocation, marineda, mMap);
 
                         // Route center
-                        LatLng center = new LatLngBounds.Builder().include(latLngLocation).include(fic).build().getCenter();
+                        LatLng center = new LatLngBounds.Builder().include(latLngLocation).include(marineda).build().getCenter();
 
                         // For zooming automatically to the location of the marker
                         CameraPosition cameraPosition = new CameraPosition.Builder().target(center).zoom(13).build();
