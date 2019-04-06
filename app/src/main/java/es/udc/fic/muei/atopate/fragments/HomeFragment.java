@@ -288,7 +288,7 @@ public class HomeFragment extends Fragment {
                     dispatchTakePictureIntent();
                 }
                 else {
-                    Toast.makeText(getActivity(), "Necesita los permisos de la cámara", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "No consediste permisos de uso de la cámara", Toast.LENGTH_SHORT).show();
                 }
             }
         }
