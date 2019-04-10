@@ -1,5 +1,8 @@
 package es.udc.fic.muei.atopate.activities;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,19 +13,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.fragments.AjustesFragment;
+import es.udc.fic.muei.atopate.fragments.EstadisticasFragment;
 import es.udc.fic.muei.atopate.fragments.HistorialFragment;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
-import es.udc.fic.muei.atopate.fragments.AjustesFragment;
-import es.udc.fic.muei.atopate.fragments.EstadisticasFragment;
 
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
 
     private BottomNavigationView bottomNavigationView;
+    private String pathFile;
+    private Uri capturedImageURI;
+    private Bitmap bitMap;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -92,9 +99,29 @@ public class HomeActivity extends AppCompatActivity {
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actions, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == R.id.actions_atopate) {
+            bottomNavigationView.setSelectedItemId(R.id.navigation_atopate);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         configureBottomNavigation();
     }
@@ -117,6 +144,7 @@ public class HomeActivity extends AppCompatActivity {
             boolean sameId = checkedItem.getItemId() == menuItem.getItemId();
 
             if (sameId && menuItem.isChecked()) {
+                bottomNavigationView.setSelectedItemId(R.id.navigation_atopate);
                 return true;
             }
         }
@@ -138,7 +166,33 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void onCompartirClick(View view) {
-        Toast.makeText(view.getContext(), "Compartir", Toast.LENGTH_SHORT).show();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "ATÓPATE - Ubicación del aparcamiento: https://goo.gl/maps/LZyRE5muqLG2");
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, "Compartir ubicación"));
     }
+
+    public void setCapturedImageURI(Uri fileUri) {
+        capturedImageURI = fileUri;
+    }
+
+    public void setCurrentPhotoPath(String path) {
+        pathFile = path;
+    }
+
+    public void setBitMap(Bitmap bitmap) {
+        bitMap = bitmap;
+    }
+
+    public Uri getCapturedImageURI() {
+        return capturedImageURI;
+    }
+
+    public String getCurrentPhotoPath() {
+        return pathFile;
+    }
+
+    public Bitmap getBipMap() { return bitMap; }
 
 }

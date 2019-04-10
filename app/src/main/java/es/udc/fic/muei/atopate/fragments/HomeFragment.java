@@ -1,20 +1,39 @@
 package es.udc.fic.muei.atopate.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
@@ -24,10 +43,21 @@ import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
+import static android.app.Activity.RESULT_OK;
+
 public class HomeFragment extends Fragment {
 
 
-    MapView mapaVista;
+    private MapView mapaVista;
+    private GoogleMap googleMap;
+
+    static final int REQUEST_TAKE_PHOTO = 1;
+
+    private ImageView image;
+
+    private String pictureFilePath;
+    private static final String TAG = HomeActivity.class.getSimpleName();
+    private int contador = 0;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,19 +70,63 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
+    private float screen_width = new Float(0);
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        screen_width = metrics.widthPixels;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        contador = 0;
 
         View viewinflated = inflater.inflate(R.layout.fragment_home, container, false);
 
+        image = viewinflated.findViewById(R.id.imageView);
+
+        HomeActivity activity = (HomeActivity) getActivity();
+
+        final Button captureButton = viewinflated.findViewById(R.id.photo);
+        captureButton.setOnClickListener(capture);
+        if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) && captureButton != null) {
+            captureButton.setEnabled(false);
+        }
+
+        if (activity.getBipMap() != null && image != null) {
+
+            image.setImageBitmap(activity.getBipMap());
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (contador == 0 || contador%2 == 0) {
+                        captureButton.setEnabled(false);
+                    } else {
+                        captureButton.setEnabled(true);
+                    }
+
+                    float scale = screen_width / view.getWidth();
+                    if (view.getScaleX() == 1) {
+                        view.setScaleY(scale);
+                        view.setScaleX(scale);
+                    } else {
+                        view.setScaleY(1);
+                        view.setScaleX(1);
+                    }
+                    contador++;
+                }
+            });
+        }
+
+
         configureCharts(viewinflated);
         configureMaps(viewinflated, savedInstanceState);
+
+        // getInstallationIdentifier();
 
         return viewinflated;
     }
@@ -149,4 +223,114 @@ public class HomeFragment extends Fragment {
         pieChartView.setPieChartData(pieChartData);
     }
 
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+// Ensure that there's a camera activity to handle the intent
+        HomeActivity activity = (HomeActivity) getActivity();
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            File photoFile = null;
+            try { // Create the File where the photo should go
+                photoFile = createImageFile();
+            } catch (IOException ex) {// Error occurred while creating the File
+                Toast.makeText(this.getContext(),
+                        "Photo file can't be created, please try again",
+                        Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "EXCEPCION: " + ex.toString());
+                return;
+            }
+            if (photoFile != null) {
+                //Uri fileUri = Uri.fromFile(photoFile);
+                Uri fileUri = FileProvider.getUriForFile(getContext(),
+                        getContext().getApplicationContext().getPackageName() + ".provider", photoFile);
+                activity.setCapturedImageURI(fileUri);
+                activity.setCurrentPhotoPath(photoFile.getAbsolutePath());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        activity.getCapturedImageURI());
+                HomeFragment homeFragment = this;
+                homeFragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+// Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new
+                Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        // File outputDir = getContext().getCacheDir();
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        Log.d(TAG, "valor de imageFileName: " + imageFileName);
+        Log.d(TAG, "valor de storageDir: " + storageDir);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        // Save a file: path for use with ACTION_VIEW intents
+        pictureFilePath = image.getAbsolutePath();
+        HomeActivity activity = (HomeActivity) getActivity();
+        //activity.setCurrentPhotoPath("file:" + pictureFilePath);
+        activity.setCurrentPhotoPath(pictureFilePath);
+        Log.d(TAG, "valor de picture: " + pictureFilePath);
+
+        return image;
+    }
+
+    private View.OnClickListener capture = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                dispatchTakePictureIntent();
+            }
+        }
+    };
+
+    private void addToGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        HomeActivity activity = (HomeActivity) getActivity();
+        File f = new File(activity.getCurrentPhotoPath());
+        Uri picUri = Uri.fromFile(f);
+        galleryIntent.setData(picUri);
+        this.getActivity().sendBroadcast(galleryIntent);
+    }
+
+    private void setPic(String imagePath, ImageView imageView) throws FileNotFoundException {
+        int targetW = imageView.getWidth(); // Get the dimensions of the View
+        int targetH = imageView.getHeight();
+        HomeActivity activity = (HomeActivity) getActivity();
+
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, bmOptions);
+        int photoW = bmOptions.outWidth; // Get the dimensions of the bitmap
+        int photoH = bmOptions.outHeight;
+// Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+// Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
+        activity.setBitMap(bitmap);
+        imageView.setImageBitmap(bitmap);
+    }
+
+    static final int REQUEST_PICTURE_CAPTURE = 1;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+       // super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_PICTURE_CAPTURE && resultCode == RESULT_OK) {
+            HomeActivity activity = (HomeActivity) getActivity();
+            addToGallery();
+            try {
+                setPic(activity.getCurrentPhotoPath(), image);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
