@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +80,6 @@ public class HistorialFragment extends Fragment {
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), "Apretado " + Integer.toString(position), Toast.LENGTH_SHORT).show();
                 LinearLayout detallesItem = view.findViewById(R.id.detallesItem);
                 if (!clicked.contains(position)) {
                     Log.d("HERE", "Pruebas: INTENTANDO INFLAR");

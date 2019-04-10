@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
@@ -89,12 +88,8 @@ public class EstadisticasFragment extends Fragment {
                 /*Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
                     Log.d(TAG, item.toString());
-                    Toast.makeText(EstadisticasActivity.this, item.toString(),
-                            Toast.LENGTH_SHORT).show();
                 }*/
                 Log.d(TAG, "Selected " + position);
-                //Toast.makeText(EstadisticasFragment.this, "Selected " + position,
-                        //Toast.LENGTH_SHORT).show();
 
             }
 

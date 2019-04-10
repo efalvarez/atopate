@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import es.udc.fic.muei.atopate.R;
 
@@ -79,8 +78,6 @@ public class AjustesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Exportando copia de seguridad");
-                /*Toast.makeText(AjustesActivity.this, "Exportando copia de seguridad...",
-                        Toast.LENGTH_SHORT).show();*/
             }
         });
 
@@ -90,8 +87,6 @@ public class AjustesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Importando copia de seguridad");
-                /*Toast.makeText(AjustesActivity.this, "Importando copia de seguridad...",
-                        Toast.LENGTH_SHORT).show();*/
             }
         });
 
@@ -101,8 +96,6 @@ public class AjustesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Eliminando registros");
-                /*Toast.makeText(AjustesActivity.this, "Eliminando registros...",
-                        Toast.LENGTH_SHORT).show();*/
             }
         });
     }
