@@ -108,7 +108,7 @@ public class HomeActivity extends AppCompatActivity {
 
         int id = item.getItemId();
         if (id == R.id.actions_atopate) {
-            bottomNavigationView.setSelectedItemId(R.id.navigation_atopate);
+            HomeFragment homeFragment = HomeFragment.newInstance();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -143,7 +143,6 @@ public class HomeActivity extends AppCompatActivity {
             boolean sameId = checkedItem.getItemId() == menuItem.getItemId();
 
             if (sameId && menuItem.isChecked()) {
-                bottomNavigationView.setSelectedItemId(R.id.navigation_atopate);
                 return true;
             }
         }
@@ -151,7 +150,6 @@ public class HomeActivity extends AppCompatActivity {
         return false;
 
     }
-
 
     private void configureBottomNavigation() {
         bottomNavigationView = findViewById(R.id.navigation);
