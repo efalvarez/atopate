@@ -2,15 +2,10 @@ package es.udc.fic.muei.atopate.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -20,31 +15,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.maps.model.DirectionsResult;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
-import okhttp3.Route;
 
 import static android.support.constraint.Constraints.TAG;
 import static es.udc.fic.muei.atopate.maps.MapsConfigurer.getInicioTrayecto;
@@ -184,16 +175,17 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
             fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     if (location != null) {
-                        RouteFinder.drawRoute(latLngLocation, marineda, mMap);
+                        LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            RouteFinder.drawRoute(latLngLocation, marineda, mMap);
+                            // Route center
+                            LatLng center = new LatLngBounds.Builder().include(latLngLocation).include(marineda).build().getCenter();
 
-                        // Route center
-                        LatLng center = new LatLngBounds.Builder().include(latLngLocation).include(marineda).build().getCenter();
-
-                        // For zooming automatically to the location of the marker
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(center).zoom(13).build();
-                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            // For zooming automatically to the location of the marker
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(center).zoom(13).build();
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    } else {
+                        Toast.makeText(getActivity(), "Necesario activar la ubicación ", Toast.LENGTH_LONG).show();
                     }
                 }
             });
