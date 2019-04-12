@@ -1,5 +1,6 @@
 package es.udc.fic.muei.atopate.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -233,7 +234,7 @@ public class HomeFragment extends Fragment {
                 photoFile = createImageFile();
             } catch (IOException ex) {// Error occurred while creating the File
                 Toast.makeText(this.getContext(),
-                        "Photo file can't be created, please try again",
+                        "No es posible tomar fotos",
                         Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "EXCEPCION: " + ex.toString());
                 return;
@@ -282,7 +283,12 @@ public class HomeFragment extends Fragment {
         @Override
         public void onClick(View view) {
             if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                dispatchTakePictureIntent();
+                if (((HomeActivity) getActivity()).tienePermiso(Manifest.permission.CAMERA)) {
+                    dispatchTakePictureIntent();
+                }
+                else {
+                    Toast.makeText(getActivity(), "No consediste permisos de uso de la cámara", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
