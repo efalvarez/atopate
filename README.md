@@ -12,6 +12,7 @@ Atópate
 - Diego Sánchez Lamas: Responsable de sensórica y geolocalización
 - Lorena Reverendo Miguéns: Responsable de Social Media y APIs
 - Sergio Costa García: Responsable de UX
+- Enrique Rodríguez Castañeda: Responsable de UX
 
 ## Descripción breve del proyecto y funcionalidades básicas:
 
