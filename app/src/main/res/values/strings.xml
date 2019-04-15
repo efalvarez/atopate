@@ -14,7 +14,7 @@
     <string name="app_verMas">VER MÁS</string>
     <string name="app_photo">Foto</string>
 
-    <string name="app_registrar"> Registrando trayecto... </string>
+    <string name="app_registrar"> Registrando trayecto&#8230; </string>
     <string name="app_trayecto">VER TRAYECTO ACTUAL</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_trayecto">Trayecto</string>
@@ -31,11 +31,17 @@
     <string name="period">Periodo</string>
     <string name="title_activity_ajustes">Ajustes</string>
     <string name="ajustes">Ajustes</string>
-    <string name="cargando_text">Cargando...</string>
+    <string name="cargando_text">Cargando\&#8230;</string>
     <string name="title_destingo">Destino</string>
+
+    <string name="tema_oscuro">Oscuro</string>
+    <string name="tema_claro">Claro</string>
+    <string name="indicador_tema">Selecciona un tema</string>
+
     <string-array name="temas_array">
-        <item>Light</item>
-        <item>Dark</item>
+        <item>@string/indicador_tema</item>
+        <item>@string/tema_claro</item>
+        <item>@string/tema_oscuro</item>
     </string-array>
     <string-array name="unidad_array">
         <item>Kilómetro</item>
