@@ -112,7 +112,7 @@ public class AjustesFragment extends Fragment {
                 try {
                     pref = activity
                             .getSharedPreferences("PreferenciasAtopate",
-                                    activity.MODE_PRIVATE);
+                                    Context.MODE_PRIVATE);
 
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("tema", temas[pos]);
