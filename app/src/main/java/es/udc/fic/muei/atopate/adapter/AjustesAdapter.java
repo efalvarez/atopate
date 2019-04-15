@@ -1,7 +1,6 @@
 package es.udc.fic.muei.atopate.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.widget.Toast;
 
 import es.udc.fic.muei.atopate.R;

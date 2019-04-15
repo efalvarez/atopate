@@ -1,6 +1,8 @@
 package es.udc.fic.muei.atopate.fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.support.v7.widget.AppCompatSpinner;
+import android.widget.Toast;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.activities.HomeActivity;
+import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,30 +80,57 @@ public class AjustesFragment extends Fragment {
 
     private void configureButtons(View vista) {
         Button clickBtnExportar = vista.findViewById(R.id.btnExportar);
-        clickBtnExportar.setOnClickListener( new View.OnClickListener() {
+        AppCompatSpinner spinner = vista.findViewById(R.id.spinner_tema);
 
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Exportando copia de seguridad");
-            }
+        clickBtnExportar.setOnClickListener(v -> {
+            Log.d(TAG, "Exportando copia de seguridad");
         });
 
         Button clickBtnImportar = vista.findViewById(R.id.btnImportar);
-        clickBtnImportar.setOnClickListener( new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Importando copia de seguridad");
-            }
+        clickBtnImportar.setOnClickListener(v -> {
+            Log.d(TAG, "Importando copia de seguridad");
         });
 
         Button clickBtnEliminar = vista.findViewById(R.id.btnEliminar);
-        clickBtnEliminar.setOnClickListener( new View.OnClickListener() {
+        clickBtnEliminar.setOnClickListener(v -> {
+            Log.d(TAG, "Eliminando registros");
+        });
+
+        Log.d(TAG, "configureButtons: " + spinner.getClass().toString());
+
+        spinner.setSelection(0,false);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Eliminando registros");
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
+            {
+
+                HomeActivity activity = (HomeActivity) getActivity();
+
+                String temas[] = getResources().getStringArray(R.array.temas_array);
+                SharedPreferences pref = null;
+                try {
+                    pref = activity
+                            .getSharedPreferences("PreferenciasAtopate",
+                                    activity.MODE_PRIVATE);
+
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("tema", temas[pos]);
+                    editor.apply();
+                    new AjustesAdapter().setTema(activity, temas[pos]);
+
+                    activity.startActivity(new Intent(activity, HomeActivity.class));
+                    activity.finish();
+                } catch (java.lang.NullPointerException e) {
+                    Log.d(TAG, "onItemSelected: NullPointerException");
+                    Toast.makeText(activity, "No se puede cambiar tema, reinicie la aplicación",
+                            Toast.LENGTH_LONG).show();
+                }
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {    }
         });
     }
 }
