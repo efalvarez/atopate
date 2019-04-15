@@ -9,16 +9,20 @@
 
     <!-- Dark application theme -->
     <style name="TemaOscuro" parent="AppTheme">
+        <item name="android:background">@color/darkTheme</item>
+        <item name="android:colorBackground">@color/darkTheme</item>
         <item name="android:textColor">@color/lightTheme</item>
         <item name="android:buttonStyle">@style/ButtonStyle</item>
-        <item name="android:windowBackground">@color/lightTheme</item>
         <item name="android:spinnerStyle">@style/SpinnerTheme</item>
+
     </style>
+
 
     <!-- Light application theme. -->
     <style name="TemaClaro" parent="AppTheme">
+        <item name="android:background">@color/lightTheme</item>
+        <item name="android:colorBackground">@color/lightTheme</item>
         <item name="android:textColor">@color/textColorLight</item>
-        <item name="android:windowBackground">@color/lightTheme</item>
     </style>
 
     <!-- Extras -->
