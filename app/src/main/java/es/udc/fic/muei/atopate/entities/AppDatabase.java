@@ -6,6 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import es.udc.fic.muei.atopate.dao.PuntosTrayectoDao;
 import es.udc.fic.muei.atopate.dao.TrayectoDao;
 
 @Database(entities = {Trayecto.class, PuntosTrayecto.class}, version = 1)
@@ -15,6 +16,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase INSTANCE;
 
     public abstract TrayectoDao trayectoDao();
+    public abstract PuntosTrayectoDao puntosTrayectoDao();
 
     public static AppDatabase getInMemoryDatabase(Context context) {
         if (INSTANCE == null) {
