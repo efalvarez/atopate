@@ -3,6 +3,7 @@ package es.udc.fic.muei.atopate.entities;
 import android.graphics.drawable.Drawable;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import es.udc.fic.muei.atopate.db.model.Trayecto;
@@ -49,14 +50,14 @@ public class itemHistorialEntity {
         this.lugarOrigen = t.origen;
         this.distancia = t.distancia + "km";
 
-        long duracion = t.horaFin.getTime() - t.horaInicio.getTime();
+        long duracion = t.horaFin.getTimeInMillis() - t.horaInicio.getTimeInMillis();
         long horas = TimeUnit.HOURS.convert(duracion, TimeUnit.MILLISECONDS);
         duracion -= TimeUnit.MILLISECONDS.convert(horas, TimeUnit.HOURS);
         long minutos = TimeUnit.MINUTES.convert(duracion, TimeUnit.MILLISECONDS);
         this.horas = (horas > 0 ? horas + "h " : "")  + minutos + "m";
 
         SimpleDateFormat formato = new SimpleDateFormat("EEEE, dd/MM/yyyy");
-        this.tiempo = formato.format(t.horaFin);
+        this.tiempo = formato.format(t.horaFin.getTime());
     }
 
     //GETERS & SETTERS

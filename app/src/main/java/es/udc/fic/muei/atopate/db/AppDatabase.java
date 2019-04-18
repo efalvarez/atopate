@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import es.udc.fic.muei.atopate.db.dao.PuntosTrayectoDao;
@@ -58,18 +59,20 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(final Void... params) {
 
-            Date horaInicio = new Date(2019, 4, 18, 11, 25);
-            Date horaFin = new Date(2019, 4, 18, 14, 15);
+            Calendar horaInicio = Calendar.getInstance();
+            Calendar horaFin = Calendar.getInstance();
+            horaInicio.set(2019, 4, 18, 11, 25);
+            horaFin.set(2019, 4, 18, 14, 15);
             Trayecto trayecto = new Trayecto("A Coruña", "Madrid", horaInicio, horaFin, 530, "pathFoto");
             trayectoDao.insert(trayecto);
 
-            horaInicio = new Date(2019, 3, 18, 11, 25);
-            horaFin = new Date(2019, 3, 18, 14, 15);
+            horaInicio.set(2019, 3, 18, 11, 25);
+            horaFin.set(2019, 3, 18, 14, 15);
             Trayecto trayecto2 = new Trayecto("Av. dos Mallos", "Pza Pontevedra", horaInicio, horaFin, 2, "pathFoto");
             trayectoDao.insert(trayecto2);
 
-            horaInicio = new Date(2019, 2, 18, 11, 25);
-            horaFin = new Date(2019, 2, 18, 14, 15);
+            horaInicio.set(2019, 2, 18, 11, 25);
+            horaFin.set(2019, 2, 18, 14, 15);
             Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "pathFoto");
             trayectoDao.insert(trayecto3);
             return null;

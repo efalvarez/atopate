@@ -7,18 +7,25 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class Converters {
     @TypeConverter
-    public static Date fromTimestamp(Long value) {
-        return value == null ? null : new Date(value);
+    public static Calendar fromTimestamp(Long value) {
+        if (value == null) {
+            return null;
+        } else {
+            Calendar res = Calendar.getInstance();
+            res.setTimeInMillis(value);
+            return res;
+        }
     }
 
     @TypeConverter
-    public static Long dateToTimestamp(Date date) {
-        return date == null ? null : date.getTime();
+    public static Long calendarToTimestamp(Calendar date) {
+        return date == null ? null : date.getTimeInMillis();
     }
 
     @TypeConverter

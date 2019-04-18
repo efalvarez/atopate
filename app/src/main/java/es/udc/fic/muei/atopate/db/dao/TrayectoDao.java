@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface TrayectoDao {
     public List<Trayecto> getAll();
 
     @Query("SELECT * FROM trayecto WHERE hora_inicio BETWEEN :from AND :to")
-    List<Trayecto> findTrayectosBetweenDates(Date from, Date to);
+    List<Trayecto> findTrayectosBetweenDates(Calendar from, Calendar to);
 
     @Insert
     public Long insert(Trayecto trayecto);

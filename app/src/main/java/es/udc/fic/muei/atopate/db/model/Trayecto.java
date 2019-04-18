@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
-import java.util.Date;
+import java.util.Calendar;
 
 @Entity
 public class Trayecto {
@@ -16,10 +16,10 @@ public class Trayecto {
     public Long id;
 
     @ColumnInfo(name = "hora_inicio")
-    public Date horaInicio;
+    public Calendar horaInicio;
 
     @ColumnInfo(name = "hora_fin")
-    public Date horaFin;
+    public Calendar horaFin;
 
     public String origen;
 
@@ -32,7 +32,7 @@ public class Trayecto {
     @Ignore
     public Bitmap fotoBitmap;
 
-    public Trayecto(String origen, String destino, Date horaInicio, Date horaFin, int distancia, String foto) {
+    public Trayecto(String origen, String destino, Calendar horaInicio, Calendar horaFin, int distancia, String foto) {
         this.origen = origen;
         this.destino = destino;
         this.horaFin = horaFin;
