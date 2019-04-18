@@ -1,16 +1,16 @@
-package es.udc.fic.muei.atopate.entities;
+package es.udc.fic.muei.atopate.db.model;
+
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.PrimaryKey;
-
-import static androidx.room.ForeignKey.CASCADE;
+import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = {
         @ForeignKey(entity = Trayecto.class,

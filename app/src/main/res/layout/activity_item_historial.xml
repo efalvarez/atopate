@@ -77,16 +77,6 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <TextView
-            android:id="@+id/fechas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:text="19/02/2019 - 26/02/2019"
-            android:textSize="12sp" />
-
-        <TextView
             android:id="@+id/horas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

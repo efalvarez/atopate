@@ -4,9 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +18,10 @@ import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.adapter.ItemHistorialAdapter;
+import es.udc.fic.muei.atopate.db.TrayectoService;
+import es.udc.fic.muei.atopate.db.dao.TrayectoDao;
+import es.udc.fic.muei.atopate.db.AppDatabase;
+import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
 
 /**
@@ -29,6 +31,8 @@ import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
  * to handle interaction events.
  */
 public class HistorialFragment extends Fragment {
+
+    private TrayectoService trayectoService;
 
     private List<Integer> clicked;
 
@@ -64,14 +68,9 @@ public class HistorialFragment extends Fragment {
         ListView listV = view.findViewById(R.id.historial_list);
         Drawable icono = Drawable.createFromPath("@drawable/ic_launcher_background.xml");
 
-        //TODO enlazar a la base de datos y alimentar desde ahí en vez de toda esta cosa -->
-        historials.add(new itemHistorialEntity("Hace 3 horas", "A coruña", "Madrid", "530km", icono, "2 horas", "hoy"));
-        historials.add(new itemHistorialEntity("Lunes, 25/02/2019", "Av. dos Mallos", "Pza Pontevedra", "2km", icono, "15 minutos", "ayer"));
-        historials.add(new itemHistorialEntity("Domingo, 24/02/2019", "Ronda de outeiro", "Pza Pontevedra", "1km", icono, "20 minutos", "ayer"));
-        /*for (int i = 0; i<10; i++) {
-            historials.add(new itemHistorialEntity());
-        }*/
-        //  <--------------------------------------------------------
+        trayectoService = new TrayectoService(getContext());
+
+        historials.addAll(trayectoService.getHistorial());
 
         ItemHistorialAdapter adapter = new ItemHistorialAdapter(this.getActivity(), historials);
 

@@ -2,6 +2,11 @@ package es.udc.fic.muei.atopate.entities;
 
 import android.graphics.drawable.Drawable;
 
+import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
+
+import es.udc.fic.muei.atopate.db.model.Trayecto;
+
 /*
  *
  */
@@ -14,7 +19,6 @@ public class itemHistorialEntity {
     private String distancia;
     private Drawable icono;
     private String horas;
-    private String fechas;
 
 
     //CONSTRUCTORES
@@ -25,12 +29,11 @@ public class itemHistorialEntity {
         this.lugarDestino = "x";
         this.distancia = "x Km";
         this.horas = "x horas";
-        this.fechas = "x fecha - y fecha";
 
     }
 
     public itemHistorialEntity(String tiempo, String lugarOrigen, String lugarDestino, String distancia,
-                               Drawable icono, String horas, String fechas) {
+                               Drawable icono, String horas) {
         super();
         this.tiempo = tiempo;
         this.lugarOrigen = lugarOrigen;
@@ -38,9 +41,23 @@ public class itemHistorialEntity {
         this.distancia = distancia;
         this.icono = icono;
         this.horas = horas;
-        this.fechas = fechas;
     }
 
+    public itemHistorialEntity(Trayecto t) {
+        super();
+        this.lugarDestino = t.destino;
+        this.lugarOrigen = t.origen;
+        this.distancia = t.distancia + "km";
+
+        long duracion = t.horaFin.getTime() - t.horaInicio.getTime();
+        long horas = TimeUnit.HOURS.convert(duracion, TimeUnit.MILLISECONDS);
+        duracion -= TimeUnit.MILLISECONDS.convert(horas, TimeUnit.HOURS);
+        long minutos = TimeUnit.MINUTES.convert(duracion, TimeUnit.MILLISECONDS);
+        this.horas = (horas > 0 ? horas + "h " : "")  + minutos + "m";
+
+        SimpleDateFormat formato = new SimpleDateFormat("EEEE, dd/MM/yyyy");
+        this.tiempo = formato.format(t.horaFin);
+    }
 
     //GETERS & SETTERS
     public String getTiempo() {
@@ -97,14 +114,6 @@ public class itemHistorialEntity {
 
     public void setHoras(String horas) {
         this.horas = horas;
-    }
-
-    public String getFechas() {
-        return fechas;
-    }
-
-    public void setFechas(String fechas) {
-        this.fechas = fechas;
     }
 
 }
