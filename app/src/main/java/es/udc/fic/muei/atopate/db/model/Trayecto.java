@@ -32,6 +32,9 @@ public class Trayecto {
     @Ignore
     public Bitmap fotoBitmap;
 
+    @Ignore
+    public PuntosTrayecto puntosTrayecto;
+
     public Trayecto(String origen, String destino, Calendar horaInicio, Calendar horaFin, int distancia, String foto) {
         this.origen = origen;
         this.destino = destino;

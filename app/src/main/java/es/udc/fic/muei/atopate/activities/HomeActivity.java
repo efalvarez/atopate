@@ -18,12 +18,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.db.TrayectoService;
+import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
+import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.fragments.AjustesFragment;
 import es.udc.fic.muei.atopate.fragments.EstadisticasFragment;
 import es.udc.fic.muei.atopate.fragments.HistorialFragment;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
+import es.udc.fic.muei.atopate.maps.RouteFinder;
+import okhttp3.Route;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -216,5 +223,20 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public Bitmap getBipMap() { return bitMap; }
+
+    // AJUSTES CLICK LISTENER
+    public void onAddTrayectoClick(View view) {
+        TrayectoService trayectoService = new TrayectoService(this);
+        Calendar inicio = Calendar.getInstance();
+        Calendar fin = Calendar.getInstance();
+        inicio.set(2019, 04, 20, 20, 00);
+        fin.set(2019, 04, 20, 20, 45);
+        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "pathfoto");
+        t.puntosTrayecto = new PuntosTrayecto();
+        t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
+        trayectoService.insert(t);
+
+        Toast.makeText(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG).show();
+    }
 
 }

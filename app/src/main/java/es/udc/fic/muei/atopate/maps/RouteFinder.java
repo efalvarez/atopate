@@ -57,4 +57,22 @@ public class RouteFinder {
         }
     }
 
+
+    // For testing
+    public static List<LatLng> getRoute(String from, String to) {
+        try {
+            DirectionsResult result = DirectionsApi.newRequest(context)
+                    .origin(from)
+                    .destination(to)
+                    .mode(TravelMode.DRIVING)
+                    .language("es")
+                    .await();
+
+            return PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath());
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

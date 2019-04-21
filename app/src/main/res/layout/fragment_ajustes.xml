@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".fragments.AjustesFragment">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -73,6 +72,16 @@
                 android:padding="8pt"
                 android:paddingLeft="8pt"
                 android:paddingRight="8pt">
+
+                <Button
+                    android:id="@+id/btnAddTrayecto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8pt"
+                    android:height="24pt"
+                    android:background="@android:color/darker_gray"
+                    android:text="crear trayecto de prueba"
+                    android:onClick="onAddTrayectoClick" />
 
                 <Button
                     android:id="@+id/btnExportar"
