@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +44,7 @@ import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
+import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
 import lecho.lib.hellocharts.model.PieChartData;
@@ -157,6 +159,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         mapaVista.onResume();
         super.onResume();
         trayecto = trayectoService.getLast();
+        itemHistorialEntity item = new itemHistorialEntity(trayecto);
+
+        TextView fecha = getView().findViewById(R.id.fecha);
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        fecha.setText(formato.format(trayecto.horaFin.getTime()));
+
+        TextView origenDestino = getView().findViewById(R.id.origenDestino);
+        origenDestino.setText(trayecto.origen + " - " + trayecto.destino);
+
+        TextView tiempo = getView().findViewById(R.id.tiempo);
+        tiempo.setText(item.getHoras());
+
+        TextView distancia = getView().findViewById(R.id.distancia);
+        distancia.setText(item.getDistancia() + " -  37.5 litros" );
     }
 
     @Override
@@ -357,7 +373,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
 
         if (trayecto != null && trayecto.puntosTrayecto != null) {
-            RouteFinder.drawRoute(trayecto.puntosTrayecto.coordenadas, mMap);
+            DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+            int height =  Math.round(150 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+
+            RouteFinder.drawRoute(trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height);
         }
 
     }

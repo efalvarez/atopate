@@ -177,7 +177,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                 public void onSuccess(Location location) {
                     if (location != null) {
                         LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            RouteFinder.drawRoute(latLngLocation, marineda, mMap);
+                            RouteFinder.drawRoute(latLngLocation, marineda, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
                             // Route center
                             LatLng center = new LatLngBounds.Builder().include(latLngLocation).include(marineda).build().getCenter();
 

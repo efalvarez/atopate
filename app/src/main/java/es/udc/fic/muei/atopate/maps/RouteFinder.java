@@ -26,7 +26,7 @@ public class RouteFinder {
 
     private static final GeoApiContext context = new GeoApiContext.Builder().apiKey(apiKey).build();
 
-    private static void draw(List<LatLng> coordenadas, GoogleMap mMap, String markerTitle, String markerSnippet) {
+    private static void draw(List<LatLng> coordenadas, GoogleMap mMap, String markerTitle, String markerSnippet, int width, int height) {
         if (coordenadas.size() > 1) {
             mMap.addPolyline(new PolylineOptions().addAll(coordenadas));
 
@@ -42,7 +42,7 @@ public class RouteFinder {
             }
             LatLngBounds bounds = builder.build();
             int padding = 50; // offset from edges of the map in pixels
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
             mMap.animateCamera(cu);
         }
     }
@@ -51,11 +51,11 @@ public class RouteFinder {
         return results.routes[0].legs[0].distance.humanReadable + " - " + results.routes[0].legs[0].duration.humanReadable;
     }
 
-    public static void drawRoute(List<LatLng> coordenadas, GoogleMap mMap) {
-        draw(coordenadas, mMap, null, null);
+    public static void drawRoute(List<LatLng> coordenadas, GoogleMap mMap, int width, int height) {
+        draw(coordenadas, mMap, null, null, width, height);
     }
 
-    public static DirectionsResult drawRoute(LatLng from, LatLng to, GoogleMap mMap) {
+    public static DirectionsResult drawRoute(LatLng from, LatLng to, GoogleMap mMap, int width, int height) {
         com.google.maps.model.LatLng gLocStart = new com.google.maps.model.LatLng(
                 from.latitude, from.longitude);
         com.google.maps.model.LatLng gLocEnd = new com.google.maps.model.LatLng(
@@ -68,7 +68,7 @@ public class RouteFinder {
                     .language("es")
                     .await();
 
-            draw(PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath()), mMap, result.routes[0].legs[0].endAddress, getEndLocationTitle(result));
+            draw(PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath()), mMap, result.routes[0].legs[0].endAddress, getEndLocationTitle(result), width, height);
 
             return result;
         } catch (Exception e) {
