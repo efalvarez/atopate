@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import es.udc.fic.muei.atopate.db.dao.DatosOBDDao;
 import es.udc.fic.muei.atopate.db.dao.PuntosTrayectoDao;
 import es.udc.fic.muei.atopate.db.dao.TrayectoDao;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
@@ -16,16 +17,18 @@ public class TrayectoService {
 
     private TrayectoDao dao;
     private PuntosTrayectoDao puntosDao;
+    private DatosOBDDao datosOBDDao;
 
     public TrayectoService(Context context) {
         AppDatabase db = AppDatabase.getDatabase(context);
         dao = db.trayectoDao();
         puntosDao = db.puntosTrayectoDao();
+        datosOBDDao = db.datosOBDDao();
     }
 
     public List<itemHistorialEntity> getHistorial() {
         try {
-            return new getAsyncTask(dao).execute().get();
+            return new getAsyncTask(dao, datosOBDDao).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -35,12 +38,12 @@ public class TrayectoService {
     }
 
     public void insert(Trayecto trayecto) {
-        new insertAsyncTask(dao, puntosDao).execute(trayecto);
+        new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto);
     }
 
     public Trayecto getLast() {
         try {
-            return new getLastAsyncTask(dao, puntosDao).execute().get();
+            return new getLastAsyncTask(dao, puntosDao, datosOBDDao).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -53,10 +56,12 @@ public class TrayectoService {
 
         private TrayectoDao mAsyncTaskDao;
         private PuntosTrayectoDao mAsyncTaskPuntosDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
 
-        insertAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosDao) {
+        insertAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosDao, DatosOBDDao datosOBDDao ) {
             mAsyncTaskDao = dao;
             mAsyncTaskPuntosDao = puntosDao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
         }
 
         @Override
@@ -66,6 +71,10 @@ public class TrayectoService {
                 params[0].puntosTrayecto.trayectoId = idTrayecto;
                 mAsyncTaskPuntosDao.insert(params[0].puntosTrayecto);
             }
+            if (params[0].datosOBD != null) {
+                params[0].datosOBD.trayectoId = idTrayecto;
+                mAsyncTaskDatosOBDDao.insert(params[0].datosOBD);
+            }
             return null;
         }
     }
@@ -73,9 +82,11 @@ public class TrayectoService {
     private static class getAsyncTask extends AsyncTask<Void, Void, List<itemHistorialEntity>> {
 
         private TrayectoDao mAsyncTaskDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
 
-        getAsyncTask(TrayectoDao dao) {
+        getAsyncTask(TrayectoDao dao, DatosOBDDao datosOBDDao) {
             mAsyncTaskDao = dao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
         }
 
         @Override
@@ -94,10 +105,12 @@ public class TrayectoService {
 
         private TrayectoDao mAsyncTaskDao;
         private PuntosTrayectoDao mAsyncTaskPuntosDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
 
-        getLastAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosDao) {
+        getLastAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosDao, DatosOBDDao datosOBDDao) {
             mAsyncTaskDao = dao;
             mAsyncTaskPuntosDao = puntosDao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
         }
 
         @Override
@@ -106,6 +119,7 @@ public class TrayectoService {
 
             if (result != null) {
                 result.puntosTrayecto = mAsyncTaskPuntosDao.getByTrayecto(result.id);
+                result.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(result.id);
             }
 
             return result;

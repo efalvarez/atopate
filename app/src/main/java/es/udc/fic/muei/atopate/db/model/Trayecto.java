@@ -35,6 +35,9 @@ public class Trayecto {
     @Ignore
     public PuntosTrayecto puntosTrayecto;
 
+    @Ignore
+    public DatosOBD datosOBD;
+
     public Trayecto(String origen, String destino, Calendar horaInicio, Calendar horaFin, int distancia, String foto) {
         this.origen = origen;
         this.destino = destino;

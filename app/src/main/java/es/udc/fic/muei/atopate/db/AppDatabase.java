@@ -10,14 +10,15 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import java.util.Calendar;
-import java.util.Date;
 
+import es.udc.fic.muei.atopate.db.dao.DatosOBDDao;
 import es.udc.fic.muei.atopate.db.dao.PuntosTrayectoDao;
 import es.udc.fic.muei.atopate.db.dao.TrayectoDao;
+import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 
-@Database(entities = {Trayecto.class, PuntosTrayecto.class}, version = 1)
+@Database(entities = {Trayecto.class, PuntosTrayecto.class, DatosOBD.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -25,11 +26,12 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract TrayectoDao trayectoDao();
     public abstract PuntosTrayectoDao puntosTrayectoDao();
+    public abstract DatosOBDDao datosOBDDao();
 
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                    AppDatabase.class, "atopate").allowMainThreadQueries()
+                    AppDatabase.class, "atopate")
                     // Wipes and rebuilds
                     .fallbackToDestructiveMigration()
                     .addCallback(sRoomDatabaseCallback)

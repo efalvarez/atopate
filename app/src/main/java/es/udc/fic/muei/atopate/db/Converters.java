@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class Converters {

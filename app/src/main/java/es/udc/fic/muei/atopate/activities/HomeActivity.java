@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.db.TrayectoService;
@@ -31,7 +30,6 @@ import es.udc.fic.muei.atopate.fragments.HistorialFragment;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
-import okhttp3.Route;
 
 public class HomeActivity extends AppCompatActivity {
 
