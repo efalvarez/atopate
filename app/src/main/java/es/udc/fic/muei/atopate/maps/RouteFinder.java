@@ -4,9 +4,13 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.DirectionsApi;
@@ -22,13 +26,33 @@ public class RouteFinder {
 
     private static final GeoApiContext context = new GeoApiContext.Builder().apiKey(apiKey).build();
 
-    private static void addPolyline(DirectionsResult results, GoogleMap mMap) {
-        List<LatLng> decodedPath = PolyUtil.decode(results.routes[0].overviewPolyline.getEncodedPath());
-        mMap.addPolyline(new PolylineOptions().addAll(decodedPath));
+    private static void draw(List<LatLng> coordenadas, GoogleMap mMap, String markerTitle, String markerSnippet) {
+        if (coordenadas.size() > 1) {
+            mMap.addPolyline(new PolylineOptions().addAll(coordenadas));
+
+            if (markerTitle != null && markerSnippet != null) {
+                mMap.addMarker(new MarkerOptions().position(coordenadas.get(coordenadas.size() - 1)).title(markerTitle).snippet(markerSnippet));
+            } else {
+                mMap.addMarker(new MarkerOptions().position(coordenadas.get(coordenadas.size() - 1)));
+            }
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for (LatLng pos : coordenadas) {
+                builder.include(pos);
+            }
+            LatLngBounds bounds = builder.build();
+            int padding = 50; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            mMap.animateCamera(cu);
+        }
     }
 
     private static String getEndLocationTitle(DirectionsResult results) {
         return results.routes[0].legs[0].distance.humanReadable + " - " + results.routes[0].legs[0].duration.humanReadable;
+    }
+
+    public static void drawRoute(List<LatLng> coordenadas, GoogleMap mMap) {
+        draw(coordenadas, mMap, null, null);
     }
 
     public static DirectionsResult drawRoute(LatLng from, LatLng to, GoogleMap mMap) {
@@ -44,21 +68,14 @@ public class RouteFinder {
                     .language("es")
                     .await();
 
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(result.routes[0].legs[0].endLocation.lat,
-                            result.routes[0].legs[0].endLocation.lng))
-                    .title(result.routes[0].legs[0].endAddress)
-                    .snippet(getEndLocationTitle(result)));
+            draw(PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath()), mMap, result.routes[0].legs[0].endAddress, getEndLocationTitle(result));
 
-            addPolyline(result, mMap);
             return result;
         } catch (Exception e) {
             return null;
         }
     }
 
-
-    // For testing
     public static List<LatLng> getRoute(String from, String to) {
         try {
             DirectionsResult result = DirectionsApi.newRequest(context)

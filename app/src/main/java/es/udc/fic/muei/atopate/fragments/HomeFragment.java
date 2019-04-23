@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
@@ -39,18 +41,22 @@ import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
+import es.udc.fic.muei.atopate.db.TrayectoService;
+import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
+import es.udc.fic.muei.atopate.maps.RouteFinder;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
 
 import static android.app.Activity.RESULT_OK;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
 
     private MapView mapaVista;
-    private GoogleMap googleMap;
+    private Trayecto trayecto;
+    private TrayectoService trayectoService;
 
     static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -84,6 +90,8 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        trayectoService = new TrayectoService(getContext());
+
         contador = 0;
 
         View viewinflated = inflater.inflate(R.layout.fragment_home, container, false);
@@ -148,6 +156,7 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         mapaVista.onResume();
         super.onResume();
+        trayecto = trayectoService.getLast();
     }
 
     @Override
@@ -182,7 +191,7 @@ public class HomeFragment extends Fragment {
 
     private void configureMaps(View vista, Bundle savedInstanceState) {
         mapaVista = vista.findViewById(R.id.mapView);
-        MapsConfigurer.initializeMap(getActivity(), mapaVista, savedInstanceState);
+        MapsConfigurer.initializeMap(getActivity(), mapaVista, savedInstanceState, this);
     }
 
     private void configureCharts(View vista) {
@@ -338,5 +347,18 @@ public class HomeFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap mMap) {
+
+        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        if (trayecto != null && trayecto.puntosTrayecto != null) {
+            RouteFinder.drawRoute(trayecto.puntosTrayecto.coordenadas, mMap);
+        }
+
     }
 }

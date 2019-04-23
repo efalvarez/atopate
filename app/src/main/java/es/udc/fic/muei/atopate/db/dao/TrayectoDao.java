@@ -18,7 +18,7 @@ public interface TrayectoDao {
     @Query("SELECT * FROM trayecto ORDER BY hora_fin DESC LIMIT 1")
     public Trayecto getLast();
 
-    @Query("SELECT * FROM trayecto")
+    @Query("SELECT * FROM trayecto ORDER BY hora_fin DESC")
     public List<Trayecto> getAll();
 
     @Query("SELECT * FROM trayecto WHERE hora_inicio BETWEEN :from AND :to")

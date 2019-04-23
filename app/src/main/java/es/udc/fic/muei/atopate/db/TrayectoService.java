@@ -104,7 +104,9 @@ public class TrayectoService {
         protected Trayecto doInBackground(Void... voids) {
             Trayecto result = mAsyncTaskDao.getLast();
 
-            result.puntosTrayecto = mAsyncTaskPuntosDao.getByTrayecto(result.id);
+            if (result != null) {
+                result.puntosTrayecto = mAsyncTaskPuntosDao.getByTrayecto(result.id);
+            }
 
             return result;
         }

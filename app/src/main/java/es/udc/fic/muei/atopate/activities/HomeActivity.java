@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.db.TrayectoService;
@@ -229,8 +230,7 @@ public class HomeActivity extends AppCompatActivity {
         TrayectoService trayectoService = new TrayectoService(this);
         Calendar inicio = Calendar.getInstance();
         Calendar fin = Calendar.getInstance();
-        inicio.set(2019, 04, 20, 20, 00);
-        fin.set(2019, 04, 20, 20, 45);
+        inicio.add(Calendar.HOUR, -1);
         Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "pathfoto");
         t.puntosTrayecto = new PuntosTrayecto();
         t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
