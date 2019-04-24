@@ -18,12 +18,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Calendar;
+
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.db.TrayectoService;
+import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
+import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.fragments.AjustesFragment;
 import es.udc.fic.muei.atopate.fragments.EstadisticasFragment;
 import es.udc.fic.muei.atopate.fragments.HistorialFragment;
 import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
+import es.udc.fic.muei.atopate.maps.RouteFinder;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -33,6 +41,8 @@ public class HomeActivity extends AppCompatActivity {
     private String pathFile;
     private Uri capturedImageURI;
     private Bitmap bitMap;
+    public TrayectoService trayectoService;
+    public Trayecto trayecto;
     private static int MULTIPLE_PERMISSIONS = 1;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -59,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (itemId) {
             case R.id.navigation_home:
+                this.trayecto = trayectoService.getLast();
 
                 fragmentToSubstitute = HomeFragment.newInstance();
 
@@ -66,6 +77,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
 
             case R.id.navigation_atopate:
+                this.trayecto = trayectoService.getLast();
 
                 fragmentToSubstitute = TrayectoFragment.newInstance();
 
@@ -121,6 +133,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.trayectoService = new TrayectoService(this);
         setContentView(R.layout.activity_home);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo);
@@ -132,7 +145,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         setFragment(bottomNavigationView.getSelectedItemId());
     }
 
@@ -188,11 +200,17 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void onCompartirClick(View view) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "ATÓPATE - Ubicación del aparcamiento: https://goo.gl/maps/LZyRE5muqLG2");
-        sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, "Compartir ubicación"));
+        if (trayecto != null && trayecto.puntosTrayecto != null) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            LatLng ubicacion = trayecto.puntosTrayecto.coordenadas.get(trayecto.puntosTrayecto.coordenadas.size() - 1);
+            String enlaceGoogleMaps = "http://maps.google.com/maps?q=" + ubicacion.latitude + "," + ubicacion.longitude;
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "ATÓPATE - Ubicación del aparcamiento: " + enlaceGoogleMaps);
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent, "Compartir ubicación"));
+        } else {
+            Toast.makeText(this, "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void setCapturedImageURI(Uri fileUri) {
@@ -216,5 +234,19 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public Bitmap getBipMap() { return bitMap; }
+
+    // AJUSTES CLICK LISTENER
+    public void onAddTrayectoClick(View view) {
+        TrayectoService trayectoService = new TrayectoService(this);
+        Calendar inicio = Calendar.getInstance();
+        Calendar fin = Calendar.getInstance();
+        inicio.add(Calendar.HOUR, -1);
+        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "pathfoto");
+        t.puntosTrayecto = new PuntosTrayecto();
+        t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
+        trayectoService.insert(t);
+
+        Toast.makeText(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG).show();
+    }
 
 }

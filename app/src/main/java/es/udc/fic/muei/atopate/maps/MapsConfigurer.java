@@ -1,9 +1,6 @@
 package es.udc.fic.muei.atopate.maps;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -17,15 +14,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import java.util.List;
-
-import es.udc.fic.muei.atopate.R;
-import es.udc.fic.muei.atopate.fragments.HomeFragment;
 
 public class MapsConfigurer {
 

@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.MapView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
@@ -22,7 +21,6 @@ import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
-import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -88,9 +86,6 @@ public class ItemHistorialAdapter extends BaseAdapter {
         //Detalles
         TextView horasItem =  view.findViewById(R.id.horas);
         horasItem.setText(dir.getHoras());
-
-        TextView fechasItem =  view.findViewById(R.id.fechas);
-        fechasItem.setText(dir.getFechas());
 
         configureCharts(view);
         configureMaps(view, null);
