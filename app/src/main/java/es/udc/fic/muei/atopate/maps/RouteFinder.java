@@ -41,7 +41,7 @@ public class RouteFinder {
                 builder.include(pos);
             }
             LatLngBounds bounds = builder.build();
-            int padding = 50; // offset from edges of the map in pixels
+            int padding = (int) (height * 0.25); // offset from edges of the map in pixels (25%)
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
             mMap.animateCamera(cu);
         }
