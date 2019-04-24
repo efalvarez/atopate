@@ -40,6 +40,9 @@ public class TrayectoService {
     public void insert(Trayecto trayecto) {
         new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto);
     }
+    public void setFoto(Trayecto trayecto) {
+        new setFotoAsyncTask(dao).execute(trayecto);
+    }
 
     public Trayecto getLast() {
         try {
@@ -75,6 +78,21 @@ public class TrayectoService {
                 params[0].datosOBD.trayectoId = idTrayecto;
                 mAsyncTaskDatosOBDDao.insert(params[0].datosOBD);
             }
+            return null;
+        }
+    }
+
+    private static class setFotoAsyncTask extends AsyncTask<Trayecto, Void, Void> {
+
+        private TrayectoDao mAsyncTaskDao;
+
+        setFotoAsyncTask(TrayectoDao dao ) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Trayecto... params) {
+            mAsyncTaskDao.update(params[0]);
             return null;
         }
     }

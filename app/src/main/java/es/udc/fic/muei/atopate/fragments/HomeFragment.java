@@ -57,8 +57,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
 
     private MapView mapaVista;
-    private Trayecto trayecto;
-    private TrayectoService trayectoService;
 
     static final int REQUEST_TAKE_PHOTO = 1;
 
@@ -92,7 +90,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        trayectoService = new TrayectoService(getContext());
 
         contador = 0;
 
@@ -137,6 +134,31 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         configureCharts(viewinflated);
         configureMaps(viewinflated, savedInstanceState);
 
+        Trayecto trayecto = activity.trayecto;
+        if (trayecto != null) {
+            itemHistorialEntity item = new itemHistorialEntity(trayecto);
+
+            TextView fecha = viewinflated.findViewById(R.id.fecha);
+            fecha.setText(item.getTiempo());
+
+            TextView origenDestino = viewinflated.findViewById(R.id.origenDestino);
+            origenDestino.setText(trayecto.origen + " - " + trayecto.destino);
+
+            TextView tiempo = viewinflated.findViewById(R.id.tiempo);
+            tiempo.setText(item.getHoras());
+
+            TextView distancia = viewinflated.findViewById(R.id.distancia);
+            distancia.setText(item.getDistancia() + " -  37.5 litros" );
+
+            if (trayecto.foto != null) {
+                try {
+                    setPic(trayecto.foto, image);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         // getInstallationIdentifier();
 
         return viewinflated;
@@ -158,21 +180,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         mapaVista.onResume();
         super.onResume();
-        trayecto = trayectoService.getLast();
-        itemHistorialEntity item = new itemHistorialEntity(trayecto);
-
-        TextView fecha = getView().findViewById(R.id.fecha);
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        fecha.setText(formato.format(trayecto.horaFin.getTime()));
-
-        TextView origenDestino = getView().findViewById(R.id.origenDestino);
-        origenDestino.setText(trayecto.origen + " - " + trayecto.destino);
-
-        TextView tiempo = getView().findViewById(R.id.tiempo);
-        tiempo.setText(item.getHoras());
-
-        TextView distancia = getView().findViewById(R.id.distancia);
-        distancia.setText(item.getDistancia() + " -  37.5 litros" );
     }
 
     @Override
@@ -330,6 +337,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private void setPic(String imagePath, ImageView imageView) throws FileNotFoundException {
         int targetW = imageView.getWidth(); // Get the dimensions of the View
         int targetH = imageView.getHeight();
+
+        if (targetW == 0 || targetH == 0) {
+            DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+            targetH =  Math.round(80 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            targetW =  Math.round(85 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        }
+
         HomeActivity activity = (HomeActivity) getActivity();
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -358,6 +372,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             HomeActivity activity = (HomeActivity) getActivity();
             addToGallery();
             try {
+                activity.trayecto.foto = activity.getCurrentPhotoPath();
+                activity.trayectoService.setFoto(activity.trayecto);
                 setPic(activity.getCurrentPhotoPath(), image);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -372,11 +388,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-        if (trayecto != null && trayecto.puntosTrayecto != null) {
+        HomeActivity activity = (HomeActivity) getActivity();
+        if (activity.trayecto != null && activity.trayecto.puntosTrayecto != null) {
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
             int height =  Math.round(150 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
-            RouteFinder.drawRoute(trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height);
+            RouteFinder.drawRoute(activity.trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height);
         }
 
     }

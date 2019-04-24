@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
 
@@ -130,7 +131,6 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
 
         //Configuración del boton de ruta
         FloatingActionButton directionButton = vista.findViewById(R.id.directionButton);
-        // TODO poner la funcionalidad del botón y generar la ruta,  asi como poner escribir en el texto donde se encuentra el mono
     }
 
     public String getAddress() {
@@ -156,39 +156,36 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         if (false) { // TODO: IF TRAYECTO EN CURSO (Se va marcando el trayecto según se avanza)
 
         } else { // TODO: IF MODO ATOPATE
-            LatLng marineda = new LatLng(43.3441932, -8.4282207);
+            HomeActivity activity = (HomeActivity) getActivity();
 
-            if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                mMap.addMarker(new MarkerOptions().position(marineda));
-                return;
-            }
-            mMap.setMyLocationEnabled(true);
-            FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+            if (activity.trayecto != null && activity.trayecto.puntosTrayecto != null) {
+                LatLng destino = activity.trayecto.puntosTrayecto.coordenadas.get(activity.trayecto.puntosTrayecto.coordenadas.size() - 1);
 
-            fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            RouteFinder.drawRoute(latLngLocation, marineda, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
-                            // Route center
-                            LatLng center = new LatLngBounds.Builder().include(latLngLocation).include(marineda).build().getCenter();
-
-                            // For zooming automatically to the location of the marker
-                            CameraPosition cameraPosition = new CameraPosition.Builder().target(center).zoom(13).build();
-                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                    } else {
-                        Toast.makeText(getActivity(), "Necesario activar la ubicación ", Toast.LENGTH_LONG).show();
-                    }
+                if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
                 }
-            });
+                mMap.setMyLocationEnabled(true);
+                FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+
+                fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                            try {
+                                RouteFinder.drawRoute(latLngLocation, destino, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
+                            } catch (IllegalStateException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            Toast.makeText(getActivity(), "Necesario activar la ubicación ", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            } else {
+                Toast.makeText(getActivity(), "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 
 import es.udc.fic.muei.atopate.R;
@@ -39,6 +41,8 @@ public class HomeActivity extends AppCompatActivity {
     private String pathFile;
     private Uri capturedImageURI;
     private Bitmap bitMap;
+    public TrayectoService trayectoService;
+    public Trayecto trayecto;
     private static int MULTIPLE_PERMISSIONS = 1;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -65,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (itemId) {
             case R.id.navigation_home:
+                this.trayecto = trayectoService.getLast();
 
                 fragmentToSubstitute = HomeFragment.newInstance();
 
@@ -72,6 +77,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
 
             case R.id.navigation_atopate:
+                this.trayecto = trayectoService.getLast();
 
                 fragmentToSubstitute = TrayectoFragment.newInstance();
 
@@ -127,6 +133,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.trayectoService = new TrayectoService(this);
         setContentView(R.layout.activity_home);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setIcon(R.drawable.logo);
@@ -138,7 +145,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         setFragment(bottomNavigationView.getSelectedItemId());
     }
 
@@ -194,11 +200,17 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void onCompartirClick(View view) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "ATÓPATE - Ubicación del aparcamiento: https://goo.gl/maps/LZyRE5muqLG2");
-        sendIntent.setType("text/plain");
-        startActivity(Intent.createChooser(sendIntent, "Compartir ubicación"));
+        if (trayecto != null && trayecto.puntosTrayecto != null) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            LatLng ubicacion = trayecto.puntosTrayecto.coordenadas.get(trayecto.puntosTrayecto.coordenadas.size() - 1);
+            String enlaceGoogleMaps = "http://maps.google.com/maps?q=" + ubicacion.latitude + "," + ubicacion.longitude;
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "ATÓPATE - Ubicación del aparcamiento: " + enlaceGoogleMaps);
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent, "Compartir ubicación"));
+        } else {
+            Toast.makeText(this, "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void setCapturedImageURI(Uri fileUri) {
