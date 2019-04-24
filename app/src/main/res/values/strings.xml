@@ -14,7 +14,7 @@
     <string name="app_verMas">VER MÁS</string>
     <string name="app_photo">Foto</string>
 
-    <string name="app_registrar"> Registrando trayecto... </string>
+    <string name="app_registrar"> Registrando trayecto&#8230; </string>
     <string name="app_trayecto">VER TRAYECTO ACTUAL</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_trayecto">Trayecto</string>
@@ -31,16 +31,31 @@
     <string name="period">Periodo</string>
     <string name="title_activity_ajustes">Ajustes</string>
     <string name="ajustes">Ajustes</string>
-    <string name="cargando_text">Cargando...</string>
+    <string name="cargando_text">Cargando\&#8230;</string>
     <string name="title_destingo">Destino</string>
+
+    <!-- String del tema -->
+    <string name="tema_oscuro">Oscuro</string>
+    <string name="tema_claro">Claro</string>
+    <string name="tema_visual_text">Tema Visual</string>
+    <string name="indicador_tema">Selecciona un tema</string>
     <string-array name="temas_array">
-        <item>Light</item>
-        <item>Dark</item>
+        <item>@string/indicador_tema</item>
+        <item>@string/tema_claro</item>
+        <item>@string/tema_oscuro</item>
     </string-array>
+
+    <!-- String de unidad -->
+    <string name="unidad_text">Unidad de distancia</string>
     <string-array name="unidad_array">
         <item>Kilómetro</item>
         <item>Milla</item>
     </string-array>
+
+    <!-- Strings de ajustes -->
+    <string name="exportar_text">Exportar copia de seguridad</string>
+    <string name="importar_text">Importar copia de seguridad</string>
+    <string name="eliminar_text">Eliminar registros</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -1,7 +1,9 @@
 package es.udc.fic.muei.atopate.activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
 import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
@@ -135,16 +139,29 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.trayectoService = new TrayectoService(this);
         setContentView(R.layout.activity_home);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        try {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        } catch (java.lang.NullPointerException e) {
+            Log.d(TAG, "onCreate: ", e);
+        }
+
         getSupportActionBar().setIcon(R.drawable.logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         compruebaPermisos();
         configureBottomNavigation();
+
+
+        SharedPreferences prefs =
+                getSharedPreferences("PreferenciasAtopate", Context.MODE_PRIVATE);
+        String theme = prefs.getString("tema", "Claro");
+
+        new AjustesAdapter().setTema(this, theme);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         setFragment(bottomNavigationView.getSelectedItemId());
     }
 

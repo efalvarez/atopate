@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -16,8 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:text="Ajustes"
-            android:textSize="24dp"
+            android:text="@string/ajustes"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <TextView
@@ -27,8 +27,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="20dp"
-            android:text="Tema visual"
-            android:textSize="18dp" />
+            android:text="@string/tema_visual_text"
+            android:textSize="18sp" />
 
         <Spinner
             android:id="@+id/spinner_tema"
@@ -38,7 +38,7 @@
             android:layout_marginRight="20dp"
             android:drawSelectorOnTop="true"
             android:entries="@array/temas_array"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/cabecera_unidad"
@@ -47,8 +47,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="20dp"
-            android:text="Unidad de distancia"
-            android:textSize="18dp" />
+            android:text="@string/unidad_text"
+            android:textSize="18sp" />
 
         <Spinner
             android:id="@+id/spinner_unidad"
@@ -58,7 +58,7 @@
             android:layout_marginRight="20dp"
             android:drawSelectorOnTop="true"
             android:entries="@array/unidad_array"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -90,7 +90,7 @@
                     android:layout_marginBottom="8pt"
                     android:height="24pt"
                     android:background="@android:color/darker_gray"
-                    android:text="Exportar copia de seguridad" />
+                    android:text="@string/exportar_text" />
 
                 <Button
                     android:id="@+id/btnImportar"
@@ -99,7 +99,7 @@
                     android:layout_marginBottom="8pt"
                     android:height="24pt"
                     android:background="@android:color/darker_gray"
-                    android:text="Importar copia de seguridad" />
+                    android:text="@string/importar_text" />
 
                 <Button
                     android:id="@+id/btnEliminar"
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:height="24pt"
                     android:background="@android:color/holo_red_light"
-                    android:text="Eliminar registros" />
+                    android:text="@string/eliminar_text" />
             </LinearLayout>
         </FrameLayout>
 

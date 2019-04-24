@@ -1,16 +1,43 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Base application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Dark application theme -->
+    <style name="TemaOscuro" parent="AppTheme">
+        <item name="android:background">@color/darkTheme</item>
+        <item name="android:colorBackground">@color/darkTheme</item>
+        <item name="android:textColor">@color/lightTheme</item>
+        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="android:spinnerStyle">@style/SpinnerTheme</item>
+
+    </style>
+
+
+    <!-- Light application theme. -->
+    <style name="TemaClaro" parent="AppTheme">
+        <item name="android:background">@color/lightTheme</item>
+        <item name="android:colorBackground">@color/lightTheme</item>
+        <item name="android:textColor">@color/textColorLight</item>
+    </style>
+
+    <!-- Extras -->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="SpinnerTheme" parent="@style/Widget.AppCompat.Spinner">
+        <item name="android:popupBackground">@color/darkTheme</item>
+        <item name="android:color">@color/lightTheme</item>
+    </style>
+
+    <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="android:background">@color/colorButtonDark</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
