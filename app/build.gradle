@@ -57,6 +57,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.maps:google-maps-services:0.9.3'
     implementation 'com.google.maps.android:android-maps-utils:0.5'
+    // DirectionsAPI compatible with API < 26
+    implementation group: 'com.github.seratch', name: 'java-time-backport', version: '1.0.0'
 
     // Third party libraries
     implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
@@ -65,5 +67,4 @@ dependencies {
     // ROOM
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
-
 }
