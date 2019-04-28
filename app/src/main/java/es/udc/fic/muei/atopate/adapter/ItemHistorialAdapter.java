@@ -2,8 +2,11 @@ package es.udc.fic.muei.atopate.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +34,12 @@ public class ItemHistorialAdapter extends BaseAdapter {
 
     private Activity activity;
     private List<itemHistorialEntity> items;
+    private Context context;
 
-    public ItemHistorialAdapter(Activity activity, List<itemHistorialEntity> items) {
+    public ItemHistorialAdapter(Activity activity, List<itemHistorialEntity> items, Context context) {
         this.activity = activity;
         this.items = items;
+        this.context = context;
     }
 
     @Override
@@ -74,23 +80,53 @@ public class ItemHistorialAdapter extends BaseAdapter {
         TextView tiempoItem = view.findViewById(R.id.tiempoItem);
         tiempoItem.setText(dir.getTiempo());
 
-        TextView lugarItem =  view.findViewById(R.id.lugarItem);
+        TextView lugarItem = view.findViewById(R.id.lugarItem);
         lugarItem.setText(dir.getLugarOrigen() + "-" + dir.getLugarDestino());
 
-        TextView distanciaItem =  view.findViewById(R.id.distanciaItem);
+        TextView distanciaItem = view.findViewById(R.id.distanciaItem);
         distanciaItem.setText(dir.getDistancia());
 
         ImageView imagen = view.findViewById(R.id.imageView);
-        imagen.setImageDrawable(dir.getIcono());
+        try {
+            setPic(dir.getIcono(), imagen);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         //Detalles
-        TextView horasItem =  view.findViewById(R.id.horas);
+        TextView horasItem = view.findViewById(R.id.horas);
         horasItem.setText(dir.getHoras());
 
         configureCharts(view);
         configureMaps(view, null);
 
         return view;
+    }
+
+    private void setPic(String imagePath, ImageView imageView) throws FileNotFoundException {
+        int targetW = imageView.getWidth(); // Get the dimensions of the View
+        int targetH = imageView.getHeight();
+
+        if (targetW == 0 || targetH == 0) {
+            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+            targetH =  Math.round(80 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            targetW =  Math.round(85 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        }
+
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, bmOptions);
+        int photoW = bmOptions.outWidth; // Get the dimensions of the bitmap
+        int photoH = bmOptions.outHeight;
+// Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+// Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
+        imageView.setImageBitmap(bitmap);
     }
 
     private void configureCharts(View vista) {

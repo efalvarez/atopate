@@ -19,9 +19,6 @@ import java.util.List;
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.adapter.ItemHistorialAdapter;
 import es.udc.fic.muei.atopate.db.TrayectoService;
-import es.udc.fic.muei.atopate.db.dao.TrayectoDao;
-import es.udc.fic.muei.atopate.db.AppDatabase;
-import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
 
 /**
@@ -72,7 +69,7 @@ public class HistorialFragment extends Fragment {
 
         historials.addAll(trayectoService.getHistorial());
 
-        ItemHistorialAdapter adapter = new ItemHistorialAdapter(this.getActivity(), historials);
+        ItemHistorialAdapter adapter = new ItemHistorialAdapter(this.getActivity(), historials, getContext());
 
         listV.setAdapter(adapter);
 

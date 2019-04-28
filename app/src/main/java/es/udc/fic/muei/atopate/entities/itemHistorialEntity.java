@@ -1,10 +1,7 @@
 package es.udc.fic.muei.atopate.entities;
 
-import android.graphics.drawable.Drawable;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import es.udc.fic.muei.atopate.db.model.Trayecto;
@@ -19,7 +16,7 @@ public class itemHistorialEntity {
     private String lugarOrigen;
     private String lugarDestino;
     private String distancia;
-    private Drawable icono;
+    private String icono;
     private String horas;
 
 
@@ -35,7 +32,7 @@ public class itemHistorialEntity {
     }
 
     public itemHistorialEntity(String tiempo, String lugarOrigen, String lugarDestino, String distancia,
-                               Drawable icono, String horas) {
+                               String icono, String horas) {
         super();
         this.tiempo = tiempo;
         this.lugarOrigen = lugarOrigen;
@@ -50,6 +47,7 @@ public class itemHistorialEntity {
         this.lugarDestino = t.destino;
         this.lugarOrigen = t.origen;
         this.distancia = t.distancia + "km";
+        this.icono = t.foto;
 
         long duracion = t.horaFin.getTimeInMillis() - t.horaInicio.getTimeInMillis();
         long horas = TimeUnit.HOURS.convert(duracion, TimeUnit.MILLISECONDS);
@@ -98,11 +96,11 @@ public class itemHistorialEntity {
         this.distancia = distancia;
     }
 
-    public Drawable getIcono() {
+    public String getIcono() {
         return icono;
     }
 
-    public void setIcono(Drawable icono) {
+    public void setIcono(String icono) {
         this.icono = icono;
     }
 
