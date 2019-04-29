@@ -79,22 +79,7 @@ public class AjustesFragment extends Fragment {
     }
 
     private void configureButtons(View vista) {
-        Button clickBtnExportar = vista.findViewById(R.id.btnExportar);
         AppCompatSpinner spinner = vista.findViewById(R.id.spinner_tema);
-
-        clickBtnExportar.setOnClickListener(v -> {
-            Log.d(TAG, "Exportando copia de seguridad");
-        });
-
-        Button clickBtnImportar = vista.findViewById(R.id.btnImportar);
-        clickBtnImportar.setOnClickListener(v -> {
-            Log.d(TAG, "Importando copia de seguridad");
-        });
-
-        Button clickBtnEliminar = vista.findViewById(R.id.btnEliminar);
-        clickBtnEliminar.setOnClickListener(v -> {
-            Log.d(TAG, "Eliminando registros");
-        });
 
         Log.d(TAG, "configureButtons: " + spinner.getClass().toString());
 

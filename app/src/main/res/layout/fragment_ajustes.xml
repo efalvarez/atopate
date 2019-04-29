@@ -107,7 +107,8 @@
                     android:layout_height="wrap_content"
                     android:height="24pt"
                     android:background="@android:color/holo_red_light"
-                    android:text="@string/eliminar_text" />
+                    android:text="@string/eliminar_text"
+                    android:onClick="onEliminarClick" />
             </LinearLayout>
         </FrameLayout>
 

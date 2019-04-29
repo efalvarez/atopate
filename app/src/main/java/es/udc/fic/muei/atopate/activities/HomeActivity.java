@@ -254,7 +254,6 @@ public class HomeActivity extends AppCompatActivity {
 
     // AJUSTES CLICK LISTENER
     public void onAddTrayectoClick(View view) {
-        TrayectoService trayectoService = new TrayectoService(this);
         Calendar inicio = Calendar.getInstance();
         Calendar fin = Calendar.getInstance();
         inicio.add(Calendar.HOUR, -1);
@@ -264,6 +263,12 @@ public class HomeActivity extends AppCompatActivity {
         trayectoService.insert(t);
 
         Toast.makeText(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG).show();
+    }
+
+    public void onEliminarClick(View view) {
+        trayectoService.delete();
+
+        Toast.makeText(this, "Registros eliminados", Toast.LENGTH_LONG).show();
     }
 
 }

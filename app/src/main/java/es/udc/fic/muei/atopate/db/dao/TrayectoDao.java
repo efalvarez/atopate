@@ -37,4 +37,7 @@ public interface TrayectoDao {
 
     @Delete
     public void delete(Trayecto trayecto);
+
+    @Query("DELETE FROM trayecto")
+    public void delete();
 }

@@ -40,6 +40,10 @@ public class TrayectoService {
     public void insert(Trayecto trayecto) {
         new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto);
     }
+
+    public void delete() {
+        new deleteAsyncTask(dao).execute();
+    }
     public void setFoto(Trayecto trayecto) {
         new setFotoAsyncTask(dao).execute(trayecto);
     }
@@ -53,6 +57,21 @@ public class TrayectoService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private TrayectoDao mAsyncTaskDao;
+
+        deleteAsyncTask(TrayectoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mAsyncTaskDao.delete();
+            return null;
+        }
     }
 
     private static class insertAsyncTask extends AsyncTask<Trayecto, Void, Void> {
