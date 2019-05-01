@@ -97,6 +97,13 @@ public class ItemHistorialAdapter extends BaseAdapter {
         TextView horasItem = view.findViewById(R.id.horas);
         horasItem.setText(dir.getHoras());
 
+        ImageView imageViewDetalle = view.findViewById(R.id.image);
+        try {
+            setPic(dir.getIcono(), imageViewDetalle);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         configureCharts(view);
         configureMaps(view, null);
 
