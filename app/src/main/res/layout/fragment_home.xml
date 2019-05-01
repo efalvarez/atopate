@@ -16,166 +16,213 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph1"
-            android:layout_width="0dp"
-            android:layout_height="166dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/chart"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph2"
-            android:layout_width="0dp"
-            android:layout_height="151dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/graph1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
-        <lecho.lib.hellocharts.view.PieChartView
-            android:id="@+id/chart"
-            android:layout_width="98dp"
-            android:layout_height="73dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/graph1" />
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="Esta Semana"
-            app:layout_constraintBottom_toTopOf="@+id/graph2"
-            app:layout_constraintEnd_toStartOf="@+id/textView9"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/fecha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="Hace 5 horas"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/origenDestino"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/origenDestino"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="A Coruña - Madrid"
-            app:layout_constraintBottom_toTopOf="@+id/mapView"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/tiempo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="5h 18min"
-            app:layout_constraintBottom_toTopOf="@+id/mapView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0" />
-
-        <TextView
-            android:id="@+id/distancia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_marginRight="4dp"
-            android:text="591 km - 37.5 litros"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mapView" />
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:text="10h 18min"
-            app:layout_constraintBottom_toTopOf="@+id/graph2"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginBottom="72dp"
-            android:minWidth="150dp"
-            android:minHeight="150dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView8"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <Button
             android:id="@+id/button2"
-            android:layout_width="107dp"
-            android:layout_height="37dp"
+            android:layout_width="80dp"
+            android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:drawableTop="@drawable/ic_navigation_black_24dp"
             android:onClick="onAtopateClick"
-            android:text="Atópate"
+            android:textSize="10sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/distancia" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/button3"
-            android:layout_width="107dp"
-            android:layout_height="37dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_width="80dp"
+            android:layout_height="45dp"
+            android:drawableTop="@drawable/ic_share_black_24dp"
             android:onClick="onCompartirClick"
-            android:text="Compartir"
+            android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@+id/button2"
-            app:layout_constraintTop_toBottomOf="@+id/distancia" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/photo"
-            android:layout_width="91dp"
-            android:layout_height="41dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginBottom="24dp"
-            android:text="Captura"
-            app:layout_constraintBottom_toTopOf="@+id/mapView"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="85dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/mapView"
-            app:layout_constraintEnd_toStartOf="@+id/photo"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/origenDestino" />
-            <!-- android:src="@drawable/topo" -->
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="80dp"
+            android:layout_height="45dp"
+            android:drawableTop="@drawable/ic_camera_alt_black_24dp"
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@+id/button3"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/bluetooth"
+            android:layout_width="80dp"
+            android:layout_height="45dp"
+            android:drawableTop="@drawable/ic_bluetooth_black_24dp"
+            app:layout_constraintStart_toEndOf="@+id/photo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/inicioMapa"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_margin="8dp"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@id/button2"
+            tools:layout_editor_absoluteX="8dp">
+
+            <TextView
+                android:id="@+id/fecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Hace 5 horas"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/origenDestino"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/origenDestino"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="A Coruña - Madrid"
+                app:layout_constraintBottom_toTopOf="@+id/mapView"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tiempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="5h 18min"
+                app:layout_constraintBottom_toTopOf="@+id/mapView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0" />
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="72dp"
+                android:minWidth="150dp"
+                android:minHeight="150dp"
+                app:layout_constraintBottom_toTopOf="@+id/distancia"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/distancia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:text="591 km - 37.5 litros"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <Button
+            android:id="@+id/botonEstadisticas"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="Estadísticas"
+            android:textSize="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/inicioMapa" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/inicioEstadisticas"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_margin="8dp"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botonEstadisticas">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Esta Semana"
+                app:layout_constraintBottom_toTopOf="@+id/graph2"
+                app:layout_constraintEnd_toStartOf="@+id/textView9"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="10h 18min"
+                app:layout_constraintBottom_toTopOf="@+id/graph2"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph1"
+                android:layout_width="0dp"
+                android:layout_height="166dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/chart"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph2"
+                android:layout_width="0dp"
+                android:layout_height="151dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/graph1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <lecho.lib.hellocharts.view.PieChartView
+                android:id="@+id/chart"
+                android:layout_width="98dp"
+                android:layout_height="73dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/graph1" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+        <Button
+            android:id="@+id/botonFoto"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="Imagen"
+            android:textSize="10sp"
+            app:layout_constraintTop_toBottomOf="@+id/inicioEstadisticas" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/inicioFoto"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_margin="8dp"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/botonFoto"
+            tools:layout_editor_absoluteX="8dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
 
     </android.support.constraint.ConstraintLayout>
 
