@@ -18,6 +18,7 @@ import android.widget.Toast;
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
+import es.udc.fic.muei.atopate.entities.CustomToast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -123,8 +124,8 @@ public class AjustesFragment extends Fragment {
                     activity.finish();
                 } catch (java.lang.NullPointerException e) {
                     Log.d(TAG, "onItemSelected: NullPointerException");
-                    Toast.makeText(activity, "No se puede cambiar tema, reinicie la aplicación",
-                            Toast.LENGTH_LONG).show();
+                    CustomToast toast = new CustomToast(activity, "No se puede cambiar tema, reinicie la aplicación", Toast.LENGTH_LONG);
+                    toast.show();
                 }
             }
 

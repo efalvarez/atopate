@@ -19,13 +19,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -35,6 +32,7 @@ import java.util.Locale;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
+import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
 
@@ -179,12 +177,14 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                             }
 
                         } else {
-                            Toast.makeText(getActivity(), "Necesario activar la ubicación ", Toast.LENGTH_LONG).show();
+                            CustomToast toast = new CustomToast(getActivity(), "Necesario activar la ubicación ", Toast.LENGTH_LONG);
+                            toast.show();
                         }
                     }
                 });
             } else {
-                Toast.makeText(getActivity(), "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG).show();
+                CustomToast toast = new CustomToast(getActivity(), "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG);
+                toast.show();
             }
         }
     }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.widget.Toast;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.entities.CustomToast;
 
 
 public class AjustesAdapter {
@@ -17,7 +18,8 @@ public class AjustesAdapter {
             activity.setTheme(R.style.TemaClaro);
         } else {
             activity.setTheme(R.style.AppTheme);
-            Toast.makeText(activity, "Hay un error al tratar de utilizar de modificar el tema", Toast.LENGTH_LONG).show();
+            CustomToast toast = new CustomToast(activity, "Hay un error al tratar de utilizar de modificar el tema", Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 }

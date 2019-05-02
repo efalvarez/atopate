@@ -16,6 +16,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import es.udc.fic.muei.atopate.entities.CustomToast;
+
 public class MapsConfigurer {
 
     private static GoogleMap mMap;
@@ -65,7 +67,8 @@ public class MapsConfigurer {
             MapsInitializer.initialize(containerActivity.getApplicationContext());
         } catch (Exception e) {
             Log.i(TAG, "Ha habido un problema a la hora de recuperar los datos del mapa");
-            Toast.makeText(containerActivity.getApplicationContext(), "Error al cargar el mapa.", Toast.LENGTH_LONG).show();
+            CustomToast toast = new CustomToast(containerActivity.getApplicationContext(), "Error al cargar el mapa.", Toast.LENGTH_LONG);
+            toast.show();
         }
 
         if (callback != null) {
