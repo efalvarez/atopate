@@ -30,6 +30,7 @@ import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
 import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
+import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.fragments.AjustesFragment;
 import es.udc.fic.muei.atopate.fragments.EstadisticasFragment;
 import es.udc.fic.muei.atopate.fragments.HistorialFragment;
@@ -116,24 +117,6 @@ public class HomeActivity extends AppCompatActivity {
         return validNavigationItemSelected;
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actions, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        if (id == R.id.actions_atopate) {
-            HomeFragment homeFragment = HomeFragment.newInstance();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,7 +128,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: ", e);
         }
 
-        getSupportActionBar().setIcon(R.drawable.logo);
+        getSupportActionBar().setIcon(R.drawable.topo45);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         compruebaPermisos();
         configureBottomNavigation();
@@ -196,7 +179,8 @@ public class HomeActivity extends AppCompatActivity {
                 && !tienePermiso(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 && !tienePermiso(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.CAMERA)) {
-                Toast.makeText(this, "Se requiere aceptes los permisos para continuar", Toast.LENGTH_LONG).show();
+                CustomToast toast = new CustomToast(this, "Se requiere aceptes los permisos para continuar", Toast.LENGTH_LONG);
+                toast.show();
             } else {
                 ActivityCompat.requestPermissions(HomeActivity.this,
                         new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION,
@@ -226,7 +210,8 @@ public class HomeActivity extends AppCompatActivity {
             sendIntent.setType("text/plain");
             startActivity(Intent.createChooser(sendIntent, "Compartir ubicación"));
         } else {
-            Toast.makeText(this, "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG).show();
+            CustomToast toast = new CustomToast(this, "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 
@@ -263,7 +248,9 @@ public class HomeActivity extends AppCompatActivity {
         t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
         trayectoService.insert(t);
 
-        Toast.makeText(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG).show();
+        CustomToast toast = new CustomToast(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG);
+        toast.show();
+
     }
 
 }

@@ -2,7 +2,6 @@ package es.udc.fic.muei.atopate.fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +44,7 @@ import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
+import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
@@ -68,22 +66,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private String pictureFilePath;
     private static final String TAG = HomeActivity.class.getSimpleName();
     private int contador = 0;
-
-    private View.OnClickListener capture = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                if (((HomeActivity) getActivity()).tienePermiso(Manifest.permission.CAMERA)) {
-                    dispatchTakePictureIntent();
-                }
-                else {
-                    Toast.makeText(getActivity(), "No consediste permisos de uso de la cámara", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    };
-
-
 
     public HomeFragment() {
         // Required empty public constructor
@@ -117,33 +99,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         image = viewinflated.findViewById(R.id.imageView);
 
         HomeActivity activity = (HomeActivity) getActivity();
-
-        final Button estadisticasButton = viewinflated.findViewById(R.id.botonEstadisticas);
-        ConstraintLayout estadisticas = viewinflated.findViewById(R.id.inicioEstadisticas);
-        estadisticasButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (estadisticas.getVisibility() == View.GONE) {
-                    estadisticas.setVisibility(View.VISIBLE);
-                } else {
-                    estadisticas.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        final Button fotoButton = viewinflated.findViewById(R.id.botonFoto);
-        ConstraintLayout foto = viewinflated.findViewById(R.id.inicioFoto);
-        fotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (foto.getVisibility() == View.GONE) {
-                    foto.setVisibility(View.VISIBLE);
-                } else {
-                    foto.setVisibility(View.GONE);
-                }
-            }
-        });
 
         final Button captureButton = viewinflated.findViewById(R.id.photo);
         captureButton.setOnClickListener(capture);
@@ -356,6 +311,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         return image;
     }
+
+    private View.OnClickListener capture = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                if (((HomeActivity) getActivity()).tienePermiso(Manifest.permission.CAMERA)) {
+                    dispatchTakePictureIntent();
+                }
+                else {
+                    CustomToast toast = new CustomToast(getActivity(), "No consediste permisos de uso de la cámara", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+        }
+    };
 
     private void addToGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
