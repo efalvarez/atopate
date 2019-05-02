@@ -11,12 +11,12 @@
     <style name="TemaOscuro" parent="AppTheme">
         <item name="android:background">@color/darkTheme</item>
         <item name="android:colorBackground">@color/darkTheme</item>
-        <item name="android:textColor">@color/lightTheme</item>
+        <item name="android:textColor">@color/textColorDark</item>
+        <item name="android:tint">@color/colorPrimary</item>
+
         <item name="android:buttonStyle">@style/ButtonStyle</item>
-        <item name="android:spinnerStyle">@style/SpinnerTheme</item>
-
+        <!--item name="android:spinnerStyle">@style/SpinnerTheme</item-->
     </style>
-
 
     <!-- Light application theme. -->
     <style name="TemaClaro" parent="AppTheme">
@@ -37,7 +37,8 @@
     </style>
 
     <style name="ButtonStyle" parent="@style/Widget.AppCompat.Button.Colored">
-        <item name="android:background">@color/colorButtonDark</item>
+        <item name="android:buttonStyle">@color/darkTheme</item>
+        <item name="android:shadowColor">@color/darkTheme</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

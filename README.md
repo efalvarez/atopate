@@ -5,6 +5,10 @@
 
 Atópate
 
+## Correo de contacto
+
+atopate@gmail.com
+
 ## Miembros del equipo
 
 - Elisa Fernández Álvarez: CEO
