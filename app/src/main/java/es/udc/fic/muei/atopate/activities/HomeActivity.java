@@ -128,7 +128,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: ", e);
         }
 
-        getSupportActionBar().setIcon(R.drawable.logo);
+        getSupportActionBar().setIcon(R.drawable.topo45);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         compruebaPermisos();
         configureBottomNavigation();
