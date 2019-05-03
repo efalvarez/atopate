@@ -3,7 +3,7 @@
     <!-- General -->
     <color name="colorPrimary">#516d5a</color>
     <color name="colorPrimaryDark">#465a4c</color>
-    <color name="colorAccent">#2F2C2C</color>
+    <color name="colorAccent">#465a4c</color>
     <color name="colorSeparador">#E6E6E6</color>
 
     <!-- Light -->
