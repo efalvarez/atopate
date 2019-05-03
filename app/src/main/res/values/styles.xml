@@ -5,7 +5,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
     </style>
+    <attr name="buttonface_picture" format="reference"/>
 
     <!-- Dark application theme -->
     <style name="TemaOscuro" parent="AppTheme">
@@ -13,9 +15,9 @@
         <item name="android:colorBackground">@color/darkTheme</item>
         <item name="android:textColor">@color/textColorDark</item>
 
-
         <item name="android:buttonStyle">@style/ButtonStyle</item>
         <!--item name="android:spinnerStyle">@style/SpinnerTheme</item-->
+        <item name="buttonface_picture">@drawable/ic_bluetooth_white_24dp</item>
     </style>
 
     <!-- Light application theme. -->
@@ -23,6 +25,7 @@
         <item name="android:background">@color/lightTheme</item>
         <item name="android:colorBackground">@color/lightTheme</item>
         <item name="android:textColor">@color/textColorLight</item>
+        <item name="buttonface_picture">@drawable/ic_bluetooth_black_24dp</item>
     </style>
 
     <!-- Extras -->

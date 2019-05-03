@@ -51,7 +51,7 @@
             android:id="@+id/bluetooth"
             android:layout_width="80dp"
             android:layout_height="45dp"
-            android:drawableTop="@drawable/ic_bluetooth_black_24dp"
+            android:drawableTop="?attr/buttonface_picture"
             app:layout_constraintStart_toEndOf="@+id/photo"
             app:layout_constraintTop_toTopOf="parent" />
 
