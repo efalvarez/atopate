@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/trayecto_mapa"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/trayecto_mapa"
-        app:srcCompat="@drawable/ic_directions_black_24dp" />
+        app:srcCompat="?attr/directionsIcon" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"

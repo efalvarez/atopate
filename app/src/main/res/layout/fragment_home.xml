@@ -22,7 +22,7 @@
             android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:drawableTop="@drawable/ic_navigation_black_24dp"
+            android:drawableTop="?attr/navigationIcon"
             android:onClick="onAtopateClick"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
             android:id="@+id/button3"
             android:layout_width="80dp"
             android:layout_height="45dp"
-            android:drawableTop="@drawable/ic_share_black_24dp"
+            android:drawableTop="?attr/shareIcon"
             android:onClick="onCompartirClick"
             android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@+id/button2"
@@ -42,7 +42,7 @@
             android:id="@+id/photo"
             android:layout_width="80dp"
             android:layout_height="45dp"
-            android:drawableTop="@drawable/ic_camera_alt_black_24dp"
+            android:drawableTop="?attr/cameraIcon"
             android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@+id/button3"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,7 +51,7 @@
             android:id="@+id/bluetooth"
             android:layout_width="80dp"
             android:layout_height="45dp"
-            android:drawableTop="?attr/buttonface_picture"
+            android:drawableTop="?attr/bluetoothIcon"
             app:layout_constraintStart_toEndOf="@+id/photo"
             app:layout_constraintTop_toTopOf="parent" />
 

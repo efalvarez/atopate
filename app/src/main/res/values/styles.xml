@@ -1,5 +1,11 @@
 <resources>
 
+    <attr name="bluetoothIcon" format="reference"/>
+    <attr name="shareIcon" format="reference"/>
+    <attr name="navigationIcon" format="reference"/>
+    <attr name="cameraIcon" format="reference"/>
+    <attr name="directionsIcon" format="reference"/>
+
     <!-- Base application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -7,7 +13,6 @@
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
-    <attr name="buttonface_picture" format="reference"/>
 
     <!-- Dark application theme -->
     <style name="TemaOscuro" parent="AppTheme">
@@ -17,7 +22,11 @@
 
         <item name="android:buttonStyle">@style/ButtonStyle</item>
         <!--item name="android:spinnerStyle">@style/SpinnerTheme</item-->
-        <item name="buttonface_picture">@drawable/ic_bluetooth_white_24dp</item>
+        <item name="bluetoothIcon">@drawable/ic_bluetooth_white_24dp</item>
+        <item name="shareIcon">@drawable/ic_share_white_24dp</item>
+        <item name="navigationIcon">@drawable/ic_navigation_white_24dp</item>
+        <item name="cameraIcon">@drawable/ic_camera_white_24dp</item>
+        <item name="directionsIcon">@drawable/ic_directions_white_24dp</item>
     </style>
 
     <!-- Light application theme. -->
@@ -25,7 +34,11 @@
         <item name="android:background">@color/lightTheme</item>
         <item name="android:colorBackground">@color/lightTheme</item>
         <item name="android:textColor">@color/textColorLight</item>
-        <item name="buttonface_picture">@drawable/ic_bluetooth_black_24dp</item>
+        <item name="bluetoothIcon">@drawable/ic_bluetooth_black_24dp</item>
+        <item name="shareIcon">@drawable/ic_share_black_24dp</item>
+        <item name="navigationIcon">@drawable/ic_navigation_black_24dp</item>
+        <item name="cameraIcon">@drawable/ic_camera_black_24dp</item>
+        <item name="directionsIcon">@drawable/ic_directions_black_24dp</item>
     </style>
 
     <!-- Extras -->
