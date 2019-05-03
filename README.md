@@ -18,6 +18,10 @@ atopate@gmail.com
 - Sergio Costa García: Responsable de UX
 - Enrique Rodríguez Castañeda: Responsable de UX
 
+## Público objetivo
+
+Nuestro público objetivo se centra en personas mayores de edad, que tengan carnet de conducir y que puedan disponer de un vehículo. Por ello, nuestra orquilla de edad irá desde los 18 años hasta los 75.
+
 ## Descripción breve del proyecto y funcionalidades básicas:
 
 Con el proyecto se pretende desarrollar una aplicación que permita localizar nuestro vehículo cuando lo aparcamos, ofrecer rutas y dar datos en tiempo real sobre el rendimiento y el consumo del coche.
