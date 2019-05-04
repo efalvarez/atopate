@@ -1,8 +1,10 @@
 package es.udc.fic.muei.atopate.activities;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -22,8 +24,19 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.sohrab.obd.reader.application.Preferences;
+import com.sohrab.obd.reader.constants.DefineObdReader;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
+import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
+import com.sohrab.obd.reader.obdCommand.SpeedCommand;
+import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
+import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
+import com.sohrab.obd.reader.service.ObdReaderService;
+import com.sohrab.obd.reader.trip.TripRecord;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
@@ -38,18 +51,22 @@ import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
 
+import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_CONNECTION_STATUS_MSG;
+import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_REAL_TIME_DATA;
+
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
+    private static int MULTIPLE_PERMISSIONS = 1;
+    public TrayectoService trayectoService;
+    public Trayecto trayecto;
+
+    private boolean bluetoothRecordIsActivated = false;
 
     private BottomNavigationView bottomNavigationView;
     private String pathFile;
     private Uri capturedImageURI;
     private Bitmap bitMap;
-    public TrayectoService trayectoService;
-    public Trayecto trayecto;
-    private static int MULTIPLE_PERMISSIONS = 1;
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -67,6 +84,28 @@ public class HomeActivity extends AppCompatActivity {
         }
     };
 
+    private BroadcastReceiver mObdReaderReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+
+            if (action.equals(ACTION_CONNECTION_STATUS_MSG)) {
+
+                String connectionStatusMsg = intent.getStringExtra(DefineObdReader.INTENT_EXTRA_DATA);
+
+
+            } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
+
+                TripRecord tripRecord = TripRecord.getTripRecode(HomeActivity.this);
+
+                Log.d("CheckThis", "Speedo: " + tripRecord.getSpeed());
+                Log.d("CheckThis", "RPM:" + tripRecord.getEngineRpm());
+            }
+
+        }
+    };
+
     public boolean setFragment(int itemId) {
         Fragment fragmentToSubstitute = HomeFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -74,7 +113,7 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (itemId) {
             case R.id.navigation_home:
-                this.trayecto = trayectoService.getLast();
+                trayecto = trayectoService.getLast();
 
                 fragmentToSubstitute = HomeFragment.newInstance();
 
@@ -82,7 +121,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
 
             case R.id.navigation_atopate:
-                this.trayecto = trayectoService.getLast();
+                trayecto = trayectoService.getLast();
 
                 fragmentToSubstitute = TrayectoFragment.newInstance();
 
@@ -120,7 +159,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.trayectoService = new TrayectoService(this);
+        trayectoService = new TrayectoService(this);
         setContentView(R.layout.activity_home);
         try {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -139,6 +178,27 @@ public class HomeActivity extends AppCompatActivity {
         String theme = prefs.getString("tema", "Claro");
 
         new AjustesAdapter().setTema(this, theme);
+
+
+        List<ObdCommand> obdComands = Arrays.asList(
+                new SpeedCommand(),
+                new OilTempCommand(),
+                new FuelLevelCommand()
+        );
+
+        ObdConfiguration.setmObdCommands(this, null);
+//
+//         set gas price per litre so that gas cost can calculated. Default is 7 $/l
+        float gasPrice = 7; // per litre, you should initialize according to your requirement.
+        Preferences.get(this).setGasPrice(gasPrice);
+//        /**
+//         * Register receiver with some action related to OBD connection status
+//         */
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA);
+        intentFilter.addAction(ACTION_CONNECTION_STATUS_MSG);
+        registerReceiver(mObdReaderReceiver, intentFilter);
+
     }
 
     @Override
@@ -146,6 +206,17 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
 
         setFragment(bottomNavigationView.getSelectedItemId());
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        unregisterReceiver(mObdReaderReceiver);
+//        stop service
+        stopService(new Intent(this, ObdReaderService.class));
+//         This will stop background thread if any running immediately.
+        Preferences.get(this).setServiceRunningStatus(false);
     }
 
     private boolean checkIfItemIsAlreadyChecked(MenuItem checkedItem, BottomNavigationView navigationView) {
@@ -194,7 +265,6 @@ public class HomeActivity extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(HomeActivity.this, service) == PackageManager.PERMISSION_GRANTED;
     }
 
-
     // HOME FRAGMENT CLICK LISTENERS
     public void onAtopateClick(View view) {
         bottomNavigationView.setSelectedItemId(R.id.navigation_atopate);
@@ -215,14 +285,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void setCapturedImageURI(Uri fileUri) {
-        capturedImageURI = fileUri;
-    }
-
-    public void setCurrentPhotoPath(String path) {
-        pathFile = path;
-    }
-
     public void setBitMap(Bitmap bitmap) {
         bitMap = bitmap;
     }
@@ -231,11 +293,21 @@ public class HomeActivity extends AppCompatActivity {
         return capturedImageURI;
     }
 
+    public void setCapturedImageURI(Uri fileUri) {
+        capturedImageURI = fileUri;
+    }
+
     public String getCurrentPhotoPath() {
         return pathFile;
     }
 
-    public Bitmap getBipMap() { return bitMap; }
+    public void setCurrentPhotoPath(String path) {
+        pathFile = path;
+    }
+
+    public Bitmap getBipMap() {
+        return bitMap;
+    }
 
     // AJUSTES CLICK LISTENER
     public void onAddTrayectoClick(View view) {
@@ -251,6 +323,19 @@ public class HomeActivity extends AppCompatActivity {
         CustomToast toast = new CustomToast(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG);
         toast.show();
 
+    }
+
+    public void onActivateBluetooth(View view) {
+
+        //start service which will execute in background for connecting and execute command until you stop
+
+        if (bluetoothRecordIsActivated) {
+            stopService(new Intent(this, ObdReaderService.class));
+        } else {
+            startService(new Intent(this, ObdReaderService.class));
+        }
+
+        bluetoothRecordIsActivated = !bluetoothRecordIsActivated;
     }
 
 }

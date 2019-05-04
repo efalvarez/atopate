@@ -67,4 +67,8 @@ dependencies {
     // ROOM
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+
+    // OBD2 API
+//    implementation 'com.github.pires:obd-java-api:1.0'
+    implementation 'com.sohrab:obd-reader:1.0.0'
 }
