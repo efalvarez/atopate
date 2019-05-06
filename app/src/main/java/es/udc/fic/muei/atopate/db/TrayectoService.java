@@ -37,6 +37,17 @@ public class TrayectoService {
         return null;
     }
 
+    public List<Trayecto> getAll() {
+        try {
+            return new getAllAsyncTask(dao, puntosDao, datosOBDDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void insert(Trayecto trayecto) {
         new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto);
     }
@@ -132,6 +143,31 @@ public class TrayectoService {
 
             for (Trayecto t : mAsyncTaskDao.getAll()) {
                 result.add(new itemHistorialEntity(t));
+            }
+
+            return result;
+        }
+    }
+
+    private static class getAllAsyncTask extends AsyncTask<Void, Void, List<Trayecto>> {
+
+        private TrayectoDao mAsyncTaskDao;
+        private PuntosTrayectoDao mAsyncTaskPuntosTrayectoDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
+
+        getAllAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosTrayectoDao, DatosOBDDao datosOBDDao) {
+            mAsyncTaskDao = dao;
+            mAsyncTaskPuntosTrayectoDao = puntosTrayectoDao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
+        }
+
+        @Override
+        protected List<Trayecto> doInBackground(Void... voids) {
+            List<Trayecto> result = mAsyncTaskDao.getAll();
+
+            for (Trayecto t : result) {
+                t.puntosTrayecto = mAsyncTaskPuntosTrayectoDao.getByTrayecto(t.id);
+                t.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(t.id);
             }
 
             return result;

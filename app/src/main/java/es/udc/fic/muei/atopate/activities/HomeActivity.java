@@ -8,12 +8,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,9 +24,18 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.List;
 
+import es.udc.fic.muei.atopate.BuildConfig;
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
 import es.udc.fic.muei.atopate.db.TrayectoService;
@@ -252,7 +263,8 @@ public class HomeActivity extends AppCompatActivity {
 
     public Bitmap getBipMap() { return bitMap; }
 
-    // AJUSTES CLICK LISTENER
+    // AJUSTES CLICK LISTENERS
+
     public void onAddTrayectoClick(View view) {
         Calendar inicio = Calendar.getInstance();
         Calendar fin = Calendar.getInstance();
@@ -269,6 +281,43 @@ public class HomeActivity extends AppCompatActivity {
         trayectoService.delete();
 
         Toast.makeText(this, "Registros eliminados", Toast.LENGTH_LONG).show();
+    }
+
+    public void onExportarClick(View view) throws IOException {
+
+        List<Trayecto> trayectos = trayectoService.getAll();
+
+        if (trayectos.size() > 0) {
+            Type listType = new TypeToken<List<Trayecto>>() {}.getType();
+            String json = (new Gson()).toJson(trayectos, listType);
+
+            File file = File.createTempFile("atopate", ".bak");
+
+            String path = "file:" + file.getAbsolutePath();
+
+            try {
+                FileOutputStream fop = new FileOutputStream(file);
+                byte[] contentInBytes = json.getBytes();
+                fop.write(contentInBytes);
+                fop.flush();
+                fop.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            Uri uri = FileProvider.getUriForFile(HomeActivity.this, BuildConfig.APPLICATION_ID + ".provider", file);
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent, "Exportar backup"));
+        } else {
+            Toast.makeText(this, "Ningún trayecto registrado", Toast.LENGTH_LONG).show();
+        }
     }
 
 }
