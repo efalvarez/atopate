@@ -1,6 +1,7 @@
 package es.udc.fic.muei.atopate.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,10 +28,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.List;
@@ -314,9 +318,56 @@ public class HomeActivity extends AppCompatActivity {
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
             sendIntent.setType("text/plain");
-            startActivity(Intent.createChooser(sendIntent, "Exportar backup"));
+            startActivity(Intent.createChooser(sendIntent, "Exportar Backup"));
         } else {
             Toast.makeText(this, "Ningún trayecto registrado", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onImportarClick(View view) throws IOException {
+
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+
+        startActivityForResult(intent, 42);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        if (requestCode == 42 && resultCode == Activity.RESULT_OK) {
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                Log.i(TAG, "Uri: " + uri.toString());
+
+                InputStream inputStream = null;
+                try {
+                    inputStream = getContentResolver().openInputStream(uri);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(
+                            inputStream));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line);
+                    }
+                    inputStream.close();
+                    reader.close();
+                    String json = stringBuilder.toString();
+                    Type listType = new TypeToken<List<Trayecto>>() {}.getType();
+                    List<Trayecto> trayectos = new Gson().fromJson(json, listType);
+
+                    for (Trayecto t : trayectos) {
+                        trayectoService.insert(t);
+                    }
+
+                    Toast.makeText(this, "Registros importados", Toast.LENGTH_LONG).show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

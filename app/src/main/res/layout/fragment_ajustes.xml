@@ -100,7 +100,8 @@
                     android:layout_marginBottom="8pt"
                     android:height="24pt"
                     android:background="@android:color/darker_gray"
-                    android:text="@string/importar_text" />
+                    android:text="@string/importar_text"
+                    android:onClick="onImportarClick" />
 
                 <Button
                     android:id="@+id/btnEliminar"
