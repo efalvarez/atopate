@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -346,12 +348,12 @@ public class HomeActivity extends AppCompatActivity {
 
         if (bluetoothRecordIsActivated) {
 
-            bluetoothButton.setBackgroundColor(Color.GRAY);
+            bluetoothButton.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
             stopService(new Intent(this, ObdReaderService.class));
 
         } else {
 
-            bluetoothButton.setBackgroundColor(Color.YELLOW);
+            ViewCompat.setBackgroundTintList(bluetoothButton, ContextCompat.getColorStateList(this, android.R.color.holo_blue_bright));
             startService(new Intent(this, ObdReaderService.class));
         }
 
