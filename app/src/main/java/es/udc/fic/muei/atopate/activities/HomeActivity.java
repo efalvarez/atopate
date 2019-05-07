@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,11 +22,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sohrab.obd.reader.application.Preferences;
-import com.sohrab.obd.reader.constants.DefineObdReader;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
@@ -34,9 +35,9 @@ import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
 import com.sohrab.obd.reader.service.ObdReaderService;
 import com.sohrab.obd.reader.trip.TripRecord;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
@@ -84,25 +85,23 @@ public class HomeActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Receiver que procesara los datos recuperados de la conexion establecida con el OBD2, procesando
+     * los datos recuperados y guardando en la base de datos aquellos que correspondan
+     */
     private BroadcastReceiver mObdReaderReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
             String action = intent.getAction();
 
-            if (action.equals(ACTION_CONNECTION_STATUS_MSG)) {
-
-                String connectionStatusMsg = intent.getStringExtra(DefineObdReader.INTENT_EXTRA_DATA);
-
-
-            } else if (action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
+            if (action != null && action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
 
                 TripRecord tripRecord = TripRecord.getTripRecode(HomeActivity.this);
 
-                Log.d("CheckThis", "Speedo: " + tripRecord.getSpeed());
+                Log.d("CheckThis", "Speed: " + tripRecord.getSpeed());
                 Log.d("CheckThis", "RPM:" + tripRecord.getEngineRpm());
             }
-
         }
     };
 
@@ -179,26 +178,8 @@ public class HomeActivity extends AppCompatActivity {
 
         new AjustesAdapter().setTema(this, theme);
 
-
-        List<ObdCommand> obdComands = Arrays.asList(
-                new SpeedCommand(),
-                new OilTempCommand(),
-                new FuelLevelCommand()
-        );
-
-        ObdConfiguration.setmObdCommands(this, null);
-//
-//         set gas price per litre so that gas cost can calculated. Default is 7 $/l
-        float gasPrice = 7; // per litre, you should initialize according to your requirement.
-        Preferences.get(this).setGasPrice(gasPrice);
-//        /**
-//         * Register receiver with some action related to OBD connection status
-//         */
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA);
-        intentFilter.addAction(ACTION_CONNECTION_STATUS_MSG);
-        registerReceiver(mObdReaderReceiver, intentFilter);
-
+        // configuramos el receiver encargado de recuperar la informacion del coche
+        configureODB2Receiver();
     }
 
     @Override
@@ -212,11 +193,36 @@ public class HomeActivity extends AppCompatActivity {
     protected void onDestroy() {
 
         super.onDestroy();
+
+        // tal como nos lo indican en la documentacion de la libreria usada, es necesario destruir
+        // el receiver de la llamada al OBD2 y parar cualquier servicio relaciondo con el mismo
         unregisterReceiver(mObdReaderReceiver);
-//        stop service
         stopService(new Intent(this, ObdReaderService.class));
-//         This will stop background thread if any running immediately.
         Preferences.get(this).setServiceRunningStatus(false);
+    }
+
+
+    /**
+     * Se configuran aquellos datos que nos interesan recuperar del coche y procedemos a establecer
+     * el receiver encargado de procesar estos datos.
+     */
+    private void configureODB2Receiver() {
+        // establecemos los comandos que procederemos a leer del coche
+        ArrayList<ObdCommand> obdComands = new ArrayList<>(Arrays.asList(
+                new SpeedCommand(),
+                new OilTempCommand(),
+                new FuelLevelCommand()
+        ));
+
+        ObdConfiguration.setmObdCommands(this, obdComands);
+
+        // lanzamos el intent correspondiente a la actividad
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA);
+        intentFilter.addAction(ACTION_CONNECTION_STATUS_MSG);
+
+        // establecemos el listener que procesara los resultados obtenidos del coche
+        registerReceiver(mObdReaderReceiver, intentFilter);
     }
 
     private boolean checkIfItemIsAlreadyChecked(MenuItem checkedItem, BottomNavigationView navigationView) {
@@ -325,13 +331,27 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Listener del boton de activacion del bluetooth. Al ser pulsado, este tendra que iniciar el evento
+     * necesario para establecer la conexion con el OBDII y empezar a recuperar los valores que han
+     * sido establecidos durante la fase del onCreate de esta actividad.
+     *
+     * @param view
+     */
     public void onActivateBluetooth(View view) {
 
         //start service which will execute in background for connecting and execute command until you stop
 
+        Button bluetoothButton = (Button) findViewById(R.id.bluetooth);
+
         if (bluetoothRecordIsActivated) {
+
+            bluetoothButton.setBackgroundColor(Color.GRAY);
             stopService(new Intent(this, ObdReaderService.class));
+
         } else {
+
+            bluetoothButton.setBackgroundColor(Color.YELLOW);
             startService(new Intent(this, ObdReaderService.class));
         }
 

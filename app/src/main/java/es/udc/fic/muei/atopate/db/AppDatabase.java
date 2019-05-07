@@ -23,12 +23,17 @@ import es.udc.fic.muei.atopate.db.model.Trayecto;
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
 
-    public abstract TrayectoDao trayectoDao();
-    public abstract PuntosTrayectoDao puntosTrayectoDao();
-    public abstract DatosOBDDao datosOBDDao();
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            // Example data when db created
+            new PopulateDbAsync(INSTANCE).execute();
+        }
+    };
 
-    public static AppDatabase getDatabase(final Context context) {
+    public static AppDatabase getDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                     AppDatabase.class, "atopate")
@@ -40,43 +45,52 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+    public abstract TrayectoDao trayectoDao();
 
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-            // Example data when db created
-            new PopulateDbAsync(INSTANCE).execute();
-        }
-    };
+    public abstract PuntosTrayectoDao puntosTrayectoDao();
+
+    public abstract DatosOBDDao datosOBDDao();
 
     private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
 
         private final TrayectoDao trayectoDao;
 
+        private final DatosOBDDao datosOBDDao;
+
         PopulateDbAsync(AppDatabase db) {
             trayectoDao = db.trayectoDao();
+            datosOBDDao = db.datosOBDDao();
+
         }
 
         @Override
-        protected Void doInBackground(final Void... params) {
+        protected Void doInBackground(Void... params) {
+
+            DatosOBD datos = new DatosOBD();
+            datos.speed = 20D;
+            datos.fuelLevel = 20D;
+            datos.oilTemp = 20D;
 
             Calendar horaInicio = Calendar.getInstance();
             Calendar horaFin = Calendar.getInstance();
             horaInicio.set(2019, 3, 18, 11, 25);
             horaFin.set(2019, 3, 18, 14, 15);
             Trayecto trayecto = new Trayecto("A Coruña", "Madrid", horaInicio, horaFin, 530, "pathFoto");
-            trayectoDao.insert(trayecto);
 
-            horaInicio.set(2019, 2, 18, 11, 25);
-            horaFin.set(2019, 2, 18, 14, 15);
-            Trayecto trayecto2 = new Trayecto("Av. dos Mallos", "Pza Pontevedra", horaInicio, horaFin, 2, "pathFoto");
-            trayectoDao.insert(trayecto2);
+            datos.trayectoId = trayectoDao.upsert(trayecto);
 
-            horaInicio.set(2019, 1, 18, 11, 25);
-            horaFin.set(2019, 1, 18, 14, 15);
-            Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "pathFoto");
-            trayectoDao.insert(trayecto3);
+            datosOBDDao.upsert(datos);
+
+
+//            horaInicio.set(2019, 2, 18, 11, 25);
+//            horaFin.set(2019, 2, 18, 14, 15);
+//            Trayecto trayecto2 = new Trayecto("Av. dos Mallos", "Pza Pontevedra", horaInicio, horaFin, 2, "pathFoto");
+//            trayectoDao.upsert(trayecto2);
+//
+//            horaInicio.set(2019, 1, 18, 11, 25);
+//            horaFin.set(2019, 1, 18, 14, 15);
+//            Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "pathFoto");
+//            trayectoDao.upsert(trayecto3);
             return null;
         }
     }
