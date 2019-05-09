@@ -57,6 +57,10 @@
     <string name="importar_text">Importar copia de seguridad</string>
     <string name="eliminar_text">Eliminar registros</string>
 
+    <!--Strings del OBD-->
+    <string name="obd_not_found">Es necesario establecer conexion con el OBD antes</string>
+    <string name="obd_not_available">El dispositivo OBD2 no esta disponible para conectarse</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
