@@ -35,6 +35,6 @@ public interface TrayectoDao {
     @Delete
     public int delete(List<Trayecto> trayectos);
 
-    @Delete
-    public void delete(Trayecto trayecto);
+    @Query("DELETE FROM trayecto")
+    public void delete();
 }

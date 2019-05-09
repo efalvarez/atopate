@@ -91,6 +91,8 @@
                     android:height="24pt"
                     android:background="@android:color/darker_gray"
                     android:text="@string/exportar_text" />
+                    android:onClick="onExportarClick" />
+
 
                 <Button
                     android:id="@+id/btnImportar"
@@ -99,7 +101,8 @@
                     android:layout_marginBottom="8pt"
                     android:height="24pt"
                     android:background="@android:color/darker_gray"
-                    android:text="@string/importar_text" />
+                    android:text="@string/importar_text"
+                    android:onClick="onImportarClick" />
 
                 <Button
                     android:id="@+id/btnEliminar"
@@ -107,7 +110,8 @@
                     android:layout_height="wrap_content"
                     android:height="24pt"
                     android:background="@android:color/holo_red_light"
-                    android:text="@string/eliminar_text" />
+                    android:text="@string/eliminar_text"
+                    android:onClick="onEliminarClick" />
             </LinearLayout>
         </FrameLayout>
 
