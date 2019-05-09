@@ -270,7 +270,8 @@ public class HomeActivity extends AppCompatActivity {
     public void onEliminarClick(View view) {
         trayectoService.delete();
 
-        Toast.makeText(this, "Registros eliminados", Toast.LENGTH_LONG).show();
+        CustomToast toast = new CustomToast(this, "Registros eliminados", Toast.LENGTH_LONG);
+        toast.show();
     }
 
     public void onExportarClick(View view) throws IOException {
@@ -306,7 +307,8 @@ public class HomeActivity extends AppCompatActivity {
             sendIntent.setType("text/plain");
             startActivity(Intent.createChooser(sendIntent, "Exportar Backup"));
         } else {
-            Toast.makeText(this, "Ningún trayecto registrado", Toast.LENGTH_LONG).show();
+            CustomToast toast = new CustomToast(this, "Ningún trayecto registrado", Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 

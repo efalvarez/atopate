@@ -90,7 +90,7 @@
                     android:layout_marginBottom="8pt"
                     android:height="24pt"
                     android:background="@android:color/darker_gray"
-                    android:text="@string/exportar_text" />
+                    android:text="@string/exportar_text"
                     android:onClick="onExportarClick" />
 
 

@@ -176,8 +176,8 @@ public class AjustesFragment extends Fragment {
                     for (Trayecto t : trayectos) {
                         activity.trayectoService.insert(t);
                     }
-
-                    Toast.makeText(getContext(), "Registros importados", Toast.LENGTH_LONG).show();
+                    CustomToast toast = new CustomToast(getContext(), "Registros importados", Toast.LENGTH_LONG);
+                    toast.show();
 
                 } catch (IOException e) {
                     e.printStackTrace();

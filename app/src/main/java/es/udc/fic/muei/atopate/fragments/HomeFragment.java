@@ -293,9 +293,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             try { // Create the File where the photo should go
                 photoFile = createImageFile();
             } catch (IOException ex) {// Error occurred while creating the File
-                Toast.makeText(this.getContext(),
-                        "No es posible tomar fotos",
-                        Toast.LENGTH_SHORT).show();
+                CustomToast toast = new CustomToast(getContext(), "No es posible tomar fotos", Toast.LENGTH_LONG);
+                toast.show();
                 Log.e(TAG, "EXCEPCION: " + ex.toString());
                 return;
             }
