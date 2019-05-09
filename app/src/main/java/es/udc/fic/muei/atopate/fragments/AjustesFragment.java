@@ -1,10 +1,12 @@
 package es.udc.fic.muei.atopate.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +17,20 @@ import android.widget.Button;
 import android.support.v7.widget.AppCompatSpinner;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.List;
+
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
+import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.CustomToast;
 
 /**
@@ -118,5 +131,58 @@ public class AjustesFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent)
             {    }
         });
+
+        final Button importarButton = vista.findViewById(R.id.btnImportar);
+        importarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("text/plain");
+
+                startActivityForResult(intent, 42);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (requestCode == 42 && resultCode == Activity.RESULT_OK) {
+            Uri uri = null;
+            if (resultData != null) {
+                uri = resultData.getData();
+                Log.i(TAG, "Uri: " + uri.toString());
+
+                InputStream inputStream = null;
+                try {
+                    HomeActivity activity = (HomeActivity) getActivity();
+                    inputStream = activity.getContentResolver().openInputStream(uri);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(
+                            inputStream));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line);
+                    }
+                    inputStream.close();
+                    reader.close();
+                    String json = stringBuilder.toString();
+                    Type listType = new TypeToken<List<Trayecto>>() {}.getType();
+                    List<Trayecto> trayectos = new Gson().fromJson(json, listType);
+
+                    for (Trayecto t : trayectos) {
+                        activity.trayectoService.insert(t);
+                    }
+
+                    Toast.makeText(getContext(), "Registros importados", Toast.LENGTH_LONG).show();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
