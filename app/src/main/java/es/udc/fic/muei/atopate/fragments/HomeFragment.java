@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -159,7 +161,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
 
 
-        configureCharts(viewinflated);
+        try {
+            configureCharts(viewinflated);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         configureMaps(viewinflated, savedInstanceState);
 
         Trayecto trayecto = activity.trayecto;
@@ -245,44 +251,61 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         MapsConfigurer.initializeMap(getActivity(), mapaVista, savedInstanceState, this);
     }
 
-    private void configureCharts(View vista) {
+    private void configureCharts(View vista) throws PackageManager.NameNotFoundException {
 
-        GraphView graph1 = vista.findViewById(R.id.graph1);
-
-        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3)
-        });
-
-        graph1.addSeries(series1);
-
-        GraphView graph2 = vista.findViewById(R.id.graph2);
+        GraphView graph1 = vista.findViewById(R.id.graph2);
         HomeActivity activity = (HomeActivity) getActivity();
 
-        BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>();
-
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{});
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[]{});
         if (activity.trayecto != null && !activity.trayecto.datosOBD.isEmpty()) {
             DataPoint[] dataPoints = new DataPoint[activity.trayecto.datosOBD.size()+1];
+            DataPoint[] dataPointsFuel = new DataPoint[activity.trayecto.datosOBD.size()+1];
             dataPoints[0] = new DataPoint(0, 0);
+            dataPointsFuel[0] = new DataPoint(0, 0);
             for (int i = 0; i < activity.trayecto.datosOBD.size(); i++) {
                 dataPoints[i+1] = new DataPoint(i+1, activity.trayecto.datosOBD.get(i).speed);
+                dataPointsFuel[i+1] = new DataPoint(i+1, activity.trayecto.datosOBD.get(i).fuelLevel);
             }
-            series2 = new BarGraphSeries<>(dataPoints);
+            series1 = new LineGraphSeries<>(dataPoints);
+            series1.setColor(Color.RED);
+            series1.setThickness(10);
+            series1.setTitle("Velocidad");
+            series1.setDrawDataPoints(Boolean.TRUE);
+            series1.setDataPointsRadius(10);
+            series2 = new LineGraphSeries<>(dataPointsFuel);
+            series2.setTitle("Combustible");
+            series2.setThickness(10);
+            series2.setDrawDataPoints(Boolean.TRUE);
+            series2.setDataPointsRadius(10);
         } else {
-            series2 = new BarGraphSeries<>(new DataPoint[]{
+            series1 = new LineGraphSeries<>(new DataPoint[]{
+                    new DataPoint(0,0),
+            });
+            series2 = new LineGraphSeries<>(new DataPoint[]{
                     new DataPoint(0,0),
             });
         }
 
-        graph2.addSeries(series2);
+        graph1.addSeries(series1);
+        graph1.addSeries(series2);
+        graph1.getLegendRenderer().setVisible(Boolean.TRUE);
+        graph1.getLegendRenderer().setFixedPosition(0,0);
+
+        /*graph1.getGridLabelRenderer().setGridColor(Color.rgb(70,90,76));
+        graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(70,90,76));
+        graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(70,90,76)); */
+        graph1.getGridLabelRenderer().setGridColor(Color.rgb(150,150,150));
+        graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(150,150,150));
+        graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(150,150,150));
+        graph1.getLegendRenderer().setBackgroundColor(Color.rgb(200,200,200));
+
 
         PieChartView pieChartView = vista.findViewById(R.id.chart);
         List<SliceValue> pieData = new ArrayList<>();
         pieData.add(new SliceValue(15, Color.BLUE));
         pieData.add(new SliceValue(25, Color.GREEN));
         pieData.add(new SliceValue(10, Color.RED));
-        pieData.add(new SliceValue(60, Color.YELLOW));
 
         PieChartData pieChartData = new PieChartData(pieData);
 

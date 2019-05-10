@@ -13,5 +13,6 @@
     <!-- Dark -->
     <color name="darkTheme">#404040</color>
     <color name="textColorDark">#EAEAEA</color>
+    <color name="grisClaro">#969696</color>
 
 </resources>

@@ -73,7 +73,7 @@ public class EstadisticasFragment extends Fragment {
 
     private void configureSpinner(View vista) {
         String[] arraySpinner = new String[] {
-                "Hoy", "Ayer", "Última semana", "Último mes"
+                "Hoy", "Ayer", "Última semana"
         };
         Spinner s = vista.findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(vista.getContext(),

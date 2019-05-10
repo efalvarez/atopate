@@ -40,26 +40,6 @@
             android:entries="@array/temas_array"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/cabecera_unidad"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:text="@string/unidad_text"
-            android:textSize="18sp" />
-
-        <Spinner
-            android:id="@+id/spinner_unidad"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:drawSelectorOnTop="true"
-            android:entries="@array/unidad_array"
-            android:textSize="18sp" />
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
