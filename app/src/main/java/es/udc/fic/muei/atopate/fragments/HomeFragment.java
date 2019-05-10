@@ -248,6 +248,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private void configureCharts(View vista) {
 
         GraphView graph1 = vista.findViewById(R.id.graph1);
+
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, 1),
                 new DataPoint(1, 5),
@@ -257,11 +258,22 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         graph1.addSeries(series1);
 
         GraphView graph2 = vista.findViewById(R.id.graph2);
-        BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(new DataPoint[]{
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3)
-        });
+        HomeActivity activity = (HomeActivity) getActivity();
+
+        BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>();
+
+        if (activity.trayecto != null && !activity.trayecto.datosOBD.isEmpty()) {
+            DataPoint[] dataPoints = new DataPoint[activity.trayecto.datosOBD.size()+1];
+            dataPoints[0] = new DataPoint(0, 0);
+            for (int i = 0; i < activity.trayecto.datosOBD.size(); i++) {
+                dataPoints[i+1] = new DataPoint(i+1, activity.trayecto.datosOBD.get(i).speed);
+            }
+            series2 = new BarGraphSeries<>(dataPoints);
+        } else {
+            series2 = new BarGraphSeries<>(new DataPoint[]{
+                    new DataPoint(0,0),
+            });
+        }
 
         graph2.addSeries(series2);
 

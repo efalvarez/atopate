@@ -56,6 +56,7 @@ import es.udc.fic.muei.atopate.BuildConfig;
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
 import es.udc.fic.muei.atopate.db.TrayectoService;
+import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.CustomToast;
@@ -82,9 +83,6 @@ public class HomeActivity extends AppCompatActivity {
     private String pathFile;
     private Uri capturedImageURI;
     private Bitmap bitMap;
-    public TrayectoService trayectoService;
-    public Trayecto trayecto;
-    private static int MULTIPLE_PERMISSIONS = 1;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -339,6 +337,20 @@ public class HomeActivity extends AppCompatActivity {
         inicio.add(Calendar.HOUR, -1);
         Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "pathfoto");
         t.puntosTrayecto = new PuntosTrayecto();
+        DatosOBD datos = new DatosOBD();
+        datos.trayectoId = t.id;
+        datos.fuelLevel = new Double(2);
+        datos.oilTemp = new Double(3);
+        datos.speed = new Double(4);
+        DatosOBD datos2 = new DatosOBD();
+        datos2.trayectoId = t.id;
+        datos2.fuelLevel = new Double(3);
+        datos2.oilTemp = new Double(4);
+        datos2.speed = new Double(5);
+        List<DatosOBD> listDatos = new ArrayList<DatosOBD>();
+        listDatos.add(datos);
+        listDatos.add(datos2);
+        t.datosOBD = listDatos;
         t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
         trayectoService.insert(t);
 
