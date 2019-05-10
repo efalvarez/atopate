@@ -1,25 +1,27 @@
 package es.udc.fic.muei.atopate.db.dao;
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+
+import java.util.List;
 
 import es.udc.fic.muei.atopate.db.model.DatosOBD;
 
 @Dao
-public interface DatosOBDDao {
+public abstract class DatosOBDDao implements BaseDao<DatosOBD> {
 
     @Query("SELECT * FROM datos_obd WHERE trayecto_id = :trayectoId")
-    public DatosOBD getByTrayecto(Long trayectoId);
+    public abstract List<DatosOBD> getByTrayecto(Long trayectoId);
 
-    @Insert
-    public Long insert(DatosOBD datosOBD);
+    @Override
+    public Long upsert(DatosOBD entidad) {
 
-    @Update
-    public void update(DatosOBD datosOBD);
+        long id = insert(entidad);
+        if (id == -1) {
+            update(entidad);
+            id = entidad.dataId;
+        }
+        return id;
+    }
 
-    @Delete
-    public void delete(DatosOBD datosOBD);
 }

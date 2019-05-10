@@ -52,6 +52,7 @@
             android:layout_width="80dp"
             android:layout_height="45dp"
             android:drawableTop="?attr/bluetoothIcon"
+            android:onClick="onActivateBluetooth"
             app:layout_constraintStart_toEndOf="@+id/photo"
             app:layout_constraintTop_toTopOf="parent" />
 

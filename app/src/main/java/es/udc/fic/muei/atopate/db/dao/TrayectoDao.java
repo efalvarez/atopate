@@ -12,29 +12,34 @@ import java.util.List;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 
 @Dao
-public interface TrayectoDao {
+public abstract class TrayectoDao implements BaseDao<Trayecto> {
 
     @Query("SELECT * FROM trayecto ORDER BY hora_fin DESC LIMIT 1")
-    public Trayecto getLast();
+    public abstract Trayecto getLast();
 
     @Query("SELECT * FROM trayecto ORDER BY hora_fin DESC")
-    public List<Trayecto> getAll();
+    public abstract List<Trayecto> getAll();
 
     @Query("SELECT * FROM trayecto WHERE hora_inicio BETWEEN :from AND :to")
-    List<Trayecto> findTrayectosBetweenDates(Calendar from, Calendar to);
+    public abstract List<Trayecto> findTrayectosBetweenDates(Calendar from, Calendar to);
 
-    @Insert
-    public Long insert(Trayecto trayecto);
+    @Query("SELECT * FROM trayecto WHERE id = :trayectoId")
+    public abstract Trayecto getById(Long trayectoId);
 
-    @Insert
-    public void insert(List<Trayecto> trayectos);
+    @Override
+    public Long upsert(Trayecto entidad) {
 
-    @Update
-    public void update(Trayecto trayecto);
+        long id = insert(entidad);
+        if (id == -1) {
+            update(entidad);
+            id = entidad.id;
+        }
+        return id;
+    }
 
     @Delete
-    public int delete(List<Trayecto> trayectos);
+    public abstract int delete(List<Trayecto> trayectos);
 
     @Query("DELETE FROM trayecto")
-    public void delete();
+    public abstract void delete();
 }

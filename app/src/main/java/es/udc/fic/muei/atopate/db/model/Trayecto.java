@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import java.util.Calendar;
+import java.util.List;
 
 @Entity
 public class Trayecto {
@@ -36,7 +37,7 @@ public class Trayecto {
     public PuntosTrayecto puntosTrayecto;
 
     @Ignore
-    public DatosOBD datosOBD;
+    public List<DatosOBD> datosOBD;
 
     public Trayecto(String origen, String destino, Calendar horaInicio, Calendar horaFin, int distancia, String foto) {
         this.origen = origen;
@@ -46,4 +47,5 @@ public class Trayecto {
         this.distancia = distancia;
         this.foto = foto;
     }
+
 }

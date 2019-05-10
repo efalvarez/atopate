@@ -1,12 +1,15 @@
 package es.udc.fic.muei.atopate.activities;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,11 +24,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sohrab.obd.reader.application.Preferences;
+import com.sohrab.obd.reader.obdCommand.ObdCommand;
+import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
+import com.sohrab.obd.reader.obdCommand.SpeedCommand;
+import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
+import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
+import com.sohrab.obd.reader.service.ObdReaderService;
+import com.sohrab.obd.reader.trip.TripRecord;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,6 +47,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -52,9 +66,17 @@ import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
 
+import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_CONNECTION_STATUS_MSG;
+import static com.sohrab.obd.reader.constants.DefineObdReader.ACTION_READ_OBD_REAL_TIME_DATA;
+
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
+    private static int MULTIPLE_PERMISSIONS = 1;
+    public TrayectoService trayectoService;
+    public Trayecto trayecto;
+
+    private boolean bluetoothRecordIsActivated = false;
 
     private BottomNavigationView bottomNavigationView;
     private String pathFile;
@@ -81,6 +103,26 @@ public class HomeActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Receiver que procesara los datos recuperados de la conexion establecida con el OBD2, procesando
+     * los datos recuperados y guardando en la base de datos aquellos que correspondan
+     */
+    private BroadcastReceiver mObdReaderReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+
+            if (action != null && action.equals(ACTION_READ_OBD_REAL_TIME_DATA)) {
+
+                TripRecord tripRecord = TripRecord.getTripRecode(HomeActivity.this);
+
+                Log.d("CheckThis", "Speed: " + tripRecord.getSpeed());
+                Log.d("CheckThis", "RPM:" + tripRecord.getEngineRpm());
+            }
+        }
+    };
+
     public boolean setFragment(int itemId) {
         Fragment fragmentToSubstitute = HomeFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -88,7 +130,7 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (itemId) {
             case R.id.navigation_home:
-                this.trayecto = trayectoService.getLast();
+                trayecto = trayectoService.getLast();
 
                 fragmentToSubstitute = HomeFragment.newInstance();
 
@@ -96,7 +138,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
 
             case R.id.navigation_atopate:
-                this.trayecto = trayectoService.getLast();
+                trayecto = trayectoService.getLast();
 
                 fragmentToSubstitute = TrayectoFragment.newInstance();
 
@@ -134,7 +176,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.trayectoService = new TrayectoService(this);
+        trayectoService = new TrayectoService(this);
         setContentView(R.layout.activity_home);
         try {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -153,6 +195,9 @@ public class HomeActivity extends AppCompatActivity {
         String theme = prefs.getString("tema", "Claro");
 
         new AjustesAdapter().setTema(this, theme);
+
+        // configuramos el receiver encargado de recuperar la informacion del coche
+        configureODB2Receiver();
     }
 
     @Override
@@ -160,6 +205,42 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
 
         setFragment(bottomNavigationView.getSelectedItemId());
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+
+        // tal como nos lo indican en la documentacion de la libreria usada, es necesario destruir
+        // el receiver de la llamada al OBD2 y parar cualquier servicio relaciondo con el mismo
+        unregisterReceiver(mObdReaderReceiver);
+        stopService(new Intent(this, ObdReaderService.class));
+        Preferences.get(this).setServiceRunningStatus(false);
+    }
+
+
+    /**
+     * Se configuran aquellos datos que nos interesan recuperar del coche y procedemos a establecer
+     * el receiver encargado de procesar estos datos.
+     */
+    private void configureODB2Receiver() {
+        // establecemos los comandos que procederemos a leer del coche
+        ArrayList<ObdCommand> obdComands = new ArrayList<>(Arrays.asList(
+                new SpeedCommand(),
+                new OilTempCommand(),
+                new FuelLevelCommand()
+        ));
+
+        ObdConfiguration.setmObdCommands(this, obdComands);
+
+        // lanzamos el intent correspondiente a la actividad
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_READ_OBD_REAL_TIME_DATA);
+        intentFilter.addAction(ACTION_CONNECTION_STATUS_MSG);
+
+        // establecemos el listener que procesara los resultados obtenidos del coche
+        registerReceiver(mObdReaderReceiver, intentFilter);
     }
 
     private boolean checkIfItemIsAlreadyChecked(MenuItem checkedItem, BottomNavigationView navigationView) {
@@ -229,14 +310,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void setCapturedImageURI(Uri fileUri) {
-        capturedImageURI = fileUri;
-    }
-
-    public void setCurrentPhotoPath(String path) {
-        pathFile = path;
-    }
-
     public void setBitMap(Bitmap bitmap) {
         bitMap = bitmap;
     }
@@ -245,11 +318,18 @@ public class HomeActivity extends AppCompatActivity {
         return capturedImageURI;
     }
 
+    public void setCapturedImageURI(Uri fileUri) {
+        capturedImageURI = fileUri;
+    }
+
     public String getCurrentPhotoPath() {
         return pathFile;
     }
 
     public Bitmap getBipMap() { return bitMap; }
+    public void setCurrentPhotoPath(String path) {
+        pathFile = path;
+    }
 
     // AJUSTES CLICK LISTENER
     public void onAddTrayectoClick(View view) {
@@ -310,6 +390,33 @@ public class HomeActivity extends AppCompatActivity {
             CustomToast toast = new CustomToast(this, "Ningún trayecto registrado", Toast.LENGTH_LONG);
             toast.show();
         }
+    }
+
+    /**
+     * Listener del boton de activacion del bluetooth. Al ser pulsado, este tendra que iniciar el evento
+     * necesario para establecer la conexion con el OBDII y empezar a recuperar los valores que han
+     * sido establecidos durante la fase del onCreate de esta actividad.
+     *
+     * @param view
+     */
+    public void onActivateBluetooth(View view) {
+
+        //start service which will execute in background for connecting and execute command until you stop
+
+        Button bluetoothButton = (Button) findViewById(R.id.bluetooth);
+
+        if (bluetoothRecordIsActivated) {
+
+            bluetoothButton.setBackgroundColor(Color.GRAY);
+            stopService(new Intent(this, ObdReaderService.class));
+
+        } else {
+
+            bluetoothButton.setBackgroundColor(Color.YELLOW);
+            startService(new Intent(this, ObdReaderService.class));
+        }
+
+        bluetoothRecordIsActivated = !bluetoothRecordIsActivated;
     }
 
 }
