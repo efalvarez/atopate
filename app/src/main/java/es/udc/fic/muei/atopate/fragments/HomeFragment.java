@@ -160,12 +160,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             });
         }
 
-
-        try {
-            configureCharts(viewinflated);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        configureCharts(viewinflated);
         configureMaps(viewinflated, savedInstanceState);
 
         Trayecto trayecto = activity.trayecto;
@@ -251,7 +246,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         MapsConfigurer.initializeMap(getActivity(), mapaVista, savedInstanceState, this);
     }
 
-    private void configureCharts(View vista) throws PackageManager.NameNotFoundException {
+    private void configureCharts(View vista) {
 
         GraphView graph1 = vista.findViewById(R.id.graph2);
         HomeActivity activity = (HomeActivity) getActivity();

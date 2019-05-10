@@ -90,7 +90,7 @@
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="102dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="16dp"
@@ -110,17 +110,9 @@
 
 
         <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph1"
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20sp" />
-
-        <com.jjoe64.graphview.GraphView
             android:id="@+id/graph2"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="103dp"
             android:layout_marginLeft="20sp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20sp" />
@@ -128,7 +120,7 @@
         <lecho.lib.hellocharts.view.PieChartView
             android:id="@+id/graph3"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="143dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"

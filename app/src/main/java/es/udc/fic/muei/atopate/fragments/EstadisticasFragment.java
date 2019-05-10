@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.activities.HomeActivity;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -102,35 +103,57 @@ public class EstadisticasFragment extends Fragment {
     }
 
     private void configureCharts(View vista) {
-        // Charts
 
-        GraphView graph1 = vista.findViewById(R.id.graph1);
-        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3)
-        });
+        GraphView graph1 = vista.findViewById(R.id.graph2);
+        HomeActivity activity = (HomeActivity) getActivity();
+
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{});
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[]{});
+        if (activity.trayecto != null && !activity.trayecto.datosOBD.isEmpty()) {
+            DataPoint[] dataPoints = new DataPoint[activity.trayecto.datosOBD.size()+1];
+            DataPoint[] dataPointsFuel = new DataPoint[activity.trayecto.datosOBD.size()+1];
+            dataPoints[0] = new DataPoint(0, 0);
+            dataPointsFuel[0] = new DataPoint(0, 0);
+            for (int i = 0; i < activity.trayecto.datosOBD.size(); i++) {
+                dataPoints[i+1] = new DataPoint(i+1, activity.trayecto.datosOBD.get(i).speed);
+                dataPointsFuel[i+1] = new DataPoint(i+1, activity.trayecto.datosOBD.get(i).fuelLevel);
+            }
+            series1 = new LineGraphSeries<>(dataPoints);
+            series1.setColor(Color.RED);
+            series1.setThickness(10);
+            series1.setTitle("Velocidad");
+            series1.setDrawDataPoints(Boolean.TRUE);
+            series1.setDataPointsRadius(10);
+            series2 = new LineGraphSeries<>(dataPointsFuel);
+            series2.setTitle("Combustible");
+            series2.setThickness(10);
+            series2.setDrawDataPoints(Boolean.TRUE);
+            series2.setDataPointsRadius(10);
+        } else {
+            series1 = new LineGraphSeries<>(new DataPoint[]{
+                    new DataPoint(0,0),
+            });
+            series2 = new LineGraphSeries<>(new DataPoint[]{
+                    new DataPoint(0,0),
+            });
+        }
+
         graph1.addSeries(series1);
+        graph1.addSeries(series2);
+        graph1.getLegendRenderer().setVisible(Boolean.TRUE);
+        graph1.getLegendRenderer().setFixedPosition(0,0);
 
-        GraphView graph2 = vista.findViewById(R.id.graph2);
-        BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(2, 5),
-                new DataPoint(4, 3)
-        });
-        graph2.addSeries(series2);
+        graph1.getGridLabelRenderer().setGridColor(Color.rgb(150,150,150));
+        graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(150,150,150));
+        graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(150,150,150));
+        graph1.getLegendRenderer().setBackgroundColor(Color.rgb(200,200,200));
+
 
         PieChartView pieChartView = vista.findViewById(R.id.graph3);
         List<SliceValue> pieData = new ArrayList<>();
         pieData.add(new SliceValue(15, Color.BLUE));
-        pieData.add(new SliceValue(25, Color.GRAY));
+        pieData.add(new SliceValue(25, Color.GREEN));
         pieData.add(new SliceValue(10, Color.RED));
-        pieData.add(new SliceValue(60, Color.MAGENTA));
-
-        /*pieData.add(new SliceValue(15, Color.BLUE).setLabel("Q1: $10"));
-        pieData.add(new SliceValue(25, Color.GRAY).setLabel("Q2: $4"));
-        pieData.add(new SliceValue(10, Color.RED).setLabel("Q3: $18"));
-        pieData.add(new SliceValue(60, Color.MAGENTA).setLabel("Q4: $28"));*/
 
         PieChartData pieChartData = new PieChartData(pieData);
 
@@ -138,7 +161,7 @@ public class EstadisticasFragment extends Fragment {
 
         pieChartData.setHasLabels(true).setValueLabelTextSize(14);
 
-        pieChartData.setHasCenterCircle(true);//.setCenterText1("HOLA");
+        pieChartData.setHasCenterCircle(true);
 
 
         pieChartView.setPieChartData(pieChartData);

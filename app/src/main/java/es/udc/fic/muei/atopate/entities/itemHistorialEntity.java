@@ -1,9 +1,12 @@
 package es.udc.fic.muei.atopate.entities;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 
 /*
@@ -12,6 +15,7 @@ import es.udc.fic.muei.atopate.db.model.Trayecto;
 public class itemHistorialEntity {
 
     private Integer itemId;
+    private Long trayectoId;
     private String tiempo;
     private String lugarOrigen;
     private String lugarDestino;
@@ -24,6 +28,7 @@ public class itemHistorialEntity {
     public itemHistorialEntity(){
         super();
         this.tiempo = "Hace x horas";
+        this.trayectoId = new Long(0);
         this.lugarOrigen = "x";
         this.lugarDestino = "x";
         this.distancia = "x Km";
@@ -32,7 +37,7 @@ public class itemHistorialEntity {
     }
 
     public itemHistorialEntity(String tiempo, String lugarOrigen, String lugarDestino, String distancia,
-                               String icono, String horas) {
+                               String icono, String horas, Long trayectoId) {
         super();
         this.tiempo = tiempo;
         this.lugarOrigen = lugarOrigen;
@@ -40,6 +45,7 @@ public class itemHistorialEntity {
         this.distancia = distancia;
         this.icono = icono;
         this.horas = horas;
+        this.trayectoId = trayectoId;
     }
 
     public itemHistorialEntity(Trayecto t) {
@@ -48,6 +54,7 @@ public class itemHistorialEntity {
         this.lugarOrigen = t.origen;
         this.distancia = t.distancia + "km";
         this.icono = t.foto;
+        this.trayectoId = t.id;
 
         long duracion = t.horaFin.getTimeInMillis() - t.horaInicio.getTimeInMillis();
         long horas = TimeUnit.HOURS.convert(duracion, TimeUnit.MILLISECONDS);
@@ -127,5 +134,9 @@ public class itemHistorialEntity {
     public void setHoras(String horas) {
         this.horas = horas;
     }
+
+    public Long getTrayectoId() { return trayectoId;}
+
+    public void setTrayectoId(Long trayectoId) { this.trayectoId = trayectoId;}
 
 }
