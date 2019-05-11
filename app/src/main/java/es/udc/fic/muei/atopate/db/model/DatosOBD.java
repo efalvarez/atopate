@@ -35,8 +35,8 @@ public class DatosOBD {
     public Double fuelLevel;
 
 
-    @ColumnInfo(name = "oil_temp")
-    public Double oilTemp;
+    @ColumnInfo(name = "rpm")
+    public Double rpm;
 
 
 }

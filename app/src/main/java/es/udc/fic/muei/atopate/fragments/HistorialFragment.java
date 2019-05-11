@@ -78,11 +78,9 @@ public class HistorialFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LinearLayout detallesItem = view.findViewById(R.id.detallesItem);
                 if (!clicked.contains(position)) {
-                    Log.d("HERE", "Pruebas: INTENTANDO INFLAR");
                     detallesItem.setVisibility(View.VISIBLE);
                     clicked.add(position);
                 } else {
-                    Log.d("HERE", "Pruebas: DESININFLANDO");
                     detallesItem.setVisibility(View.GONE);
                     int clickedPos = clicked.indexOf(position);
                     clicked.remove(clickedPos);

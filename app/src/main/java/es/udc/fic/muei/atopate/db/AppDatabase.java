@@ -69,7 +69,7 @@ public abstract class AppDatabase extends RoomDatabase {
             DatosOBD datos = new DatosOBD();
             datos.speed = 20D;
             datos.fuelLevel = 20D;
-            datos.oilTemp = 20D;
+            datos.rpm = 3D;
 
             Calendar horaInicio = Calendar.getInstance();
             Calendar horaFin = Calendar.getInstance();

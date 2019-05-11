@@ -298,20 +298,42 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         PieChartView pieChartView = vista.findViewById(R.id.chart);
         List<SliceValue> pieData = new ArrayList<>();
-        pieData.add(new SliceValue(15, Color.BLUE));
-        pieData.add(new SliceValue(25, Color.GREEN));
-        pieData.add(new SliceValue(10, Color.RED));
+        Double notPaintedRPM = 2.75;
+        pieData.add(new SliceValue(notPaintedRPM.floatValue(), Color.TRANSPARENT).setLabel(""));
+
+        if (activity.trayecto != null && !activity.trayecto.datosOBD.isEmpty()) {
+            Double avgRPM = 0.0;
+            for (int i = 0; i < activity.trayecto.datosOBD.size(); i++) {
+                avgRPM += activity.trayecto.datosOBD.get(i).rpm;
+            }
+            Double paintedRPM = avgRPM / activity.trayecto.datosOBD.size();
+            Double rpmTo7 = 7 - paintedRPM;
+            Double rpmLimitValue = 1.0;
+
+            if (paintedRPM < 5) {
+                pieData.add(new SliceValue(paintedRPM.floatValue(), Color.GREEN));
+            } else if (paintedRPM < 8) {
+                pieData.add(new SliceValue(paintedRPM.floatValue(), Color.rgb(255,165,0)));
+            } else {
+                pieData.add(new SliceValue(paintedRPM.floatValue(), Color.RED));
+            }
+            if (paintedRPM < 7) {
+                pieData.add(new SliceValue(rpmTo7.floatValue(), Color.LTGRAY).setLabel(""));
+            }
+            if (paintedRPM < 8) {
+                pieData.add(new SliceValue(rpmLimitValue.floatValue(), Color.RED).setLabel("8"));
+            }
+
+        } else {
+            pieData.add(new SliceValue(8, Color.LTGRAY));
+        }
 
         PieChartData pieChartData = new PieChartData(pieData);
-
-        pieChartData.setHasLabels(true);
-
         pieChartData.setHasLabels(true).setValueLabelTextSize(14);
-
         pieChartData.setHasCenterCircle(true);
-
-
+        pieChartData.setCenterText1("RPM").setCenterText1FontSize(16);
         pieChartView.setPieChartData(pieChartData);
+        pieChartView.setChartRotationEnabled(false);
     }
 
     private void dispatchTakePictureIntent() {
