@@ -170,13 +170,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             fecha.setText(item.getTiempo());
 
             TextView origenDestino = viewinflated.findViewById(R.id.origenDestino);
-            origenDestino.setText(trayecto.origen + " - " + trayecto.destino);
+            origenDestino.setText(String.format("%s - %s", trayecto.origen, trayecto.destino));
 
             TextView tiempo = viewinflated.findViewById(R.id.tiempo);
             tiempo.setText(item.getHoras());
 
             TextView distancia = viewinflated.findViewById(R.id.distancia);
-            distancia.setText(item.getDistancia() + " -  37.5 litros" );
+            distancia.setText( String.format("%s -  37.5 litros", item.getDistancia()) );
 
             if (trayecto.foto != null) {
                 try {
@@ -433,8 +433,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
             int height =  Math.round(150 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
-            RouteFinder.drawRoute(activity.trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height);
+            RouteFinder.drawRoute(activity.trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height, RouteFinder.WITH_MARKERS);
         }
-
     }
 }
