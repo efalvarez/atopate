@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -92,6 +93,9 @@ public class ItemHistorialAdapter extends BaseAdapter {
         TextView distanciaItem = view.findViewById(R.id.distanciaItem);
         distanciaItem.setText(dir.getDistancia());
 
+        TextView duracionItem = view.findViewById(R.id.duracionItem);
+        duracionItem.setText(dir.getHoras());
+
         ImageView imagen = view.findViewById(R.id.imageView);
         try {
             setPic(dir.getIcono(), imagen);
@@ -100,8 +104,6 @@ public class ItemHistorialAdapter extends BaseAdapter {
         }
 
         //Detalles
-        TextView horasItem = view.findViewById(R.id.horas);
-        horasItem.setText(dir.getHoras());
 
         ImageView imageViewDetalle = view.findViewById(R.id.image);
         try {
@@ -109,10 +111,10 @@ public class ItemHistorialAdapter extends BaseAdapter {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        LinearLayout detallesItem = view.findViewById(R.id.detallesItem);
-
-        configureCharts(detallesItem, position);
+        GraphView graph1 = view.findViewById(R.id.graph2);
+        graph1.removeAllSeries();
+        PieChartView pieChartView = view.findViewById(R.id.chart);
+        configureCharts(pieChartView, position, graph1);
 
         return view;
     }
@@ -143,9 +145,8 @@ public class ItemHistorialAdapter extends BaseAdapter {
         imageView.setImageBitmap(bitmap);
     }
 
-    private void configureCharts(View vista, int position) {
+    private void configureCharts(PieChartView pieChart, int position, GraphView graph) {
 
-        GraphView graph1 = vista.findViewById(R.id.graph2);
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{});
         LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[]{});
         Trayecto trayecto = null;
@@ -183,21 +184,15 @@ public class ItemHistorialAdapter extends BaseAdapter {
             });
         }
 
-        graph1.addSeries(series1);
-        graph1.addSeries(series2);
-        graph1.getLegendRenderer().setVisible(Boolean.TRUE);
-        graph1.getLegendRenderer().setFixedPosition(0,0);
+        graph.addSeries(series1);
+        graph.addSeries(series2);
+        graph.getLegendRenderer().setVisible(Boolean.TRUE);
+        graph.getLegendRenderer().setFixedPosition(0,0);
+        graph.getLegendRenderer().setBackgroundColor(Color.rgb(200,200,200));
+        graph.getGridLabelRenderer().setGridColor(Color.rgb(150,150,150));
+        graph.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(150,150,150));
+        graph.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(150,150,150));
 
-        /*graph1.getGridLabelRenderer().setGridColor(Color.rgb(70,90,76));
-        graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(70,90,76));
-        graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(70,90,76)); */
-        graph1.getGridLabelRenderer().setGridColor(Color.rgb(150,150,150));
-        graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(150,150,150));
-        graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(150,150,150));
-        graph1.getLegendRenderer().setBackgroundColor(Color.rgb(200,200,200));
-
-
-        PieChartView pieChartView = vista.findViewById(R.id.chart);
         List<SliceValue> pieData = new ArrayList<>();
         Double notPaintedRPM = 2.75;
         pieData.add(new SliceValue(notPaintedRPM.floatValue(), Color.TRANSPARENT).setLabel(""));
@@ -233,8 +228,8 @@ public class ItemHistorialAdapter extends BaseAdapter {
         pieChartData.setHasLabels(true).setValueLabelTextSize(14);
         pieChartData.setHasCenterCircle(true);
         pieChartData.setCenterText1("RPM").setCenterText1FontSize(16);
-        pieChartView.setPieChartData(pieChartData);
-        pieChartView.setChartRotationEnabled(false);
+        pieChart.setPieChartData(pieChartData);
+        pieChart.setChartRotationEnabled(false);
     }
 
 }

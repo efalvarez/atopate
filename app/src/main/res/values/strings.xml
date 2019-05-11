@@ -13,6 +13,7 @@
     <string name="app_horas_2">2 h</string>
     <string name="app_verMas">VER MÁS</string>
     <string name="app_photo">Foto</string>
+    <string name="app_duracion">Duración</string>
 
     <string name="app_registrar"> Registrando trayecto&#8230; </string>
     <string name="app_trayecto">VER TRAYECTO ACTUAL</string>
