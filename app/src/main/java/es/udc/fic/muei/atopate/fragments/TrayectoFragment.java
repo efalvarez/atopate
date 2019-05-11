@@ -2,11 +2,12 @@ package es.udc.fic.muei.atopate.fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -28,7 +30,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -37,9 +38,12 @@ import java.util.List;
 import java.util.Locale;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.activities.HomeActivity;
+import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
 
+import static android.content.Context.LOCATION_SERVICE;
 import static android.support.constraint.Constraints.TAG;
 
 public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
@@ -48,9 +52,10 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     private static final long TIME_FAST_REQUEST = 5000;
 
     MapView mapaVista;
-    TextView textViewLugar;
+    TextView textViewLugar, textViewLugar2;
     transient ArrayList<LatLng> camino = new ArrayList<>();
     MarkerOptions inicioTrayecto, posicionActual;
+    HomeActivity activity;
 
     FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -76,8 +81,10 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         View vistaTrayecto = inflater.inflate(R.layout.fragment_trayecto, container, false);
 
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
-        camino = loadArray("caminoRecorrido", getContext());
+        activity = (HomeActivity) getActivity();
+        camino = getCoordenadas();
         configureMaps(vistaTrayecto, savedInstanceState);
         return vistaTrayecto;
     }
@@ -115,8 +122,12 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         mapaVista.onPause();
-        saveArray(camino,"caminoRecorrido",getContext());
-        fusedLocationClient.removeLocationUpdates(locationCallback);
+        setCoordenadas(camino);
+        try {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
+        } catch(NullPointerException npe) {
+            Log.e(TAG, "onPause: Sin actualizaciones de localización");
+        }
         super.onPause();
     }
 
@@ -138,18 +149,20 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
 
         //Configuración del texto de dirección de inicio
         textViewLugar = vista.findViewById(R.id.textViewLugar);
-        textViewLugar.setText(getAddress());
-
+        textViewLugar2 = vista.findViewById(R.id.textViewLugar2);
+        if(!camino.isEmpty()) {
+            textViewLugar.setText(getAddress(camino.get(0)));
+        }
         //Configuración del boton de ruta
         FloatingActionButton directionButton = vista.findViewById(R.id.directionButton);
     }
 
-    public String getAddress() {
+    public String getAddress(LatLng punto) {
         Geocoder geocoder;
         List<Address> addresses;
         String address;
         geocoder = new Geocoder(this.getContext(), Locale.getDefault());
-        LatLng latLng = camino.get(0);
+        LatLng latLng = punto;
         try {
             addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
             String street = addresses.get(0).getAddressLine(0);
@@ -171,6 +184,18 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                 return;
             }
             mMap.setMyLocationEnabled(true); // Se habilita el puntero de ubicación en el mapa
+
+            // --- EL siguiente bloque sólo posiciona el mapa --
+            LocationManager locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            String provider = locationManager.getBestProvider(criteria, true);
+            Location myLocation = locationManager.getLastKnownLocation(provider);
+            double latitude = myLocation.getLatitude();
+            double longitude = myLocation.getLongitude();
+            LatLng latLng = new LatLng(latitude, longitude);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,16));
+            // --------------------------------------------------
+
             startLocationUpdates(mMap); // Se generan actualizaciones breves según las estáticas TIME_REQUEST y TIME_FAST_REQUEST
         }
     }
@@ -187,55 +212,62 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void startLocationUpdates(GoogleMap mMap) {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location actual : locationResult.getLocations()) {
-                    LatLng latLngActual = new LatLng(actual.getLatitude(), actual.getLongitude());
-                    camino.add(latLngActual);
-                    if(camino.size()!=0) {
-                        //Dibujar la ruta cada segun el recorrido de cada actualización
-                        RouteFinder.drawingRoute(camino, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
+        if (activity.bluetoothRecordIsActivated) {
+            if (camino.isEmpty()) {
+                Toast.makeText(activity, "Iniciando trayecto", Toast.LENGTH_SHORT).show();
+            }
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+            locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        return;
                     }
+                    for (Location actual : locationResult.getLocations()) {
+                        LatLng latLngActual = new LatLng(actual.getLatitude(), actual.getLongitude());
+                        if (camino.size() != 0) {
+                            //Dibujar la ruta cada segun el recorrido de cada actualización
+                            RouteFinder.drawingRoute(camino, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
+                        } else {
+                            textViewLugar.setText(getAddress(latLngActual));
+                        }
+                        camino.add(latLngActual);
+                    }
+
                 }
+
+                ;
             };
-        };
 
+            try {
+                fusedLocationClient.requestLocationUpdates(getLocationRequest(),
+                        locationCallback,
+                        null /* Looper */);
+            } catch (SecurityException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
+    public boolean setCoordenadas(ArrayList<LatLng> array) {
         try {
-            fusedLocationClient.requestLocationUpdates(getLocationRequest(),
-                    locationCallback,
-                    null /* Looper */);
-        } catch (SecurityException se) {
-            se.printStackTrace();
+            PuntosTrayecto puntosTrayecto = activity.trayecto.puntosTrayecto;
+            puntosTrayecto.coordenadas = array;
+            return true;
+        } catch (NullPointerException npe) {
+            return false;
         }
     }
 
-    public boolean saveArray(ArrayList<LatLng> array, String arrayName, Context mContext) {
-        SharedPreferences prefs = mContext.getSharedPreferences("caminoRecorrido", 0);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(arrayName +"_size", array.size());
-        for(int i=0;i<array.size();i++) {
-            String cadena = Double.toString(array.get(i).latitude) + "," + Double.toString(array.get(i).longitude);
-            editor.putString(arrayName + "_" + i, cadena);
-        }
-        return editor.commit();
-    }
-
-    public ArrayList<LatLng> loadArray(String arrayName, Context mContext)
-    {
-        SharedPreferences prefs = mContext.getSharedPreferences("caminoRecorrido", 0);
-        int size = prefs.getInt(arrayName + "_size", 0);
-        ArrayList<LatLng> arrayList = new ArrayList<>();
-        for(int i=0;i<size;i++) {
-            String cadena = prefs.getString(arrayName + "_" + i, null);
-            String coord[] = cadena.split(",");
-            LatLng latLng = new LatLng(Double.parseDouble(coord[0]), Double.parseDouble(coord[1]));
-            arrayList.add(latLng);
+    public ArrayList<LatLng> getCoordenadas() {
+        ArrayList<LatLng> arrayList;
+        try {
+            arrayList = new ArrayList<>(activity.trayecto.puntosTrayecto.coordenadas);
+        } catch (NullPointerException npe) {
+            Toast.makeText(activity, "No has iniciado un trayecto", Toast.LENGTH_SHORT).show();
+            arrayList = new ArrayList<>();
         }
         return arrayList;
     }
+
 }

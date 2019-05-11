@@ -32,7 +32,8 @@
     <string name="title_activity_ajustes">Ajustes</string>
     <string name="ajustes">Ajustes</string>
     <string name="cargando_text">Cargando\&#8230;</string>
-    <string name="title_destingo">Destino</string>
+    <string name="title_ruta">Punto de partida</string>
+    <string name="direccion_ruta">Ahora en:</string>
 
     <!-- String del tema -->
     <string name="tema_oscuro">Oscuro</string>

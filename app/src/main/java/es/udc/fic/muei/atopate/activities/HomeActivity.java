@@ -77,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
     public TrayectoService trayectoService;
     public Trayecto trayecto;
 
-    private boolean bluetoothRecordIsActivated = false;
+    public boolean bluetoothRecordIsActivated = false;
 
     private BottomNavigationView bottomNavigationView;
     private String pathFile;
