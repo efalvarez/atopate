@@ -340,12 +340,12 @@ public class HomeActivity extends AppCompatActivity {
         DatosOBD datos = new DatosOBD();
         datos.trayectoId = t.id;
         datos.fuelLevel = new Double(2);
-        datos.oilTemp = new Double(3);
+        datos.rpm = new Double(3);
         datos.speed = new Double(4);
         DatosOBD datos2 = new DatosOBD();
         datos2.trayectoId = t.id;
         datos2.fuelLevel = new Double(3);
-        datos2.oilTemp = new Double(4);
+        datos2.rpm = new Double(4);
         datos2.speed = new Double(5);
         List<DatosOBD> listDatos = new ArrayList<DatosOBD>();
         listDatos.add(datos);

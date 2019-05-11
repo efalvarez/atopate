@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -109,8 +110,9 @@ public class ItemHistorialAdapter extends BaseAdapter {
             e.printStackTrace();
         }
 
-        configureCharts(view, position);
-        configureMaps(view, null);
+        LinearLayout detallesItem = view.findViewById(R.id.detallesItem);
+
+        configureCharts(detallesItem, position);
 
         return view;
     }
@@ -186,32 +188,53 @@ public class ItemHistorialAdapter extends BaseAdapter {
         graph1.getLegendRenderer().setVisible(Boolean.TRUE);
         graph1.getLegendRenderer().setFixedPosition(0,0);
 
+        /*graph1.getGridLabelRenderer().setGridColor(Color.rgb(70,90,76));
+        graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(70,90,76));
+        graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(70,90,76)); */
         graph1.getGridLabelRenderer().setGridColor(Color.rgb(150,150,150));
         graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(150,150,150));
         graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(150,150,150));
         graph1.getLegendRenderer().setBackgroundColor(Color.rgb(200,200,200));
 
 
-        PieChartView pieChartView = vista.findViewById(R.id.graph3);
+        PieChartView pieChartView = vista.findViewById(R.id.chart);
         List<SliceValue> pieData = new ArrayList<>();
-        pieData.add(new SliceValue(15, Color.BLUE));
-        pieData.add(new SliceValue(25, Color.GREEN));
-        pieData.add(new SliceValue(10, Color.RED));
+        Double notPaintedRPM = 2.75;
+        pieData.add(new SliceValue(notPaintedRPM.floatValue(), Color.TRANSPARENT).setLabel(""));
+
+        if (trayecto != null && !trayecto.datosOBD.isEmpty()) {
+            Double avgRPM = 0.0;
+            for (int i = 0; i < trayecto.datosOBD.size(); i++) {
+                avgRPM += trayecto.datosOBD.get(i).rpm;
+            }
+            Double paintedRPM = avgRPM / trayecto.datosOBD.size();
+            Double rpmTo7 = 7 - paintedRPM;
+            Double rpmLimitValue = 1.0;
+
+            if (paintedRPM < 5) {
+                pieData.add(new SliceValue(paintedRPM.floatValue(), Color.GREEN));
+            } else if (paintedRPM < 8) {
+                pieData.add(new SliceValue(paintedRPM.floatValue(), Color.rgb(255,165,0)));
+            } else {
+                pieData.add(new SliceValue(paintedRPM.floatValue(), Color.RED));
+            }
+            if (paintedRPM < 7) {
+                pieData.add(new SliceValue(rpmTo7.floatValue(), Color.LTGRAY).setLabel(""));
+            }
+            if (paintedRPM < 8) {
+                pieData.add(new SliceValue(rpmLimitValue.floatValue(), Color.RED).setLabel("8"));
+            }
+
+        } else {
+            pieData.add(new SliceValue(8, Color.LTGRAY).setLabel("8"));
+        }
 
         PieChartData pieChartData = new PieChartData(pieData);
-
-        pieChartData.setHasLabels(true);
-
         pieChartData.setHasLabels(true).setValueLabelTextSize(14);
-
         pieChartData.setHasCenterCircle(true);
-
-
+        pieChartData.setCenterText1("RPM").setCenterText1FontSize(16);
         pieChartView.setPieChartData(pieChartData);
+        pieChartView.setChartRotationEnabled(false);
     }
 
-    private void configureMaps(View vista, Bundle savedInstanceState) {
-        //MapView mapaVista = vista.findViewById(R.id.mapView);
-        //MapsConfigurer.initializeMap(this.activity, mapaVista, null);
-    }
 }
