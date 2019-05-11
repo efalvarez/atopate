@@ -77,6 +77,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         View vistaTrayecto = inflater.inflate(R.layout.fragment_trayecto, container, false);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this.getActivity());
+        camino = loadArray("caminoRecorrido", getContext());
         configureMaps(vistaTrayecto, savedInstanceState);
         return vistaTrayecto;
     }
@@ -108,13 +109,14 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStop() {
         mapaVista.onStop();
-        fusedLocationClient.removeLocationUpdates(locationCallback);
         super.onStop();
     }
 
     @Override
     public void onPause() {
         mapaVista.onPause();
+        saveArray(camino,"caminoRecorrido",getContext());
+        fusedLocationClient.removeLocationUpdates(locationCallback);
         super.onPause();
     }
 
@@ -170,32 +172,6 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
             }
             mMap.setMyLocationEnabled(true); // Se habilita el puntero de ubicación en el mapa
             startLocationUpdates(mMap); // Se generan actualizaciones breves según las estáticas TIME_REQUEST y TIME_FAST_REQUEST
-
-            /*if (activity.trayecto != null && activity.trayecto.puntosTrayecto != null) {
-                HomeActivity activity = (HomeActivity) getActivity();
-                //LatLng destino = activity.trayecto.puntosTrayecto.coordenadas.get(activity.trayecto.puntosTrayecto.coordenadas.size() - 1);
-
-                fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            try {
-                                RouteFinder.drawRoute(latLngLocation, destino, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
-                            } catch (IllegalStateException e) {
-                                e.printStackTrace();
-                            }
-
-                        } else {
-                            CustomToast toast = new CustomToast(getActivity(), "Necesario activar la ubicación ", Toast.LENGTH_LONG);
-                            toast.show();
-                        }
-                    }
-                });
-            } else {
-                CustomToast toast = new CustomToast(getActivity(), "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG);
-                toast.show();
-            }*/
         }
     }
 
@@ -225,15 +201,6 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                         //Dibujar la ruta cada segun el recorrido de cada actualización
                         RouteFinder.drawingRoute(camino, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
                     }
-                    //Poner una marca al inicio del trayecto (opcional)
-                    /*
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(camino.get(0));
-                    markerOptions.title("Inicio del trayecto");
-
-                    mMap.addMarker(markerOptions);
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camino.get(0),10));
-                    */
                 }
             };
         };
