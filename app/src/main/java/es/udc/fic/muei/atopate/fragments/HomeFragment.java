@@ -107,7 +107,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         estadisticasButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (estadisticas.getVisibility() == View.GONE) {
                     estadisticas.setVisibility(View.VISIBLE);
                 } else {
@@ -121,10 +120,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         fotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (foto.getVisibility() == View.GONE) {
+                ImageView imagen = foto.findViewById(R.id.imageView);
+                if (foto.getVisibility() == View.GONE && imagen.getDrawable() != null) {
                     foto.setVisibility(View.VISIBLE);
                 } else {
                     foto.setVisibility(View.GONE);
+                    CustomToast toast = new CustomToast(activity.getApplicationContext(), "No hay ninguna imagen", Toast.LENGTH_LONG);
+                    toast.show();
                 }
             }
         });
@@ -300,7 +302,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
 
         } else {
-            pieData.add(new SliceValue(8, Color.LTGRAY));
+            pieData.add(new SliceValue(7, Color.LTGRAY).setLabel(""));
+            pieData.add(new SliceValue(1, Color.RED).setLabel("8"));
         }
 
         PieChartData pieChartData = new PieChartData(pieData);

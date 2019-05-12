@@ -64,7 +64,11 @@ public class itemHistorialEntity {
 
         Calendar now = Calendar.getInstance();
         long timeFromNow = now.getTimeInMillis() - t.horaFin.getTimeInMillis();
-        if (timeFromNow >=  86400000) { // Si el trayecto fue hace  24 horas o más, poner fecha
+
+        SimpleDateFormat formato = new SimpleDateFormat("EEEE, dd/MM/yyyy");
+        this.tiempo = formato.format(t.horaFin.getTime());
+
+        /*if (timeFromNow >=  86400000) { // Si el trayecto fue hace  24 horas o más, poner fecha
             SimpleDateFormat formato = new SimpleDateFormat("EEEE, dd/MM/yyyy");
             this.tiempo = formato.format(t.horaFin.getTime());
         } else {
@@ -75,7 +79,7 @@ public class itemHistorialEntity {
             } else {
                 this.tiempo = "Hace " + horas + ( horas == 1 ? " hora" : " horas");
             }
-        }
+        }*/
     }
 
     //GETERS & SETTERS

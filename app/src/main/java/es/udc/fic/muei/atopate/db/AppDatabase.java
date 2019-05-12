@@ -73,9 +73,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
             Calendar horaInicio = Calendar.getInstance();
             Calendar horaFin = Calendar.getInstance();
-            horaInicio.set(2019, 5, 10, 11, 25);
-            horaFin.set(2019, 5, 10, 14, 15);
-            Trayecto trayecto = new Trayecto("A Coruña", "Madrid", horaInicio, horaFin, 530, "pathFoto");
+            horaInicio.set(2019, 4, 10, 11, 25);
+            horaFin.set(2019, 4, 10, 14, 15);
+            Trayecto trayecto = new Trayecto("A Coruña", "Madrid", horaInicio, horaFin, 530, "atopate"+horaInicio.getTimeInMillis());
 
             datos.trayectoId = trayectoDao.upsert(trayecto);
 
@@ -87,9 +87,9 @@ public abstract class AppDatabase extends RoomDatabase {
 //            Trayecto trayecto2 = new Trayecto("Av. dos Mallos", "Pza Pontevedra", horaInicio, horaFin, 2, "pathFoto");
 //            trayectoDao.upsert(trayecto2);
 
-            horaInicio.set(2019, 5, 11, 11, 25);
-            horaFin.set(2019, 5, 11, 14, 15);
-            Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "pathFoto");
+            horaInicio.set(2019, 4, 11, 11, 25);
+            horaFin.set(2019, 4, 11, 14, 15);
+            Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "atopate"+horaInicio.getTimeInMillis());
             trayectoDao.upsert(trayecto3);
             return null;
         }

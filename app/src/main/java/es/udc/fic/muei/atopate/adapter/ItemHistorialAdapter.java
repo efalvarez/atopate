@@ -98,7 +98,7 @@ public class ItemHistorialAdapter extends BaseAdapter {
 
         ImageView imagen = view.findViewById(R.id.imageView);
         try {
-            setPic(dir.getIcono(), imagen);
+            setPic(dir.getIcono(), imagen, 0);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -107,7 +107,7 @@ public class ItemHistorialAdapter extends BaseAdapter {
 
         ImageView imageViewDetalle = view.findViewById(R.id.image);
         try {
-            setPic(dir.getIcono(), imageViewDetalle);
+            setPic(dir.getIcono(), imageViewDetalle, 1);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -119,7 +119,7 @@ public class ItemHistorialAdapter extends BaseAdapter {
         return view;
     }
 
-    private void setPic(String imagePath, ImageView imageView) throws FileNotFoundException {
+    private void setPic(String imagePath, ImageView imageView, int type) throws FileNotFoundException {
         int targetW = imageView.getWidth(); // Get the dimensions of the View
         int targetH = imageView.getHeight();
 
@@ -142,7 +142,11 @@ public class ItemHistorialAdapter extends BaseAdapter {
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
-        imageView.setImageBitmap(bitmap);
+        if (bitmap != null || type == 0) {
+            imageView.setImageBitmap(bitmap);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
     }
 
     private void configureCharts(PieChartView pieChart, int position, GraphView graph) {
@@ -221,7 +225,8 @@ public class ItemHistorialAdapter extends BaseAdapter {
             }
 
         } else {
-            pieData.add(new SliceValue(8, Color.LTGRAY).setLabel("8"));
+            pieData.add(new SliceValue(7, Color.LTGRAY).setLabel(""));
+            pieData.add(new SliceValue(1, Color.RED).setLabel("8"));
         }
 
         PieChartData pieChartData = new PieChartData(pieData);

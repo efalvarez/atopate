@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -19,7 +20,10 @@ import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
@@ -62,6 +66,8 @@ public class EstadisticasFragment extends Fragment {
 
         trayectoService = new TrayectoService(getContext());
         trayectos.addAll(trayectoService.getAllToday());
+        TextView conteo = viewinflated.findViewById(R.id.numeroTrayectos);
+        conteo.setText(trayectos.size() + " trayectos");
 
         configureSpinner(viewinflated);
         configureCharts(viewinflated);
@@ -89,7 +95,7 @@ public class EstadisticasFragment extends Fragment {
         };
         Spinner s = vista.findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(vista.getContext(),
-                android.R.layout.simple_spinner_item, arraySpinner);
+                android.R.layout.simple_spinner_dropdown_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -98,16 +104,34 @@ public class EstadisticasFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view,
                                        int position, long id) {
                 trayectos.removeAll(trayectos);
+                TextView fechas = vista.findViewById(R.id.fechas);
+                Calendar cal = Calendar.getInstance();
+                Date today = cal.getTime();
+
                 switch(position) {
                     case 0:
                         trayectos.addAll(trayectoService.getAllToday());
+                        fechas.setText(new SimpleDateFormat("dd/MM/yyyy").format(today));
                         break;
                     case 1:
                         trayectos.addAll(trayectoService.getAllYesterday());
+                        cal.add(Calendar.DATE, -1);
+                        Date yesterday = cal.getTime();
+                        fechas.setText(new SimpleDateFormat("dd/MM/yyyy").format(yesterday));
                         break;
                     case 2:
+                        cal.add(Calendar.DATE, -7);
+                        Date lastWeek = cal.getTime();
+                        fechas.setText(new SimpleDateFormat("dd/MM/yyyy").format(lastWeek) + "-"
+                                + new SimpleDateFormat("dd/MM/yyyy").format(lastWeek));
                         trayectos.addAll(trayectoService.getAllLastWeek());
                         break;
+                }
+                TextView conteo = vista.findViewById(R.id.numeroTrayectos);
+                if (trayectos.size() == 1) {
+                    conteo.setText(trayectos.size() + " trayecto");
+                } else {
+                    conteo.setText(trayectos.size() + " trayectos");
                 }
                 configureCharts(vista);
             }
@@ -128,6 +152,7 @@ public class EstadisticasFragment extends Fragment {
 
         speedGraph.removeAllSeries();
         fuelGraph.removeAllSeries();
+        pieChartView.setPieChartData(null);
 
         BarGraphSeries<DataPoint> speedSeries = new BarGraphSeries<>(new DataPoint[]{});
         BarGraphSeries<DataPoint> fuelSeries = new BarGraphSeries<>(new DataPoint[]{});
@@ -171,11 +196,14 @@ public class EstadisticasFragment extends Fragment {
 
                         numDatos++;
                     }
+                    fuelAvg = fuelSuma / numDatos;
+                    velocidadAvg = fuelSuma / numDatos;
+                    rpmAvg = rpmSuma / numDatos;
+                }
+                else {
+                    fuelMin = 0.0;
                 }
             }
-            fuelAvg = fuelSuma / numDatos;
-            velocidadAvg = fuelSuma / numDatos;
-            rpmAvg = rpmSuma / numDatos;
 
         } else {
             fuelMin = 0.0;
@@ -183,12 +211,12 @@ public class EstadisticasFragment extends Fragment {
 
 
         DataPoint[] dataPointsSpeed = new DataPoint[2];
-        dataPointsSpeed[0] = new DataPoint(1, velocidadMax);
-        dataPointsSpeed[1] = new DataPoint(2, velocidadAvg);
+        dataPointsSpeed[0] = new DataPoint(1, Math.round(velocidadMax));
+        dataPointsSpeed[1] = new DataPoint(2, Math.round(velocidadAvg));
         DataPoint[] dataPointsFuel = new DataPoint[3];
-        dataPointsFuel[0] = new DataPoint(1, fuelMax);
-        dataPointsFuel[1] = new DataPoint(2, fuelAvg);
-        dataPointsFuel[2] = new DataPoint(3, fuelMin);
+        dataPointsFuel[0] = new DataPoint(1, Math.round(fuelMax));
+        dataPointsFuel[1] = new DataPoint(2, Math.round(fuelAvg));
+        dataPointsFuel[2] = new DataPoint(3, Math.round(fuelMin));
 
         speedSeries = new BarGraphSeries<>(dataPointsSpeed);
         speedSeries.setColor(Color.RED);
