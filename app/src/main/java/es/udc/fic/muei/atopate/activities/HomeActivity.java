@@ -335,7 +335,7 @@ public class HomeActivity extends AppCompatActivity {
         Calendar inicio = Calendar.getInstance();
         Calendar fin = Calendar.getInstance();
         inicio.add(Calendar.HOUR, -1);
-        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "pathfoto");
+        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "atopate"+inicio.getTimeInMillis());
         t.puntosTrayecto = new PuntosTrayecto();
         DatosOBD datos = new DatosOBD();
         datos.trayectoId = t.id;

@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -107,7 +109,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         estadisticasButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (estadisticas.getVisibility() == View.GONE) {
                     estadisticas.setVisibility(View.VISIBLE);
                 } else {
@@ -121,11 +122,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         fotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (foto.getVisibility() == View.GONE) {
-                    foto.setVisibility(View.VISIBLE);
+                ImageView imagen = foto.findViewById(R.id.imageView);
+                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+
+                if (bitmap != null) {
+                    if (foto.getVisibility() == View.GONE) {
+                        foto.setVisibility(View.VISIBLE);
+                    } else {
+                        foto.setVisibility(View.GONE);
+                    }
                 } else {
-                    foto.setVisibility(View.GONE);
+                    CustomToast toast = new CustomToast(activity.getApplicationContext(), "No hay ninguna imagen", Toast.LENGTH_LONG);
+                    toast.show();
                 }
+
             }
         });
 
@@ -149,10 +160,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             origenDestino.setText(trayecto.origen + " - " + trayecto.destino);
 
             TextView tiempo = viewinflated.findViewById(R.id.tiempo);
-            tiempo.setText(item.getHoras());
-
-            TextView distancia = viewinflated.findViewById(R.id.distancia);
-            distancia.setText(item.getDistancia() + " -  37.5 litros" );
+            tiempo.setText(item.getHoras() + " - " + item.getDistancia());
 
             if (trayecto.foto != null) {
                 try {
@@ -285,7 +293,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             Double rpmTo7 = 7 - paintedRPM;
             Double rpmLimitValue = 1.0;
 
-            if (paintedRPM < 5) {
+            if (paintedRPM < 4) {
                 pieData.add(new SliceValue(paintedRPM.floatValue(), Color.GREEN));
             } else if (paintedRPM < 8) {
                 pieData.add(new SliceValue(paintedRPM.floatValue(), Color.rgb(255,165,0)));
@@ -300,7 +308,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
 
         } else {
-            pieData.add(new SliceValue(8, Color.LTGRAY));
+            pieData.add(new SliceValue(7, Color.LTGRAY).setLabel(""));
+            pieData.add(new SliceValue(1, Color.RED).setLabel("8"));
         }
 
         PieChartData pieChartData = new PieChartData(pieData);
