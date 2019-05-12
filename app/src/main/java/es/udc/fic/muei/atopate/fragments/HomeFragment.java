@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -121,13 +123,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View view) {
                 ImageView imagen = foto.findViewById(R.id.imageView);
-                if (foto.getVisibility() == View.GONE && imagen.getDrawable() != null) {
-                    foto.setVisibility(View.VISIBLE);
+                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+
+                if (bitmap != null) {
+                    if (foto.getVisibility() == View.GONE) {
+                        foto.setVisibility(View.VISIBLE);
+                    } else {
+                        foto.setVisibility(View.GONE);
+                    }
                 } else {
-                    foto.setVisibility(View.GONE);
                     CustomToast toast = new CustomToast(activity.getApplicationContext(), "No hay ninguna imagen", Toast.LENGTH_LONG);
                     toast.show();
                 }
+
             }
         });
 
@@ -151,10 +160,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             origenDestino.setText(trayecto.origen + " - " + trayecto.destino);
 
             TextView tiempo = viewinflated.findViewById(R.id.tiempo);
-            tiempo.setText(item.getHoras());
-
-            TextView distancia = viewinflated.findViewById(R.id.distancia);
-            distancia.setText(item.getDistancia() + " -  37.5 litros" );
+            tiempo.setText(item.getHoras() + " - " + item.getDistancia());
 
             if (trayecto.foto != null) {
                 try {

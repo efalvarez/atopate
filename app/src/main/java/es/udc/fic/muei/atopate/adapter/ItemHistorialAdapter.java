@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,10 +143,15 @@ public class ItemHistorialAdapter extends BaseAdapter {
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
-        if (bitmap != null || type == 0) {
+        if (type == 0) {
             imageView.setImageBitmap(bitmap);
         } else {
-            imageView.setVisibility(View.GONE);
+            Log.d("ahoa",  "hola");
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                imageView.setVisibility(View.GONE);
+            }
         }
     }
 
