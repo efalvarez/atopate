@@ -135,31 +135,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             captureButton.setEnabled(false);
         }
 
-        if (activity.getBipMap() != null && image != null) {
-
-            image.setImageBitmap(activity.getBipMap());
-            image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (contador == 0 || contador%2 == 0) {
-                        captureButton.setEnabled(false);
-                    } else {
-                        captureButton.setEnabled(true);
-                    }
-
-                    float scale = screen_width / view.getWidth();
-                    if (view.getScaleX() == 1) {
-                        view.setScaleY(scale);
-                        view.setScaleX(scale);
-                    } else {
-                        view.setScaleY(1);
-                        view.setScaleX(1);
-                    }
-                    contador++;
-                }
-            });
-        }
-
         configureCharts(viewinflated);
         configureMaps(viewinflated, savedInstanceState);
 
