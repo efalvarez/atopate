@@ -28,7 +28,6 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            // Example data when db created
             new PopulateDbAsync(INSTANCE).execute();
         }
     };
@@ -69,27 +68,25 @@ public abstract class AppDatabase extends RoomDatabase {
             DatosOBD datos = new DatosOBD();
             datos.speed = 20D;
             datos.fuelLevel = 20D;
-            datos.oilTemp = 20D;
 
             Calendar horaInicio = Calendar.getInstance();
             Calendar horaFin = Calendar.getInstance();
             horaInicio.set(2019, 3, 18, 11, 25);
             horaFin.set(2019, 3, 18, 14, 15);
-            Trayecto trayecto = new Trayecto("A Coruña", "Madrid", horaInicio, horaFin, 530, "pathFoto");
+            Trayecto trayecto = new Trayecto("A Coruña", "Madrid", horaInicio, horaFin, 530, "pathFoto", false);
 
             datos.trayectoId = trayectoDao.upsert(trayecto);
 
             datosOBDDao.upsert(datos);
 
-
 //            horaInicio.set(2019, 2, 18, 11, 25);
 //            horaFin.set(2019, 2, 18, 14, 15);
-//            Trayecto trayecto2 = new Trayecto("Av. dos Mallos", "Pza Pontevedra", horaInicio, horaFin, 2, "pathFoto");
+//            Trayecto trayecto2 = new Trayecto("Av. dos Mallos", "Pza Pontevedra", horaInicio, horaFin, 2, "pathFoto", false);
 //            trayectoDao.upsert(trayecto2);
 //
 //            horaInicio.set(2019, 1, 18, 11, 25);
 //            horaFin.set(2019, 1, 18, 14, 15);
-//            Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "pathFoto");
+//            Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "pathFoto", false);
 //            trayectoDao.upsert(trayecto3);
             return null;
         }

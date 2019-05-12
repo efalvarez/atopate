@@ -1,6 +1,7 @@
 package es.udc.fic.muei.atopate.activities;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -27,15 +29,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.sohrab.obd.reader.application.Preferences;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
-import com.sohrab.obd.reader.obdCommand.engine.OilTempCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -45,6 +48,7 @@ import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
 import es.udc.fic.muei.atopate.bluetooth.BluetoothConstants;
 import es.udc.fic.muei.atopate.bluetooth.BluetoothReaderService;
 import es.udc.fic.muei.atopate.db.TrayectoService;
+import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.CustomToast;
@@ -70,6 +74,8 @@ public class HomeActivity extends AppCompatActivity {
     private Uri capturedImageURI;
     private Bitmap bitMap;
 
+    private boolean isBluetoothConnectionEstablished;
+
     private BroadcastReceiver bthReceiver = new BroadcastReceiver() {
 
         @Override
@@ -89,9 +95,98 @@ public class HomeActivity extends AppCompatActivity {
 
             } else if (action.equalsIgnoreCase(OBD_ACTION_DATA_READ)) {
 
+                // LECTURA TRAYECTO
+
                 TripRecord tripRecord = TripRecord.getTripRecode(HomeActivity.this);
 
+                if (trayecto != null) {
+                    DatosOBD datosOBD = new DatosOBD();
 
+
+                    datosOBD.speed = Double.valueOf(tripRecord.getSpeed());
+
+                    Field field = null;
+                    try {
+                        field = tripRecord.getClass().getDeclaredField("mFuelLevel");
+                        field.setAccessible(true);
+                        Object value = field.get(tripRecord);
+
+                        if (value != null) {
+                            String fuelLevelValue = (String) value;
+                            Log.i("CheckThis", "fuelLeve :: " + fuelLevelValue);
+                            fuelLevelValue = fuelLevelValue.replaceAll("\\%", "");
+                            fuelLevelValue = fuelLevelValue.replaceAll("\\,", "\\.");
+                            datosOBD.fuelLevel = Double.valueOf(fuelLevelValue);
+                        } else {
+                            datosOBD.fuelLevel = null;
+                        }
+
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    trayectoService.updateTrayectoinfo(datosOBD, trayecto.id);
+                }
+
+
+            } else if (action.equalsIgnoreCase(BluetoothConstants.OBD_ACTION_DISCONNECTED)) {
+
+                // FIN TRAYECTO: Parte del coche (se apago, se desconecto del bluetooth, etc)
+
+                isBluetoothConnectionEstablished = false;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Button bluetoothButton = findViewById(R.id.bluetooth);
+                    bluetoothButton.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
+                }
+
+                Trayecto currentTrayecto = trayectoService.getCurrentTrayecto();
+
+                if (currentTrayecto != null && !CollectionUtils.isEmpty(currentTrayecto.datosOBD) && currentTrayecto.esTrayectoActual) {
+                    // en caso de que se haya desconectado antes de siquiera iniciar un viaje
+
+                    TripRecord record = TripRecord.getTripRecode(HomeActivity.this);
+
+                    currentTrayecto.horaFin = Calendar.getInstance();
+                    currentTrayecto.esTrayectoActual = false;
+                    currentTrayecto.distancia = (int) record.getmDistanceTravel();
+                    trayectoService.insert(trayecto);
+                    trayecto = null;
+                }
+
+            } else if (action.equalsIgnoreCase(BluetoothConstants.OBD_ACTION_CONNECTED)) {
+
+                // INICIO TRAYECTO: Conexion establecida con el coche. En caso de que ya se hubiera creado
+                // un trayecto que estuviera vacio, se procede a actualizarle la hora de inicio
+
+                isBluetoothConnectionEstablished = true;
+
+                Button bluetoothButton = findViewById(R.id.bluetooth);
+                ViewCompat.setBackgroundTintList(bluetoothButton, ContextCompat.getColorStateList(getApplicationContext(), android.R.color.holo_blue_bright));
+
+
+                Trayecto currentTrayecto = trayectoService.getCurrentTrayecto();
+
+                if (currentTrayecto == null) {
+
+                    Calendar hora = Calendar.getInstance();
+                    Trayecto trayectoInsercion = new Trayecto("Bluetooth" +
+                            Calendar.getInstance().getTime().toLocaleString(), "Casa", hora,
+                            null, 23, null, true);
+
+                    trayectoInsercion.datosOBD = new ArrayList<>();
+                    trayectoInsercion.id = trayectoService.insert(trayectoInsercion);
+
+                    trayecto = trayectoInsercion;
+                } else {
+
+                    currentTrayecto.horaInicio = Calendar.getInstance();
+                    trayectoService.insert(currentTrayecto);
+
+                }
             }
 
         }
@@ -122,7 +217,9 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (itemId) {
             case R.id.navigation_home:
-                trayecto = trayectoService.getLast();
+                if (trayecto == null) {
+                    trayecto = trayectoService.getLast();
+                }
 
                 fragmentToSubstitute = HomeFragment.newInstance();
 
@@ -130,7 +227,9 @@ public class HomeActivity extends AppCompatActivity {
                 break;
 
             case R.id.navigation_atopate:
-                trayecto = trayectoService.getLast();
+                if (trayecto == null) {
+                    trayecto = trayectoService.getLast();
+                }
 
                 fragmentToSubstitute = TrayectoFragment.newInstance();
 
@@ -197,6 +296,24 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
 
         setFragment(bottomNavigationView.getSelectedItemId());
+
+        SharedPreferences sharedPreferences = getSharedPreferences("PreferenciasAtopate", Context.MODE_PRIVATE);
+        boolean doWeComeFromBluetooth = sharedPreferences.getBoolean(BluetoothConstants.PREFERENCE_KEY_GOING_TO_BLUETOOTH, false);
+
+        boolean isOBDDisconnected = !Preferences.get(getApplicationContext()).getIsOBDconnected();
+
+        if (BluetoothAdapter.getDefaultAdapter().isEnabled() && doWeComeFromBluetooth &&
+                isOBDDisconnected) {
+            // caso de que vengamos de la aplicacion de bluetooth y reestablecemos el estado
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(BluetoothConstants.PREFERENCE_KEY_GOING_TO_BLUETOOTH, false);
+            editor.apply();
+
+            isBluetoothConnectionEstablished = false;
+
+            Toast.makeText(getApplicationContext(), R.string.obd_reconnect, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
@@ -220,7 +337,6 @@ public class HomeActivity extends AppCompatActivity {
         // establecemos los comandos que procederemos a leer del coche
         ArrayList<ObdCommand> obdComands = new ArrayList<>(Arrays.asList(
                 new SpeedCommand(),
-                new OilTempCommand(),
                 new FuelLevelCommand()
         ));
 
@@ -231,9 +347,13 @@ public class HomeActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothConstants.OBD_ACTION_MESSAGE);
         intentFilter.addAction(BluetoothConstants.OBD_ACTION_DATA_READ);
+        intentFilter.addAction(BluetoothConstants.OBD_ACTION_DISCONNECTED);
+        intentFilter.addAction(BluetoothConstants.OBD_ACTION_CONNECTED);
 
         // establecemos el listener que procesara los resultados obtenidos del coche
         registerReceiver(bthReceiver, intentFilter);
+
+        isBluetoothConnectionEstablished = Preferences.get(getApplicationContext()).getIsOBDconnected();
 
     }
 
@@ -333,7 +453,7 @@ public class HomeActivity extends AppCompatActivity {
         Calendar inicio = Calendar.getInstance();
         Calendar fin = Calendar.getInstance();
         inicio.add(Calendar.HOUR, -1);
-        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "pathfoto");
+        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "pathfoto", false);
         t.puntosTrayecto = new PuntosTrayecto();
         t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
         trayectoService.insert(t);
@@ -356,22 +476,38 @@ public class HomeActivity extends AppCompatActivity {
 
         Button bluetoothButton = findViewById(R.id.bluetooth);
 
-
-        if (Preferences.get(getApplicationContext()).getIsOBDconnected()) {
+        if (isBluetoothConnectionEstablished) {
 
             bluetoothButton.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
 
             Intent stopBluetoothService = new Intent(this, BluetoothReaderService.class);
             stopService(stopBluetoothService);
 
+            Trayecto currentTrayecto = trayectoService.getCurrentTrayecto();
+
+            if (currentTrayecto != null && !CollectionUtils.isEmpty(currentTrayecto.datosOBD) && currentTrayecto.esTrayectoActual) {
+                // FIN DE TRAYECTO: Por parte del usuario
+
+                TripRecord record = TripRecord.getTripRecode(HomeActivity.this);
+
+                currentTrayecto.distancia = (int) record.getmDistanceTravel();
+
+                currentTrayecto.horaFin = Calendar.getInstance();
+                currentTrayecto.esTrayectoActual = false;
+                trayectoService.insert(currentTrayecto);
+                trayecto = null;
+            }
+
         } else {
 
-            ViewCompat.setBackgroundTintList(bluetoothButton, ContextCompat.getColorStateList(this, android.R.color.holo_blue_bright));
+            ViewCompat.setBackgroundTintList(bluetoothButton, ContextCompat.getColorStateList(this, android.R.color.holo_orange_light));
 
             Intent startBluetoothService = new Intent(this, BluetoothReaderService.class);
             startService(startBluetoothService);
         }
 
+
+        isBluetoothConnectionEstablished = !isBluetoothConnectionEstablished;
 
     }
 

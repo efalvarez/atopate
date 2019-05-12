@@ -40,8 +40,15 @@ public class TrayectoService {
         return null;
     }
 
-    public void insert(Trayecto trayecto) {
-        new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto);
+    public Long insert(Trayecto trayecto) {
+        try {
+            return new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void setFoto(Trayecto trayecto) {
@@ -59,9 +66,21 @@ public class TrayectoService {
         return null;
     }
 
-    public Trayecto getById(Long trayectoId) {
+    public List<Trayecto> getAllTrayectos() {
         try {
-            return new getByIdAsyncTask(dao, puntosDao, datosOBDDao).execute(trayectoId).get();
+            return new getAllTrayectosAsyncTask(dao, puntosDao, datosOBDDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public Trayecto getTrayectoById(Long trayectoId) {
+
+        try {
+            return new getTrayectoById(dao, puntosDao, datosOBDDao).execute(trayectoId).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -70,7 +89,26 @@ public class TrayectoService {
         return null;
     }
 
-    private static class insertAsyncTask extends AsyncTask<Trayecto, Void, Void> {
+    public void updateTrayectoinfo(DatosOBD informacionTrayecto, Long idTrayecto) {
+
+        informacionTrayecto.trayectoId = idTrayecto;
+
+        new updateTrayectoInfo(datosOBDDao).execute(informacionTrayecto);
+    }
+
+    public Trayecto getCurrentTrayecto() {
+
+        try {
+            return new getCurrentTrayecto(dao, puntosDao, datosOBDDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static class insertAsyncTask extends AsyncTask<Trayecto, Void, Long> {
 
         private TrayectoDao mAsyncTaskDao;
         private PuntosTrayectoDao mAsyncTaskPuntosDao;
@@ -83,10 +121,17 @@ public class TrayectoService {
         }
 
         @Override
-        protected Void doInBackground(Trayecto... params) {
-            Long idTrayecto = mAsyncTaskDao.upsert(params[0]);
-            List<DatosOBD> datosCoche = params[0].datosOBD;
+        protected Long doInBackground(Trayecto... params) {
 
+            Trayecto trayectoToInsert = params[0];
+            Long idTrayecto;
+            if (trayectoToInsert != null && trayectoToInsert.esTrayectoActual) {
+                idTrayecto = mAsyncTaskDao.setCurrentTrayecto(trayectoToInsert);
+            } else {
+                idTrayecto = mAsyncTaskDao.upsert(params[0]);
+            }
+
+            List<DatosOBD> datosCoche = params[0].datosOBD;
 
             if (params[0].puntosTrayecto != null) {
                 params[0].puntosTrayecto.trayectoId = idTrayecto;
@@ -95,14 +140,15 @@ public class TrayectoService {
 
             if (!CollectionUtils.isEmpty(datosCoche)) {
 
-                for (DatosOBD datoCoche : datosCoche) {
+                DatosOBD[] datos = datosCoche.toArray(new DatosOBD[0]);
+                for (DatosOBD datoCoche : datos) {
                     datoCoche.trayectoId = idTrayecto;
                     mAsyncTaskDatosOBDDao.upsert(datoCoche);
                 }
 
             }
 
-            return null;
+            return idTrayecto;
         }
     }
 
@@ -168,21 +214,46 @@ public class TrayectoService {
         }
     }
 
-    private static class getByIdAsyncTask extends AsyncTask<Long, Void, Trayecto> {
+    private static class getAllTrayectosAsyncTask extends AsyncTask<Void, Void, List<Trayecto>> {
 
         private TrayectoDao mAsyncTaskDao;
         private PuntosTrayectoDao mAsyncTaskPuntosDao;
         private DatosOBDDao mAsyncTaskDatosOBDDao;
 
-        getByIdAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosDao, DatosOBDDao datosOBDDao) {
+        getAllTrayectosAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosDao, DatosOBDDao datosOBDDao) {
             mAsyncTaskDao = dao;
             mAsyncTaskPuntosDao = puntosDao;
             mAsyncTaskDatosOBDDao = datosOBDDao;
         }
 
         @Override
-        protected Trayecto doInBackground(Long... ids) {
-            Trayecto result = mAsyncTaskDao.getById(ids[0]);
+        protected List<Trayecto> doInBackground(Void... voids) {
+            List<Trayecto> result = mAsyncTaskDao.getAll();
+
+            for (Trayecto trayecto : result) {
+                trayecto.puntosTrayecto = mAsyncTaskPuntosDao.getByTrayecto(trayecto.id);
+                trayecto.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(trayecto.id);
+            }
+
+            return result;
+        }
+    }
+
+    private static class getTrayectoById extends AsyncTask<Long, Void, Trayecto> {
+
+        private TrayectoDao mAsyncTaskDao;
+        private PuntosTrayectoDao mAsyncTaskPuntosDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
+
+        getTrayectoById(TrayectoDao dao, PuntosTrayectoDao puntosDao, DatosOBDDao datosOBDDao) {
+            mAsyncTaskDao = dao;
+            mAsyncTaskPuntosDao = puntosDao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
+        }
+
+        @Override
+        protected Trayecto doInBackground(Long... params) {
+            Trayecto result = mAsyncTaskDao.getById(params[0]);
 
             if (result != null) {
                 result.puntosTrayecto = mAsyncTaskPuntosDao.getByTrayecto(result.id);
@@ -192,4 +263,47 @@ public class TrayectoService {
             return result;
         }
     }
+
+
+    private static class updateTrayectoInfo extends AsyncTask<DatosOBD, Void, Void> {
+
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
+
+        updateTrayectoInfo(DatosOBDDao datosOBDDao) {
+            mAsyncTaskDatosOBDDao = datosOBDDao;
+        }
+
+        @Override
+        protected Void doInBackground(DatosOBD... params) {
+            mAsyncTaskDatosOBDDao.upsert(params[0]);
+            return null;
+        }
+    }
+
+
+    private static class getCurrentTrayecto extends AsyncTask<Void, Void, Trayecto> {
+
+        private TrayectoDao mAsyncTaskDao;
+        private PuntosTrayectoDao mAsyncTaskPuntosDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
+
+        getCurrentTrayecto(TrayectoDao dao, PuntosTrayectoDao puntosDao, DatosOBDDao datosOBDDao) {
+            mAsyncTaskDao = dao;
+            mAsyncTaskPuntosDao = puntosDao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
+        }
+
+        @Override
+        protected Trayecto doInBackground(Void... params) {
+            Trayecto result = mAsyncTaskDao.getCurrent();
+
+            if (result != null) {
+                result.puntosTrayecto = mAsyncTaskPuntosDao.getByTrayecto(result.id);
+                result.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(result.id);
+            }
+
+            return result;
+        }
+    }
+
 }

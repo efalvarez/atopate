@@ -43,6 +43,7 @@ import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
+import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
@@ -57,15 +58,28 @@ import static android.app.Activity.RESULT_OK;
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
 
-    private MapView mapaVista;
-
     static final int REQUEST_TAKE_PHOTO = 1;
-
-    private ImageView image;
-
-    private String pictureFilePath;
+    static final int REQUEST_PICTURE_CAPTURE = 1;
     private static final String TAG = HomeActivity.class.getSimpleName();
+    private MapView mapaVista;
+    private ImageView image;
+    private String pictureFilePath;
     private int contador = 0;
+    private TrayectoService trayectoService;
+    private float screen_width = new Float(0);
+    private View.OnClickListener capture = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                if (((HomeActivity) getActivity()).tienePermiso(Manifest.permission.CAMERA)) {
+                    dispatchTakePictureIntent();
+                } else {
+                    CustomToast toast = new CustomToast(getActivity(), "No consediste permisos de uso de la cámara", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+        }
+    };
 
     public HomeFragment() {
         // Required empty public constructor
@@ -78,11 +92,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return fragment;
     }
 
-    private float screen_width = new Float(0);
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        trayectoService = new TrayectoService(getContext());
+
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         screen_width = metrics.widthPixels;
@@ -100,7 +115,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         HomeActivity activity = (HomeActivity) getActivity();
 
-        final Button estadisticasButton = viewinflated.findViewById(R.id.botonEstadisticas);
+        Button estadisticasButton = viewinflated.findViewById(R.id.botonEstadisticas);
         ConstraintLayout estadisticas = viewinflated.findViewById(R.id.inicioEstadisticas);
         estadisticasButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +129,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        final Button fotoButton = viewinflated.findViewById(R.id.botonFoto);
+        Button fotoButton = viewinflated.findViewById(R.id.botonFoto);
         ConstraintLayout foto = viewinflated.findViewById(R.id.inicioFoto);
         fotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +142,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        final Button captureButton = viewinflated.findViewById(R.id.photo);
+        Button captureButton = viewinflated.findViewById(R.id.photo);
         captureButton.setOnClickListener(capture);
         if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) && captureButton != null) {
             captureButton.setEnabled(false);
@@ -139,7 +154,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (contador == 0 || contador%2 == 0) {
+                    if (contador == 0 || contador % 2 == 0) {
                         captureButton.setEnabled(false);
                     } else {
                         captureButton.setEnabled(true);
@@ -162,7 +177,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         configureCharts(viewinflated);
         configureMaps(viewinflated, savedInstanceState);
 
-        Trayecto trayecto = activity.trayecto;
+        Trayecto trayecto = trayectoService.getLast();
         if (trayecto != null) {
             itemHistorialEntity item = new itemHistorialEntity(trayecto);
 
@@ -176,7 +191,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             tiempo.setText(item.getHoras());
 
             TextView distancia = viewinflated.findViewById(R.id.distancia);
-            distancia.setText(item.getDistancia() + " -  37.5 litros" );
+            distancia.setText(item.getDistancia() + " -  37.5 litros");
 
             if (trayecto.foto != null) {
                 try {
@@ -192,6 +207,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return viewinflated;
     }
 
+    // serie de metodos reimplementados para que el mapa se actualice de acorde al estado de la tarea
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -201,8 +218,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onDetach() {
         super.onDetach();
     }
-
-    // serie de metodos reimplementados para que el mapa se actualice de acorde al estado de la tarea
 
     @Override
     public void onResume() {
@@ -293,7 +308,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             try { // Create the File where the photo should go
                 photoFile = createImageFile();
             } catch (IOException ex) {// Error occurred while creating the File
-                Toast.makeText(this.getContext(),
+                Toast.makeText(getContext(),
                         "No es posible tomar fotos",
                         Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "EXCEPCION: " + ex.toString());
@@ -339,28 +354,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return image;
     }
 
-    private View.OnClickListener capture = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                if (((HomeActivity) getActivity()).tienePermiso(Manifest.permission.CAMERA)) {
-                    dispatchTakePictureIntent();
-                }
-                else {
-                    CustomToast toast = new CustomToast(getActivity(), "No consediste permisos de uso de la cámara", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-            }
-        }
-    };
-
     private void addToGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         HomeActivity activity = (HomeActivity) getActivity();
         File f = new File(activity.getCurrentPhotoPath());
         Uri picUri = Uri.fromFile(f);
         galleryIntent.setData(picUri);
-        this.getActivity().sendBroadcast(galleryIntent);
+        getActivity().sendBroadcast(galleryIntent);
     }
 
     private void setPic(String imagePath, ImageView imageView) throws FileNotFoundException {
@@ -369,8 +369,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         if (targetW == 0 || targetH == 0) {
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-            targetH =  Math.round(80 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-            targetW =  Math.round(85 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            targetH = Math.round(80 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            targetW = Math.round(85 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         }
 
         HomeActivity activity = (HomeActivity) getActivity();
@@ -392,11 +392,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         imageView.setImageBitmap(bitmap);
     }
 
-    static final int REQUEST_PICTURE_CAPTURE = 1;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       // super.onActivityResult(requestCode, resultCode, data);
+        // super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PICTURE_CAPTURE && resultCode == RESULT_OK) {
             HomeActivity activity = (HomeActivity) getActivity();
             addToGallery();
@@ -413,14 +411,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap mMap) {
 
-        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
         HomeActivity activity = (HomeActivity) getActivity();
         if (activity.trayecto != null && activity.trayecto.puntosTrayecto != null) {
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-            int height =  Math.round(150 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            int height = Math.round(150 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
             RouteFinder.drawRoute(activity.trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height);
         }

@@ -4,7 +4,9 @@ import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -78,6 +80,8 @@ public class BluetoothReaderService extends IntentService {
             Intent intentOpenBluetoothSettings = new Intent();
             intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
             startActivity(intentOpenBluetoothSettings);
+
+            establishGoingToOtherActivity();
 
             // e paramos o proceso
             stopSelf();
@@ -180,8 +184,23 @@ public class BluetoothReaderService extends IntentService {
 
                 L.i("Exception executing command :: " + command.getName() + " :: " + e.getMessage());
 
-                if (!TextUtils.isEmpty(e.getMessage()) && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"))) {
+                boolean condicionOriginalComrpobacionConexion = !TextUtils.isEmpty(e.getMessage())
+                        && (e.getMessage().equals("Broken pipe") || e.getMessage().equals("Connection reset by peer"));
+
+                boolean unableToRetrieveData = e.getMessage().contains(BluetoothConstants.CODE_OBD_UNABLE_TO_RETRIEVE_DATA);
+
+                boolean carDisconnected = e.getMessage().contains(BluetoothConstants.CODE_OBD_CAR_DISCONNECTED);
+
+                if (condicionOriginalComrpobacionConexion || unableToRetrieveData) {
                     L.i("command Exception  :: " + e.getMessage());
+
+                    sendMessageToBroadcast(BluetoothConstants.OBD_ACTION_MESSAGE, getString(R.string.obd_running_vehicle_mandatory));
+                    establishDiconnectionStatus();
+
+                    deviceIsConnected = false;
+                    return;
+
+                } else if (carDisconnected) {
                     establishDiconnectionStatus();
                 }
             }
@@ -191,6 +210,7 @@ public class BluetoothReaderService extends IntentService {
                 count = 0;
 
 
+                // Establece un delay entre recuperacion de los datos
                 try {
                     Thread.sleep(BluetoothConstants.COMMAND_EXECUTION_DELAY);
                 } catch (InterruptedException e) {
@@ -241,7 +261,7 @@ public class BluetoothReaderService extends IntentService {
 
                 }
 
-                if (!deviceFound) {
+                if (!deviceFound && (bthSocket == null || bthSocket.isConnected())) {
                     // no caso de que non se encontrase algun dispositivo, mandamos un mensaje
                     sendMessageToBroadcast(BluetoothConstants.OBD_ACTION_MESSAGE, getString(R.string.obd_not_found));
                 }
@@ -354,7 +374,7 @@ public class BluetoothReaderService extends IntentService {
 
                 // en caso de que no podamos conectarnos mandamos el mensaje correspondiente
                 sendMessageToBroadcast(BluetoothConstants.OBD_ACTION_MESSAGE, getString(R.string.obd_not_available));
-                stopSelf();
+                establishDiconnectionStatus();
 
             }
         }
@@ -384,16 +404,22 @@ public class BluetoothReaderService extends IntentService {
 
         Preferences.get(getApplicationContext()).setIsOBDconnected(true);
         deviceIsConnected = true;
+
+        L.i("The socket was connected :: ");
+        sendBroadcast(new Intent(BluetoothConstants.OBD_ACTION_CONNECTED));
     }
 
     private void establishDiconnectionStatus() {
 
         Preferences.get(getApplicationContext()).setIsOBDconnected(false);
+        Preferences.get(getApplicationContext()).setServiceRunningStatus(false);
         deviceIsConnected = false;
         closeSocket();
 
         L.i("The socket was disconnected :: ");
+
         sendBroadcast(new Intent(BluetoothConstants.OBD_ACTION_DISCONNECTED));
+        stopSelf();
     }
 
     /**
@@ -413,6 +439,18 @@ public class BluetoothReaderService extends IntentService {
         }
     }
 
+
+    private void establishGoingToOtherActivity() {
+
+        SharedPreferences preferences = getSharedPreferences("PreferenciasAtopate", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor preferencesEditor = preferences.edit();
+        preferencesEditor.putBoolean(BluetoothConstants.PREFERENCE_KEY_GOING_TO_BLUETOOTH, true);
+        preferencesEditor.apply();
+
+    }
+
+
     /**
      * create Binder instance used to return in onBind method
      */
@@ -421,6 +459,7 @@ public class BluetoothReaderService extends IntentService {
             return BluetoothReaderService.this;
         }
     }
+
 
 }
 
