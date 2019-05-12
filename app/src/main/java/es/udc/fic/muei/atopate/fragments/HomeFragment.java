@@ -310,7 +310,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             Double rpmTo7 = 7 - paintedRPM;
             Double rpmLimitValue = 1.0;
 
-            if (paintedRPM < 5) {
+            if (paintedRPM < 4) {
                 pieData.add(new SliceValue(paintedRPM.floatValue(), Color.GREEN));
             } else if (paintedRPM < 8) {
                 pieData.add(new SliceValue(paintedRPM.floatValue(), Color.rgb(255,165,0)));

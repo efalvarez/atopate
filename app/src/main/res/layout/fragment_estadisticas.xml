@@ -50,32 +50,45 @@
         android:text="19/02/2019 - 26/02/2019"
         android:textSize="12sp"/>
 
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph2"
-            android:layout_width="match_parent"
-            android:layout_height="158dp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20sp" />
+    <TextView
+        android:id="@+id/conteo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:text="1"
+        android:textSize="12sp" />
 
-    <!--com.jjoe64.graphview.GraphView
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph2"
         android:layout_width="match_parent"
-        android:layout_marginTop="480sp"
+        android:layout_height="158dp"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20sp" />
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_marginTop="20sp"
         android:layout_height="140dp"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
-        android:id="@+id/graph3" /-->
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/graph2"
+        app:layout_constraintTop_toBottomOf="@+id/graph2"
+        android:id="@+id/graph3"/>
 
-        <lecho.lib.hellocharts.view.PieChartView
-            android:id="@+id/graph3"
-            android:layout_width="match_parent"
-            android:layout_height="169dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/graph1"
-            app:layout_constraintTop_toBottomOf="@+id/graph2" />
+    <lecho.lib.hellocharts.view.PieChartView
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="169dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/graph3"
+        app:layout_constraintTop_toBottomOf="@+id/graph3" />
 
     </LinearLayout>
 

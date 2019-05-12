@@ -51,6 +51,39 @@ public class TrayectoService {
         return null;
     }
 
+    public List<Trayecto> getAllToday() {
+        try {
+            return new getAllTodayAsyncTask(dao, puntosDao, datosOBDDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Trayecto> getAllYesterday() {
+        try {
+            return new getAllYesterdayAsyncTask(dao, puntosDao, datosOBDDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Trayecto> getAllLastWeek() {
+        try {
+            return new getAllLastWeekAsyncTask(dao, puntosDao, datosOBDDao).execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public void insert(Trayecto trayecto) {
         new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto);
@@ -189,6 +222,81 @@ public class TrayectoService {
         @Override
         protected List<Trayecto> doInBackground(Void... voids) {
             List<Trayecto> result = mAsyncTaskDao.getAll();
+
+            for (Trayecto t : result) {
+                t.puntosTrayecto = mAsyncTaskPuntosTrayectoDao.getByTrayecto(t.id);
+                t.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(t.id);
+            }
+
+            return result;
+        }
+    }
+
+    private static class getAllTodayAsyncTask extends AsyncTask<Void, Void, List<Trayecto>> {
+
+        private TrayectoDao mAsyncTaskDao;
+        private PuntosTrayectoDao mAsyncTaskPuntosTrayectoDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
+
+        getAllTodayAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosTrayectoDao, DatosOBDDao datosOBDDao) {
+            mAsyncTaskDao = dao;
+            mAsyncTaskPuntosTrayectoDao = puntosTrayectoDao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
+        }
+
+        @Override
+        protected List<Trayecto> doInBackground(Void... voids) {
+            List<Trayecto> result = mAsyncTaskDao.getAllToday();
+
+            for (Trayecto t : result) {
+                t.puntosTrayecto = mAsyncTaskPuntosTrayectoDao.getByTrayecto(t.id);
+                t.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(t.id);
+            }
+
+            return result;
+        }
+    }
+
+    private static class getAllYesterdayAsyncTask extends AsyncTask<Void, Void, List<Trayecto>> {
+
+        private TrayectoDao mAsyncTaskDao;
+        private PuntosTrayectoDao mAsyncTaskPuntosTrayectoDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
+
+        getAllYesterdayAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosTrayectoDao, DatosOBDDao datosOBDDao) {
+            mAsyncTaskDao = dao;
+            mAsyncTaskPuntosTrayectoDao = puntosTrayectoDao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
+        }
+
+        @Override
+        protected List<Trayecto> doInBackground(Void... voids) {
+            List<Trayecto> result = mAsyncTaskDao.getAllYesterday();
+
+            for (Trayecto t : result) {
+                t.puntosTrayecto = mAsyncTaskPuntosTrayectoDao.getByTrayecto(t.id);
+                t.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(t.id);
+            }
+
+            return result;
+        }
+    }
+
+    private static class getAllLastWeekAsyncTask extends AsyncTask<Void, Void, List<Trayecto>> {
+
+        private TrayectoDao mAsyncTaskDao;
+        private PuntosTrayectoDao mAsyncTaskPuntosTrayectoDao;
+        private DatosOBDDao mAsyncTaskDatosOBDDao;
+
+        getAllLastWeekAsyncTask(TrayectoDao dao, PuntosTrayectoDao puntosTrayectoDao, DatosOBDDao datosOBDDao) {
+            mAsyncTaskDao = dao;
+            mAsyncTaskPuntosTrayectoDao = puntosTrayectoDao;
+            mAsyncTaskDatosOBDDao = datosOBDDao;
+        }
+
+        @Override
+        protected List<Trayecto> doInBackground(Void... voids) {
+            List<Trayecto> result = mAsyncTaskDao.getAllLastWeek();
 
             for (Trayecto t : result) {
                 t.puntosTrayecto = mAsyncTaskPuntosTrayectoDao.getByTrayecto(t.id);
