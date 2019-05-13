@@ -3,7 +3,6 @@ package es.udc.fic.muei.atopate.activities;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -21,8 +20,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -42,13 +41,11 @@ import com.sohrab.obd.reader.obdCommand.SpeedCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,7 +84,7 @@ public class HomeActivity extends AppCompatActivity {
     private Uri capturedImageURI;
     private Bitmap bitMap;
 
-    private boolean isBluetoothConnectionEstablished;
+    public boolean isBluetoothConnectionEstablished;
 
     private BroadcastReceiver bthReceiver = new BroadcastReceiver() {
 
@@ -467,14 +464,12 @@ public class HomeActivity extends AppCompatActivity {
         t.puntosTrayecto = new PuntosTrayecto();
         DatosOBD datos = new DatosOBD();
         datos.trayectoId = t.id;
-        datos.fuelLevel = new Double(2);
-        datos.oilTemp = new Double(3);
-        datos.speed = new Double(4);
+        datos.fuelLevel = 2D;
+        datos.speed = 4D;
         DatosOBD datos2 = new DatosOBD();
         datos2.trayectoId = t.id;
-        datos2.fuelLevel = new Double(3);
-        datos2.oilTemp = new Double(4);
-        datos2.speed = new Double(5);
+        datos2.fuelLevel = 3D;
+        datos2.speed = 5D;
         List<DatosOBD> listDatos = new ArrayList<DatosOBD>();
         listDatos.add(datos);
         listDatos.add(datos2);
@@ -496,7 +491,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void onExportarClick(View view) throws IOException {
 
-        List<Trayecto> trayectos = trayectoService.getAll();
+        List<Trayecto> trayectos = trayectoService.getAllTrayectos();
 
         if (trayectos.size() > 0) {
             Type listType = new TypeToken<List<Trayecto>>() {}.getType();

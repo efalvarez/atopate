@@ -24,7 +24,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -212,7 +211,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void startLocationUpdates(GoogleMap mMap) {
-        if (activity.bluetoothRecordIsActivated) {
+        if (activity.isBluetoothConnectionEstablished) {
             if (camino.isEmpty()) {
                 Toast.makeText(activity, "Iniciando trayecto", Toast.LENGTH_SHORT).show();
             }

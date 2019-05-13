@@ -1,10 +1,7 @@
 package es.udc.fic.muei.atopate.db.dao;
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 import android.arch.persistence.room.Transaction;
 
 import java.util.Calendar;
@@ -56,8 +53,6 @@ public abstract class TrayectoDao implements BaseDao<Trayecto> {
         return id;
     }
 
-    @Delete
-    public abstract int delete(List<Trayecto> trayectos);
 
     @Query("DELETE FROM trayecto")
     public abstract void delete();
