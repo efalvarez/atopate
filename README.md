@@ -35,6 +35,7 @@ Las funcionalidades básicas son:
 - Detección de apagado del sistema de localización del vehículo.
 - Visualización en tiempo real de velocidad, consumo y demás datos del vehículo.
 - Mantener un registro de consumo, kilometraje y demás datos tanto del trayecto actual como de los anteriores y visualización de los mismos.
+- Añadir fotografía del lugar de estacionamiento del vehículo
 
 Todo esto se dividirá en dos modos: modo peatón y modo vehículo. 
 Aprovecharemos las tecnologías Bluetooth en algunas de las funcionalidades.
