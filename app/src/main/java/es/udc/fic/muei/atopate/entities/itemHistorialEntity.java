@@ -12,6 +12,7 @@ import es.udc.fic.muei.atopate.db.model.Trayecto;
 public class itemHistorialEntity {
 
     private Integer itemId;
+    private Long id;
     private String tiempo;
     private String lugarOrigen;
     private String lugarDestino;
@@ -31,19 +32,9 @@ public class itemHistorialEntity {
 
     }
 
-    public itemHistorialEntity(String tiempo, String lugarOrigen, String lugarDestino, String distancia,
-                               String icono, String horas) {
-        super();
-        this.tiempo = tiempo;
-        this.lugarOrigen = lugarOrigen;
-        this.lugarDestino = lugarDestino;
-        this.distancia = distancia;
-        this.icono = icono;
-        this.horas = horas;
-    }
-
     public itemHistorialEntity(Trayecto t) {
         super();
+        this.id = t.id;
         this.lugarDestino = t.destino;
         this.lugarOrigen = t.origen;
         this.distancia = t.distancia + " km";
@@ -76,10 +67,6 @@ public class itemHistorialEntity {
         return tiempo;
     }
 
-    public void setTiempo(String tiempo) {
-        this.tiempo = tiempo;
-    }
-
     public String getLugarDestino() {
         return lugarDestino;
     }
@@ -92,40 +79,19 @@ public class itemHistorialEntity {
         return distancia;
     }
 
-    public void setDistancia(String distancia) {
-        this.distancia = distancia;
-    }
-
     public String getIcono() {
         return icono;
-    }
-
-    public void setIcono(String icono) {
-        this.icono = icono;
     }
 
     public Integer getItemId(){
         return itemId;
     }
 
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
-    }
-
-    public void setLugarOrigen(String lugarOrigen) {
-        this.lugarOrigen = lugarOrigen;
-    }
-
-    public void setLugarDestino(String lugarDestino) {
-        this.lugarDestino = lugarDestino;
-    }
-
     public String getHoras() {
         return horas;
     }
 
-    public void setHoras(String horas) {
-        this.horas = horas;
+    public Long getId() {
+        return id;
     }
-
 }
