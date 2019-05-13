@@ -13,7 +13,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -182,7 +184,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: ", e);
         }
 
-        getSupportActionBar().setIcon(R.drawable.topo45);
+        getSupportActionBar().setLogo(R.drawable.topo100);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         compruebaPermisos();
         configureBottomNavigation();
@@ -354,16 +356,15 @@ public class HomeActivity extends AppCompatActivity {
         t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
         trayectoService.insert(t);
 
-        CustomToast toast = new CustomToast(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG);
-        toast.show();
-
+        Snackbar.make(findViewById(R.id.titulo_ajustes), "Trayecto de prueba añadido", Snackbar.LENGTH_LONG)
+                .setAction("Descartar", v -> {}).show();
     }
 
     public void onEliminarClick(View view) {
         trayectoService.delete();
 
-        CustomToast toast = new CustomToast(this, "Registros eliminados", Toast.LENGTH_LONG);
-        toast.show();
+        Snackbar.make(findViewById(R.id.titulo_ajustes), "Registros eliminados", Snackbar.LENGTH_LONG)
+                .setAction("Descartar", null).show();
     }
 
     public void onExportarClick(View view) throws IOException {

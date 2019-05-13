@@ -46,7 +46,7 @@ public class itemHistorialEntity {
         super();
         this.lugarDestino = t.destino;
         this.lugarOrigen = t.origen;
-        this.distancia = t.distancia + "km";
+        this.distancia = t.distancia + " km";
         this.icono = t.foto;
 
         long duracion = t.horaFin.getTimeInMillis() - t.horaInicio.getTimeInMillis();

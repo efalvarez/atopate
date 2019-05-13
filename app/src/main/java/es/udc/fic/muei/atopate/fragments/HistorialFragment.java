@@ -1,17 +1,17 @@
 package es.udc.fic.muei.atopate.fragments;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,33 +62,21 @@ public class HistorialFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_historial, container, false);
 
-        ListView listV = view.findViewById(R.id.historial_list);
+        RecyclerView listV = view.findViewById(R.id.historial_list);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        listV.setLayoutManager(layoutManager);
+
         Drawable icono = Drawable.createFromPath("@drawable/ic_launcher_background.xml");
 
         trayectoService = new TrayectoService(getContext());
 
         historials.addAll(trayectoService.getHistorial());
 
-        ItemHistorialAdapter adapter = new ItemHistorialAdapter(this.getActivity(), historials, getContext());
+        ItemHistorialAdapter adapter = new ItemHistorialAdapter(getContext(), R.layout.activity_item_historial, historials);
 
         listV.setAdapter(adapter);
-
-        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LinearLayout detallesItem = view.findViewById(R.id.detallesItem);
-                if (!clicked.contains(position)) {
-                    Log.d("HERE", "Pruebas: INTENTANDO INFLAR");
-                    detallesItem.setVisibility(View.VISIBLE);
-                    clicked.add(position);
-                } else {
-                    Log.d("HERE", "Pruebas: DESININFLANDO");
-                    detallesItem.setVisibility(View.GONE);
-                    int clickedPos = clicked.indexOf(position);
-                    clicked.remove(clickedPos);
-                }
-            }
-        });
 
         return view;
     }
