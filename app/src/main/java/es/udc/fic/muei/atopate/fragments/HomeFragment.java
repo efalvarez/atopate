@@ -315,7 +315,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         PieChartData pieChartData = new PieChartData(pieData);
         pieChartData.setHasLabels(true).setValueLabelTextSize(14);
         pieChartData.setHasCenterCircle(true);
-        pieChartData.setCenterText1("RPM").setCenterText1FontSize(16);
+        pieChartData.setCenterText1("RPM").setCenterText1FontSize(16).setCenterText1Color(Color.GRAY);
         pieChartView.setPieChartData(pieChartData);
         pieChartView.setChartRotationEnabled(false);
     }

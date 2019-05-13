@@ -123,7 +123,7 @@ public class EstadisticasFragment extends Fragment {
                         cal.add(Calendar.DATE, -7);
                         Date lastWeek = cal.getTime();
                         fechas.setText(new SimpleDateFormat("dd/MM/yyyy").format(lastWeek) + "-"
-                                + new SimpleDateFormat("dd/MM/yyyy").format(lastWeek));
+                                + new SimpleDateFormat("dd/MM/yyyy").format(today));
                         trayectos.addAll(trayectoService.getAllLastWeek());
                         break;
                 }
@@ -197,7 +197,8 @@ public class EstadisticasFragment extends Fragment {
                         numDatos++;
                     }
                     fuelAvg = fuelSuma / numDatos;
-                    velocidadAvg = fuelSuma / numDatos;
+                    velocidadAvg = velocidadSuma / numDatos;
+                    //velocidadAvg = 1.8D;
                     rpmAvg = rpmSuma / numDatos;
                 }
                 else {
@@ -237,6 +238,7 @@ public class EstadisticasFragment extends Fragment {
         speedGraph.getViewport().setMinY(0);
         speedGraph.getViewport().setMaxY(130);
         speedGraph.setTitle("Velocidad");
+        speedGraph.setTitleColor(Color.RED);
         speedGraph.getGridLabelRenderer().setGridColor(Color.rgb(150,150,150));
         speedGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(150,150,150));
         speedGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(150,150,150));
@@ -267,8 +269,10 @@ public class EstadisticasFragment extends Fragment {
         fuelGraph.getViewport().setMinX(0);
         fuelGraph.getViewport().setMaxX(4);
         fuelGraph.getViewport().setMinY(0);
-        fuelGraph.getViewport().setMaxY(130);
+        fuelGraph.getViewport().setMaxY(40);
         fuelGraph.setTitle("Combustible");
+        fuelGraph.setTitleColor(Color.BLUE);
+
         fuelGraph.getGridLabelRenderer().setGridColor(Color.rgb(150,150,150));
         fuelGraph.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(150,150,150));
         fuelGraph.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(150,150,150));
@@ -329,7 +333,7 @@ public class EstadisticasFragment extends Fragment {
         PieChartData pieChartData = new PieChartData(pieData);
         pieChartData.setHasLabels(true).setValueLabelTextSize(14);
         pieChartData.setHasCenterCircle(true);
-        pieChartData.setCenterText1("RPM").setCenterText1FontSize(16);
+        pieChartData.setCenterText1("RPM").setCenterText1FontSize(16).setCenterText1Color(Color.GRAY);
         pieChartView.setPieChartData(pieChartData);
         pieChartView.setChartRotationEnabled(false);
     }

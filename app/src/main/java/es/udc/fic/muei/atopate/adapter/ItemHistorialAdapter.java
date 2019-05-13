@@ -239,7 +239,7 @@ public class ItemHistorialAdapter extends BaseAdapter {
         PieChartData pieChartData = new PieChartData(pieData);
         pieChartData.setHasLabels(true).setValueLabelTextSize(14);
         pieChartData.setHasCenterCircle(true);
-        pieChartData.setCenterText1("RPM").setCenterText1FontSize(16);
+        pieChartData.setCenterText1("RPM").setCenterText1FontSize(16).setCenterText1Color(Color.GRAY);
         pieChart.setPieChartData(pieChartData);
         pieChart.setChartRotationEnabled(false);
     }

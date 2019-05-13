@@ -350,6 +350,15 @@ public class HomeActivity extends AppCompatActivity {
         List<DatosOBD> listDatos = new ArrayList<DatosOBD>();
         listDatos.add(datos);
         listDatos.add(datos2);
+
+        /*for(int i=0;i<20;i++) {
+            DatosOBD d = new DatosOBD();
+            d.trayectoId = t.id;
+            d.fuelLevel = new Double(i);
+            d.rpm = new Double(6);
+            d.speed = new Double(i+2);
+            listDatos.add(d);
+        } */
         t.datosOBD = listDatos;
         t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
         trayectoService.insert(t);
