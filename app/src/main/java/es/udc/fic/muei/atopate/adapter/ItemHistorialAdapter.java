@@ -148,6 +148,7 @@ public class ItemHistorialAdapter extends BaseAdapter {
         } else {
             Log.d("ahoa",  "hola");
             if (bitmap != null) {
+                imageView.setVisibility(View.VISIBLE);
                 imageView.setImageBitmap(bitmap);
             } else {
                 imageView.setVisibility(View.GONE);
