@@ -75,42 +75,39 @@
 
                 <Button
                     android:id="@+id/btnAddTrayecto"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8pt"
-                    android:height="24pt"
-                    android:background="@android:color/darker_gray"
-                    android:text="crear trayecto de prueba"
-                    android:onClick="onAddTrayectoClick" />
+                    android:height="28pt"
+                    android:onClick="onAddTrayectoClick"
+                    android:text="Crear trayecto de prueba" />
 
                 <Button
                     android:id="@+id/btnExportar"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8pt"
-                    android:height="24pt"
-                    android:background="@android:color/darker_gray"
-                    android:text="@string/exportar_text"
-                    android:onClick="onExportarClick" />
+                    android:height="28pt"
+                    android:onClick="onExportarClick"
+                    android:text="@string/exportar_text" />
 
 
                 <Button
                     android:id="@+id/btnImportar"
+                    style="@style/Widget.MaterialComponents.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8pt"
-                    android:height="24pt"
-                    android:background="@android:color/darker_gray"
+                    android:height="28pt"
                     android:text="@string/importar_text" />
 
                 <Button
                     android:id="@+id/btnEliminar"
+                    style="@style/AppButtonDanger"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:height="24pt"
-                    android:background="@android:color/holo_red_light"
-                    android:text="@string/eliminar_text"
-                    android:onClick="onEliminarClick" />
+                    android:onClick="onEliminarClick"
+                    android:text="@string/eliminar_text" />
             </LinearLayout>
         </FrameLayout>
 

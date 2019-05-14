@@ -129,7 +129,6 @@
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:text="Estadísticas"
-            android:textSize="10sp"
             app:layout_constraintTop_toBottomOf="@+id/inicioMapa" />
 
         <android.support.constraint.ConstraintLayout
@@ -201,7 +200,6 @@
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:text="Imagen"
-            android:textSize="10sp"
             app:layout_constraintTop_toBottomOf="@+id/inicioEstadisticas" />
 
         <android.support.constraint.ConstraintLayout
