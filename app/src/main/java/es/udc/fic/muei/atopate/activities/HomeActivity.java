@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.util.CollectionUtils;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -69,6 +75,7 @@ import es.udc.fic.muei.atopate.fragments.HomeFragment;
 import es.udc.fic.muei.atopate.fragments.TrayectoFragment;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
 
+import static android.support.constraint.Constraints.TAG;
 import static es.udc.fic.muei.atopate.bluetooth.BluetoothConstants.OBD_ACTION_DATA_READ;
 import static es.udc.fic.muei.atopate.bluetooth.BluetoothConstants.OBD_ACTION_MESSAGE;
 
@@ -83,6 +90,13 @@ public class HomeActivity extends AppCompatActivity {
     private String pathFile;
     private Uri capturedImageURI;
     private Bitmap bitMap;
+
+
+    FusedLocationProviderClient fusedLocationClient;
+    private LocationCallback locationCallback;
+    // Variables que determinan los tiempos de actualización
+    public static final long TIME_REQUEST = 10000;
+    private static final long TIME_FAST_REQUEST = 5000;
 
     public boolean isBluetoothConnectionEstablished;
 
@@ -167,6 +181,13 @@ public class HomeActivity extends AppCompatActivity {
                     trayecto = null;
                 }
 
+                //Para las actualizaciones
+                try {
+                    fusedLocationClient.removeLocationUpdates(locationCallback);
+                } catch(NullPointerException npe) {
+                    Log.e(TAG, "onPause: Sin actualizaciones de localización");
+                }
+
             } else if (action.equalsIgnoreCase(BluetoothConstants.OBD_ACTION_CONNECTED)) {
 
                 // INICIO TRAYECTO: Conexion establecida con el coche. En caso de que ya se hubiera creado
@@ -197,6 +218,10 @@ public class HomeActivity extends AppCompatActivity {
                     trayectoService.insert(currentTrayecto);
 
                 }
+
+                // Carga el provedor de actualizaciones
+                startLocationUpdate();
+
             }
 
         }
@@ -299,6 +324,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // configuramos el receiver encargado de recuperar la informacion del coche
         configureODB2Receiver();
+
+        //Funcionamiento del callback del actualizador del mapa
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     @Override
@@ -335,6 +363,7 @@ public class HomeActivity extends AppCompatActivity {
         // el receiver de la llamada al OBD2 y parar cualquier servicio relaciondo con el mismo
         unregisterReceiver(bthReceiver);
         stopService(new Intent(this, BluetoothReaderService.class));
+
         Preferences.get(this).setServiceRunningStatus(false);
     }
 
@@ -470,7 +499,7 @@ public class HomeActivity extends AppCompatActivity {
         datos2.trayectoId = t.id;
         datos2.fuelLevel = 3D;
         datos2.speed = 5D;
-        List<DatosOBD> listDatos = new ArrayList<DatosOBD>();
+        List<DatosOBD> listDatos = new ArrayList<>();
         listDatos.add(datos);
         listDatos.add(datos2);
         t.datosOBD = listDatos;
@@ -499,7 +528,7 @@ public class HomeActivity extends AppCompatActivity {
 
             File file = File.createTempFile("atopate", ".bak");
 
-            String path = "file:" + file.getAbsolutePath();
+            //String path = "file:" + file.getAbsolutePath();
 
             try {
                 FileOutputStream fop = new FileOutputStream(file);
@@ -532,7 +561,7 @@ public class HomeActivity extends AppCompatActivity {
      * necesario para establecer la conexion con el OBDII y empezar a recuperar los valores que han
      * sido establecidos durante la fase del onCreate de esta actividad.
      *
-     * @param view
+     * @param view Vista actual
      */
     public void onActivateBluetooth(View view) {
 
@@ -575,4 +604,47 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+
+    // LOCATIONS UPDATES
+
+    protected LocationRequest getLocationRequest() {
+        LocationRequest locationRequest = LocationRequest.create();
+        // Intervalos en milisegundos
+        locationRequest.setInterval(TIME_REQUEST);
+        locationRequest.setFastestInterval(TIME_FAST_REQUEST);
+        // Exactitud del mapa
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        return locationRequest;
+    }
+
+    public void startLocationUpdate() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location actual : locationResult.getLocations()) {
+                    LatLng latLngActual = new LatLng(actual.getLatitude(), actual.getLongitude());
+                    try {
+                        Trayecto trayecto = trayectoService.getCurrentTrayecto();
+                        trayecto.puntosTrayecto.coordenadas.add(latLngActual);
+                        trayectoService.insert(trayecto);
+                    } catch(NullPointerException npe) {
+                        Log.e(TAG, "startLocationUpdate/onLocationResult: Intento de getCurrentTrayecto pero se halló vacío",npe);
+                    }
+                }
+            }
+        };
+
+        try {
+            fusedLocationClient.requestLocationUpdates(getLocationRequest(),
+                    locationCallback,
+                    null /* Looper */);
+        } catch (SecurityException se) {
+            se.printStackTrace();
+        }
+    }
 }
