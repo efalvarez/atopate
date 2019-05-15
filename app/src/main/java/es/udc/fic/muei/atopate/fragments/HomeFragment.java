@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.transition.TransitionManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -100,28 +101,41 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         HomeActivity activity = (HomeActivity) getActivity();
 
-        final Button estadisticasButton = viewinflated.findViewById(R.id.botonEstadisticas);
+        final View viewHome = viewinflated.findViewById(R.id.constraintHome);
+
+        final TextView estadisticasButton = viewinflated.findViewById(R.id.botonEstadisticas);
         ConstraintLayout estadisticas = viewinflated.findViewById(R.id.inicioEstadisticas);
         estadisticasButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (estadisticas.getVisibility() == View.GONE) {
+                if (estadisticas.getVisibility() == View.GONE || estadisticas.getVisibility() == View.INVISIBLE) {
+                    //btSeeMore.animate().rotation(180f).start()
+                    TransitionManager.beginDelayedTransition((ConstraintLayout)viewHome);
                     estadisticas.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else {
+                    //btSeeMore.animate().rotation(0f).start()
+
+                    TransitionManager.beginDelayedTransition((ConstraintLayout)viewHome);
                     estadisticas.setVisibility(View.GONE);
                 }
             }
         });
 
-        final Button fotoButton = viewinflated.findViewById(R.id.botonFoto);
+        final TextView fotoButton = viewinflated.findViewById(R.id.botonFoto);
         ConstraintLayout foto = viewinflated.findViewById(R.id.inicioFoto);
         fotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (foto.getVisibility() == View.GONE) {
+                if (foto.getVisibility() == View.GONE || foto.getVisibility() == View.INVISIBLE) {
+                    //btSeeMore.animate().rotation(180f).start()
+                    TransitionManager.beginDelayedTransition((ConstraintLayout)viewHome);
                     foto.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else {
+                    //btSeeMore.animate().rotation(0f).start()
+
+                    TransitionManager.beginDelayedTransition((ConstraintLayout)viewHome);
                     foto.setVisibility(View.GONE);
                 }
             }
