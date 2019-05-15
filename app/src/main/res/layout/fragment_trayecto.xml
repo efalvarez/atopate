@@ -26,7 +26,7 @@
         android:layout_marginRight="8dp"
         android:clickable="true"
         android:focusable="true"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorAccent"
         app:backgroundTintMode="src_over"
         app:layout_constraintBottom_toBottomOf="@+id/trayecto_mapa"
         app:layout_constraintEnd_toEndOf="parent"

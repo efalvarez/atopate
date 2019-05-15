@@ -16,6 +16,7 @@ import android.support.transition.TransitionManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,41 +103,43 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         HomeActivity activity = (HomeActivity) getActivity();
 
-        final View viewHome = viewinflated.findViewById(R.id.constraintHome);
+        final View viewHome = viewinflated.findViewById(R.id.scrollView2);
 
-        final TextView estadisticasButton = viewinflated.findViewById(R.id.botonEstadisticas);
+        final CardView estadisticasButton = viewinflated.findViewById(R.id.estadisticasCard);
         ConstraintLayout estadisticas = viewinflated.findViewById(R.id.inicioEstadisticas);
+        ImageView icExpandEstadisticas = viewinflated.findViewById(R.id.expandEstadisticas);
         estadisticasButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (estadisticas.getVisibility() == View.GONE || estadisticas.getVisibility() == View.INVISIBLE) {
-                    //btSeeMore.animate().rotation(180f).start()
-                    TransitionManager.beginDelayedTransition((ConstraintLayout)viewHome);
+                    icExpandEstadisticas.animate().rotation(180f).start();
+                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
                     estadisticas.setVisibility(View.VISIBLE);
                 }
                 else {
-                    //btSeeMore.animate().rotation(0f).start()
+                    icExpandEstadisticas.animate().rotation(0f).start();
 
-                    TransitionManager.beginDelayedTransition((ConstraintLayout)viewHome);
+                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
                     estadisticas.setVisibility(View.GONE);
                 }
             }
         });
 
-        final TextView fotoButton = viewinflated.findViewById(R.id.botonFoto);
+        final CardView fotoButton = viewinflated.findViewById(R.id.imagenCard);
         ConstraintLayout foto = viewinflated.findViewById(R.id.inicioFoto);
+        ImageView icExpandFoto = viewinflated.findViewById(R.id.expandImagen);
         fotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (foto.getVisibility() == View.GONE || foto.getVisibility() == View.INVISIBLE) {
-                    //btSeeMore.animate().rotation(180f).start()
-                    TransitionManager.beginDelayedTransition((ConstraintLayout)viewHome);
+                    icExpandFoto.animate().rotation(180f).start();
+                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
                     foto.setVisibility(View.VISIBLE);
                 }
                 else {
-                    //btSeeMore.animate().rotation(0f).start()
+                    icExpandFoto.animate().rotation(0f).start();
 
-                    TransitionManager.beginDelayedTransition((ConstraintLayout)viewHome);
+                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
                     foto.setVisibility(View.GONE);
                 }
             }
