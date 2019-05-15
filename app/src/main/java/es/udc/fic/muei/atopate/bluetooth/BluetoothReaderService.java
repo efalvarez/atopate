@@ -79,6 +79,7 @@ public class BluetoothReaderService extends IntentService {
 
             Intent intentOpenBluetoothSettings = new Intent();
             intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+            intentOpenBluetoothSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intentOpenBluetoothSettings);
 
             establishGoingToOtherActivity();

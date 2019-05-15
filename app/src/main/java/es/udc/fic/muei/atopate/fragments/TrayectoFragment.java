@@ -35,6 +35,7 @@ import java.util.Locale;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
+import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
 
@@ -111,6 +112,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         mapaVista.onPause();
+        mapaDrawing.detener();
         mapaDrawing.interrupt();
         super.onPause();
     }
@@ -136,6 +138,8 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         textViewLugar2 = vista.findViewById(R.id.textViewLugar2);
         if(!camino.isEmpty()) {
             textViewLugar.setText(getAddress(camino.get(0)));
+        } else {
+            textViewLugar.setText(getString(R.string.sin_punto_de_partida));
         }
         //Configuración del boton de ruta
         FloatingActionButton directionButton = vista.findViewById(R.id.directionButton);
@@ -179,7 +183,9 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
             latLngActual = new LatLng(latitude, longitude);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngActual,16));
             // --------------------------------------------------
-
+            if(camino.isEmpty()) {
+                textViewLugar2.setText(getAddress(latLngActual));
+            }
             // Se genera el hilo para las actualizaciones del mapa.
             mapaDrawing = new MapaDrawing(mMap, 10000);
             mapaDrawing.run();
@@ -205,16 +211,25 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         MapaDrawing(GoogleMap map, long TIME_REQUEST) {
             this.mapToDraw = map;
             this.TIME_REQUEST = TIME_REQUEST;
+            hilo = true;
+        }
+
+        public void detener() {
+            hilo = false;
         }
 
         @Override
         public void run() {
             try {
-                while(activity.isBluetoothConnectionEstablished) {
+                if(!activity.isBluetoothConnectionEstablished) {
+                    new CustomToast(activity, "No hay conexión bluetooth", Toast.LENGTH_SHORT).show();
+                }
+
+                while(hilo) {
                     try {
                         camino = new ArrayList<>(activity.trayecto.puntosTrayecto.coordenadas);
                     } catch (NullPointerException npe) {
-                        Toast.makeText(activity, "No has iniciado un trayecto. Conectate a OBD", Toast.LENGTH_SHORT).show();
+                        new CustomToast(activity, "No has iniciado un trayecto. Conectate a OBD", Toast.LENGTH_SHORT).show();
                         break;
                     }
                     new Handler(Looper.getMainLooper()).post(() -> startDrawingLocation(mapToDraw));
@@ -230,7 +245,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                 //Dibujar la ruta cada segun el recorrido de cada actualización
                 RouteFinder.drawingRoute(camino, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
             } else {
-                textViewLugar.setText(getAddress(latLngActual));
+                textViewLugar2.setText(getAddress(latLngActual));
             }
         }
     }

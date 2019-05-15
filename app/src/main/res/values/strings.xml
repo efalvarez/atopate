@@ -34,6 +34,7 @@
     <string name="cargando_text">Cargando\&#8230;</string>
     <string name="title_ruta">Punto de partida</string>
     <string name="direccion_ruta">Ahora en:</string>
+    <string name="sin_punto_de_partida">Aún no has empezado un trayecto</string>
 
     <!-- String del tema -->
     <string name="tema_oscuro">Oscuro</string>

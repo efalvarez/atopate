@@ -95,8 +95,8 @@ public class HomeActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
     // Variables que determinan los tiempos de actualización
-    public static final long TIME_REQUEST = 10000;
-    private static final long TIME_FAST_REQUEST = 5000;
+    public static final long TIME_REQUEST = 100000;
+    private static final long TIME_FAST_REQUEST = 50000;
 
     public boolean isBluetoothConnectionEstablished;
 
