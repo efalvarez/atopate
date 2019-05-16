@@ -1,12 +1,9 @@
 package es.udc.fic.muei.atopate.entities;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 
 /*
@@ -16,6 +13,7 @@ public class itemHistorialEntity {
 
     private Integer itemId;
     private Long trayectoId;
+    private Long id;
     private String tiempo;
     private String lugarOrigen;
     private String lugarDestino;
@@ -50,9 +48,10 @@ public class itemHistorialEntity {
 
     public itemHistorialEntity(Trayecto t) {
         super();
+        this.id = t.id;
         this.lugarDestino = t.destino;
         this.lugarOrigen = t.origen;
-        this.distancia = t.distancia + "km";
+        this.distancia = t.distancia + " km";
         this.icono = t.foto;
         this.trayectoId = t.id;
 
@@ -87,10 +86,6 @@ public class itemHistorialEntity {
         return tiempo;
     }
 
-    public void setTiempo(String tiempo) {
-        this.tiempo = tiempo;
-    }
-
     public String getLugarDestino() {
         return lugarDestino;
     }
@@ -103,40 +98,20 @@ public class itemHistorialEntity {
         return distancia;
     }
 
-    public void setDistancia(String distancia) {
-        this.distancia = distancia;
-    }
-
     public String getIcono() {
         return icono;
-    }
-
-    public void setIcono(String icono) {
-        this.icono = icono;
     }
 
     public Integer getItemId(){
         return itemId;
     }
 
-    public void setItemId(Integer itemId) {
-        this.itemId = itemId;
-    }
-
-    public void setLugarOrigen(String lugarOrigen) {
-        this.lugarOrigen = lugarOrigen;
-    }
-
-    public void setLugarDestino(String lugarDestino) {
-        this.lugarDestino = lugarDestino;
-    }
-
     public String getHoras() {
         return horas;
     }
 
-    public void setHoras(String horas) {
-        this.horas = horas;
+    public Long getId() {
+        return id;
     }
 
     public Long getTrayectoId() { return trayectoId;}

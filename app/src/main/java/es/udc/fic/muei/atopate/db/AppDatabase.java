@@ -18,7 +18,7 @@ import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 
-@Database(entities = {Trayecto.class, PuntosTrayecto.class, DatosOBD.class}, version = 1)
+@Database(entities = {Trayecto.class, PuntosTrayecto.class, DatosOBD.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 

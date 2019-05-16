@@ -2,7 +2,6 @@ package es.udc.fic.muei.atopate.activities;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -25,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -39,13 +38,10 @@ import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
 import com.sohrab.obd.reader.service.ObdReaderService;
 import com.sohrab.obd.reader.trip.TripRecord;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +55,6 @@ import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
-import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.fragments.AjustesFragment;
 import es.udc.fic.muei.atopate.fragments.EstadisticasFragment;
 import es.udc.fic.muei.atopate.fragments.HistorialFragment;
@@ -182,7 +177,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: ", e);
         }
 
-        getSupportActionBar().setIcon(R.drawable.topo45);
+        getSupportActionBar().setLogo(R.drawable.topo100);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         compruebaPermisos();
         configureBottomNavigation();
@@ -272,8 +267,8 @@ public class HomeActivity extends AppCompatActivity {
                 && !tienePermiso(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 && !tienePermiso(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(HomeActivity.this, Manifest.permission.CAMERA)) {
-                CustomToast toast = new CustomToast(this, "Se requiere aceptes los permisos para continuar", Toast.LENGTH_LONG);
-                toast.show();
+                Snackbar.make(findViewById(R.id.titulo_ajustes), "Se requiere aceptes los permisos para continuar", Snackbar.LENGTH_LONG)
+                        .setAction("Descartar", v -> {}).show();
             } else {
                 ActivityCompat.requestPermissions(HomeActivity.this,
                         new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION,
@@ -303,8 +298,8 @@ public class HomeActivity extends AppCompatActivity {
             sendIntent.setType("text/plain");
             startActivity(Intent.createChooser(sendIntent, "Compartir ubicación"));
         } else {
-            CustomToast toast = new CustomToast(this, "Ubicación del aparcamiento no disponible", Toast.LENGTH_LONG);
-            toast.show();
+            Snackbar.make(findViewById(R.id.titulo_ajustes), "Ubicación del aparcamiento no disponible", Snackbar.LENGTH_LONG)
+                    .setAction("Descartar", v -> {}).show();
         }
     }
 
@@ -363,16 +358,15 @@ public class HomeActivity extends AppCompatActivity {
         t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
         trayectoService.insert(t);
 
-        CustomToast toast = new CustomToast(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG);
-        toast.show();
-
+        Snackbar.make(findViewById(R.id.titulo_ajustes), "Trayecto de prueba añadido", Snackbar.LENGTH_LONG)
+                .setAction("Descartar", v -> {}).show();
     }
 
     public void onEliminarClick(View view) {
         trayectoService.delete();
 
-        CustomToast toast = new CustomToast(this, "Registros eliminados", Toast.LENGTH_LONG);
-        toast.show();
+        Snackbar.make(findViewById(R.id.titulo_ajustes), "Registros eliminados", Snackbar.LENGTH_LONG)
+                .setAction("Descartar", v -> {}).show();
     }
 
     public void onExportarClick(View view) throws IOException {
@@ -408,8 +402,8 @@ public class HomeActivity extends AppCompatActivity {
             sendIntent.setType("text/plain");
             startActivity(Intent.createChooser(sendIntent, "Exportar Backup"));
         } else {
-            CustomToast toast = new CustomToast(this, "Ningún trayecto registrado", Toast.LENGTH_LONG);
-            toast.show();
+            Snackbar.make(findViewById(R.id.titulo_ajustes), "Ningún trayecto registrado", Snackbar.LENGTH_LONG)
+                    .setAction("Descartar", v -> {}).show();
         }
     }
 

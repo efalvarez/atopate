@@ -3,8 +3,15 @@
     <!-- General -->
     <color name="colorPrimary">#516d5a</color>
     <color name="colorPrimaryDark">#465a4c</color>
-    <color name="colorAccent">#465a4c</color>
-    <color name="colorSeparador">#E6E6E6</color>
+    <color name="colorPrimaryLight">#638A70</color>
+    <color name="colorAccent">#009688</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="colorSeparador">#BDBDBD</color>
+
+    <!--<color name="colorAccent">#465a4c</color>
+    <color name="colorSeparador">#E6E6E6</color>-->
 
     <!-- Light -->
     <color name="textColorLight">#202020</color>

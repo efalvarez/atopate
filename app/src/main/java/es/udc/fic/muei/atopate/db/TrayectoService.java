@@ -93,6 +93,10 @@ public class TrayectoService {
         new deleteAsyncTask(dao).execute();
     }
 
+    public void delete(Trayecto trayecto) {
+        new deleteTrayectoAsyncTask(dao).execute(trayecto);
+    }
+
     public void setFoto(Trayecto trayecto) {
         new setFotoAsyncTask(dao).execute(trayecto);
     }
@@ -119,6 +123,21 @@ public class TrayectoService {
         @Override
         protected Void doInBackground(Void... voids) {
             mAsyncTaskDao.delete();
+            return null;
+        }
+    }
+
+    private static class deleteTrayectoAsyncTask extends AsyncTask<Trayecto, Void, Void> {
+
+        private TrayectoDao mAsyncTaskDao;
+
+        deleteTrayectoAsyncTask(TrayectoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Trayecto... params) {
+            mAsyncTaskDao.delete(params[0]);
             return null;
         }
     }

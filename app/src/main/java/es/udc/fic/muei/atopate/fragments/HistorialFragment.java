@@ -1,17 +1,20 @@
 package es.udc.fic.muei.atopate.fragments;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.List;
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.adapter.ItemHistorialAdapter;
 import es.udc.fic.muei.atopate.db.TrayectoService;
+import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
 
 /**
@@ -34,7 +38,7 @@ public class HistorialFragment extends Fragment {
     private List<Integer> clicked;
 
     private OnFragmentInteractionListener mListener;
-    ArrayList historials = new ArrayList<itemHistorialEntity>();
+    ArrayList<itemHistorialEntity> historials = new ArrayList<itemHistorialEntity>();
 
     public HistorialFragment() {
         // Required empty public constructor
@@ -62,31 +66,55 @@ public class HistorialFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_historial, container, false);
 
-        ListView listV = view.findViewById(R.id.historial_list);
+        RecyclerView listV = view.findViewById(R.id.historial_list);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        listV.setLayoutManager(layoutManager);
+
+
+        ItemHistorialAdapter adapter = new ItemHistorialAdapter(getContext(), R.layout.activity_item_historial, historials);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            Trayecto trayectoEliminado;
+            int position;
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                position = viewHolder.getAdapterPosition();
+                Long idTrayecto = historials.get(position).getId();
+                trayectoEliminado = trayectoService.getById(idTrayecto);
+                trayectoService.delete(trayectoEliminado);
+                historials.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+                Snackbar.make(view, "Trayecto eliminado", Snackbar.LENGTH_LONG)
+                        .setAction("Deshacer", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                trayectoService.insert(trayectoEliminado);
+                                historials.add(position, new itemHistorialEntity(trayectoEliminado));
+                                adapter.notifyItemInserted(position);
+                            }
+                        }).show();
+            }
+
+        };
+
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(listV);
+
         Drawable icono = Drawable.createFromPath("@drawable/ic_launcher_background.xml");
 
         trayectoService = new TrayectoService(getContext());
 
         historials.addAll(trayectoService.getHistorial());
 
-        ItemHistorialAdapter adapter = new ItemHistorialAdapter(this.getActivity(), historials, getContext());
-
         listV.setAdapter(adapter);
-
-        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LinearLayout detallesItem = view.findViewById(R.id.detallesItem);
-                if (!clicked.contains(position)) {
-                    detallesItem.setVisibility(View.VISIBLE);
-                    clicked.add(position);
-                } else {
-                    detallesItem.setVisibility(View.GONE);
-                    int clickedPos = clicked.indexOf(position);
-                    clicked.remove(clickedPos);
-                }
-            }
-        });
 
         return view;
     }

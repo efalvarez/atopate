@@ -6,15 +6,16 @@
     android:id="@+id/scrollView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin">
+    android:fillViewport="true">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintHome"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
 
         <Button
             android:id="@+id/button2"
@@ -59,7 +60,7 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/inicioMapa"
             android:layout_width="match_parent"
-            android:layout_height="320dp"
+            android:layout_height="300dp"
             android:layout_margin="8dp"
             android:fillViewport="true"
             android:orientation="vertical"
@@ -114,45 +115,139 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <Button
-            android:id="@+id/botonEstadisticas"
+        <android.support.v7.widget.CardView
+            android:id="@+id/imagenCard"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="Estadísticas"
-            android:textSize="10sp"
-            android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@+id/inicioMapa" />
+            app:layout_constraintTop_toBottomOf="@+id/inicioMapa"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true"
+            app:cardPreventCornerOverlap="false">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/inicioEstadisticas"
+            <LinearLayout
+                android:id="@+id/imagen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorAccent"
+                    android:padding="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/icons"
+                        android:textStyle="bold"
+                        android:background="@color/colorAccent"
+                        android:text="Imagen" />
+
+
+                    <ImageView
+                        android:id="@+id/expandImagen"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@color/colorAccent"
+                        app:srcCompat="@drawable/ic_expand_more_black_24dp" />
+                </LinearLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/inicioFoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:fillViewport="true"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:layout_editor_absoluteX="8dp">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/estadisticasCard"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_margin="8dp"
-            android:fillViewport="true"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/botonEstadisticas">
+            app:layout_constraintTop_toBottomOf="@+id/imagenCard"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="true"
+            app:cardPreventCornerOverlap="false">
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/estadisticas"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="Esta Semana"
-                app:layout_constraintBottom_toTopOf="@+id/graph2"
-                app:layout_constraintEnd_toStartOf="@+id/textView9"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:text="10h 18min"
-                app:layout_constraintBottom_toTopOf="@+id/graph2"
-                app:layout_constraintEnd_toEndOf="parent" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorAccent"
+                    android:padding="8dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/icons"
+                        android:textStyle="bold"
+                        android:background="@color/colorAccent"
+                        android:text="Estadísticas" />
+
+
+                    <ImageView
+                        android:id="@+id/expandEstadisticas"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="@color/colorAccent"
+                        app:srcCompat="@drawable/ic_expand_more_black_24dp" />
+                </LinearLayout>
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/inicioEstadisticas"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_margin="8dp"
+                    android:fillViewport="true"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:text="Esta Semana"
+                        app:layout_constraintBottom_toTopOf="@+id/graph2"
+                        app:layout_constraintEnd_toStartOf="@+id/textView9"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:text="10h 18min"
+                        app:layout_constraintBottom_toTopOf="@+id/graph2"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
             <com.jjoe64.graphview.GraphView
                 android:id="@+id/graph2"
@@ -180,36 +275,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/graph2" />
 
 
-        </android.support.constraint.ConstraintLayout>
+                </android.support.constraint.ConstraintLayout>
 
-        <Button
-            android:id="@+id/botonFoto"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="Imagen"
-            android:textSize="10sp"
-            app:layout_constraintTop_toBottomOf="@+id/inicioEstadisticas" />
+            </LinearLayout>
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/inicioFoto"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_margin="8dp"
-            android:fillViewport="true"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/botonFoto"
-            tools:layout_editor_absoluteX="8dp">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </android.support.constraint.ConstraintLayout>
-
+        </android.support.v7.widget.CardView>
 
     </android.support.constraint.ConstraintLayout>
 

@@ -14,10 +14,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
+import android.support.transition.TransitionManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,37 +107,44 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         HomeActivity activity = (HomeActivity) getActivity();
 
-        final Button estadisticasButton = viewinflated.findViewById(R.id.botonEstadisticas);
+        final View viewHome = viewinflated.findViewById(R.id.scrollView2);
+
+        final CardView estadisticasButton = viewinflated.findViewById(R.id.estadisticasCard);
         ConstraintLayout estadisticas = viewinflated.findViewById(R.id.inicioEstadisticas);
+        ImageView icExpandEstadisticas = viewinflated.findViewById(R.id.expandEstadisticas);
         estadisticasButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (estadisticas.getVisibility() == View.GONE) {
+                if (estadisticas.getVisibility() == View.GONE || estadisticas.getVisibility() == View.INVISIBLE) {
+                    icExpandEstadisticas.animate().rotation(180f).start();
+                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
                     estadisticas.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else {
+                    icExpandEstadisticas.animate().rotation(0f).start();
+
+                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
                     estadisticas.setVisibility(View.GONE);
                 }
             }
         });
 
-        final Button fotoButton = viewinflated.findViewById(R.id.botonFoto);
+        final CardView fotoButton = viewinflated.findViewById(R.id.imagenCard);
         ConstraintLayout foto = viewinflated.findViewById(R.id.inicioFoto);
+        ImageView icExpandFoto = viewinflated.findViewById(R.id.expandImagen);
         fotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ImageView imagen = foto.findViewById(R.id.imageView);
-                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
+                if (foto.getVisibility() == View.GONE || foto.getVisibility() == View.INVISIBLE) {
+                    icExpandFoto.animate().rotation(180f).start();
+                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
+                    foto.setVisibility(View.VISIBLE);
+                }
+                else {
+                    icExpandFoto.animate().rotation(0f).start();
 
-                if (bitmap != null) {
-                    if (foto.getVisibility() == View.GONE) {
-                        foto.setVisibility(View.VISIBLE);
-                    } else {
-                        foto.setVisibility(View.GONE);
-                    }
-                } else {
-                    CustomToast toast = new CustomToast(activity.getApplicationContext(), "No hay ninguna imagen", Toast.LENGTH_LONG);
-                    toast.show();
+                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
+                    foto.setVisibility(View.GONE);
                 }
 
             }
