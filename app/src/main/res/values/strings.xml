@@ -36,6 +36,7 @@
     <string name="direccion_ruta">Ahora en:</string>
     <string name="sin_punto_de_partida">Aún no has empezado un trayecto</string>
     <string name="regreso_a_coche">Fijando ruta de regreso a tu vehículo</string>
+    <string name="no_hay_posicion_de_coche">No se tiene la posición del vehículo</string>
 
     <!-- String del tema -->
     <string name="tema_oscuro">Oscuro</string>

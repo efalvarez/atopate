@@ -195,7 +195,6 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
             directionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new CustomToast(v.getContext(), getString(R.string.regreso_a_coche), Toast.LENGTH_SHORT);
                     mMap.clear();
                     if (ActivityCompat.checkSelfPermission(v.getContext(),
                             Manifest.permission.ACCESS_FINE_LOCATION)
@@ -205,18 +204,24 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                                     != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
-                    Trayecto ultimoTrayecto = new TrayectoService(v.getContext()).getLast();
-                    Location myLocation = locationManager.getLastKnownLocation(provider);
-                    LatLng tuPosicion = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                    LatLng posicionCoche = ultimoTrayecto.puntosTrayecto.coordenadas.get(
-                            ultimoTrayecto.puntosTrayecto.coordenadas.size() - 1);
-                    RouteFinder.drawRoute(
-                            tuPosicion,
-                            posicionCoche,
-                            mMap,
-                            v.getResources().getDisplayMetrics().widthPixels,
-                            v.getResources().getDisplayMetrics().heightPixels,
-                            RouteFinder.WITHOUT_MARKERS);
+                    try {
+                        Trayecto ultimoTrayecto = new TrayectoService(v.getContext()).getLast();
+                        new CustomToast(v.getContext(), getString(R.string.regreso_a_coche), Toast.LENGTH_SHORT);
+                        Location myLocation = locationManager.getLastKnownLocation(provider);
+                        LatLng tuPosicion = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                        LatLng posicionCoche = ultimoTrayecto.puntosTrayecto.coordenadas.get(
+                                ultimoTrayecto.puntosTrayecto.coordenadas.size() - 1);
+                        RouteFinder.drawRoute(
+                                tuPosicion,
+                                posicionCoche,
+                                mMap,
+                                v.getResources().getDisplayMetrics().widthPixels,
+                                v.getResources().getDisplayMetrics().heightPixels,
+                                RouteFinder.WITHOUT_MARKERS);
+                    } catch (Exception e) {
+                        Log.e(TAG, "onClick: No se tiene posición del auto", e);
+                        new CustomToast(v.getContext(), getString(R.string.no_hay_posicion_de_coche),Toast.LENGTH_SHORT);
+                    }
                 }
             });
         }
