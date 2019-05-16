@@ -135,17 +135,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         fotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (foto.getVisibility() == View.GONE || foto.getVisibility() == View.INVISIBLE) {
-                    icExpandFoto.animate().rotation(180f).start();
-                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
-                    foto.setVisibility(View.VISIBLE);
-                }
-                else {
-                    icExpandFoto.animate().rotation(0f).start();
+                ImageView imagen = foto.findViewById(R.id.imageView);
+                BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
 
-                    TransitionManager.beginDelayedTransition((ScrollView)viewHome);
-                    foto.setVisibility(View.GONE);
+                if (bitmap != null) {
+                    if (foto.getVisibility() == View.GONE || foto.getVisibility() == View.INVISIBLE) {
+                        icExpandFoto.animate().rotation(180f).start();
+                        TransitionManager.beginDelayedTransition((ScrollView)viewHome);
+                        foto.setVisibility(View.VISIBLE);
+
+                    }
+                    else {
+                        icExpandFoto.animate().rotation(0f).start();
+                        TransitionManager.beginDelayedTransition((ScrollView)viewHome);
+                        foto.setVisibility(View.GONE);
+                    }
+                } else {
+                    CustomToast toast = new CustomToast(activity.getApplicationContext(), "No hay ninguna imagen", Toast.LENGTH_LONG);
+                    toast.show();
                 }
+
 
             }
         });

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,6 +30,7 @@ import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.adapter.AjustesAdapter;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
+import es.udc.fic.muei.atopate.entities.CustomToast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -120,8 +121,6 @@ public class AjustesFragment extends Fragment {
                     activity.finish();
                 } catch (java.lang.NullPointerException e) {
                     Log.d(TAG, "onItemSelected: NullPointerException");
-                    Snackbar.make(view, "No se puede cambiar tema, reinicie la aplicación", Snackbar.LENGTH_LONG)
-                            .setAction("Descartar", v -> {}).show();
                 }
             }
 
@@ -175,8 +174,8 @@ public class AjustesFragment extends Fragment {
                         activity.trayectoService.insert(t);
                     }
 
-                    Snackbar.make(getView(), "Registros importados", Snackbar.LENGTH_LONG)
-                            .setAction("Descartar", v -> {}).show();
+                    CustomToast toast = new CustomToast(activity, "Trayectos importados", Toast.LENGTH_LONG);
+                    toast.show();
 
                 } catch (IOException e) {
                     e.printStackTrace();

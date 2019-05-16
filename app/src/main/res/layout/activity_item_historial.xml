@@ -87,24 +87,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        <TextView
-            android:id="@+id/horas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="10dp"
-            android:paddingRight="@dimen/activity_vertical_margin"
-            android:text="10h 8 min"
-            android:textSize="12sp" />
-
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="16dp"
-            app:srcCompat="@mipmap/ic_launcher_round" />
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="205dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="16dp"
+                app:srcCompat="@mipmap/ic_launcher_round" />
 
             <!--com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
@@ -119,24 +109,24 @@
                 app:layout_constraintStart_toStartOf="parent" /-->
 
 
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph2"
-            android:layout_width="match_parent"
-            android:layout_height="159dp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20sp" />
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph2"
+                android:layout_width="match_parent"
+                android:layout_height="159dp"
+                android:layout_marginLeft="20sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20sp" />
 
-        <lecho.lib.hellocharts.view.PieChartView
-            android:id="@+id/chart"
-            android:layout_width="match_parent"
-            android:layout_height="130dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/graph1"
-            app:layout_constraintTop_toBottomOf="@+id/graph2" />
+            <lecho.lib.hellocharts.view.PieChartView
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/graph1"
+                app:layout_constraintTop_toBottomOf="@+id/graph2" />
 
         </LinearLayout>
 

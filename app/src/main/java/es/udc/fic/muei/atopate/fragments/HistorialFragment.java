@@ -1,9 +1,6 @@
 package es.udc.fic.muei.atopate.fragments;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -73,7 +70,7 @@ public class HistorialFragment extends Fragment {
         listV.setLayoutManager(layoutManager);
 
 
-        ItemHistorialAdapter adapter = new ItemHistorialAdapter(getContext(), R.layout.activity_item_historial, historials);
+        ItemHistorialAdapter adapter = new ItemHistorialAdapter(getContext(), R.layout.activity_item_historial, historials, this.getActivity());
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
