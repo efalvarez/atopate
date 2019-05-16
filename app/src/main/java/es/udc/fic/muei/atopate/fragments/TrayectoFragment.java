@@ -214,7 +214,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
             hilo = true;
         }
 
-        public void detener() {
+        void detener() {
             hilo = false;
         }
 

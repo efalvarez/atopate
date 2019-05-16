@@ -231,7 +231,6 @@ public class BluetoothReaderService extends IntentService {
      * OBD2 e intenta establecer conexion con el mismo.
      */
     private void connectToDevice() {
-
         while (!deviceIsConnected && Preferences.get(getApplicationContext()).getServiceRunningStatus()) {
 
             if (bthAdapter != null) {
@@ -240,6 +239,14 @@ public class BluetoothReaderService extends IntentService {
                 // revisamos todos los dispositivos emparejados
                 Set<BluetoothDevice> bluetoothDevices = bthAdapter.getBondedDevices();
 
+                if (bluetoothDevices.isEmpty()) {
+                    // TODO Revisar si esto está bien implementado.
+                    sendMessageToBroadcast(BluetoothConstants.OBD_ACTION_MESSAGE, getString(R.string.bluetooth_without_available_devices));
+                    stopService(new Intent(this, BluetoothReaderService.class));
+
+                    Preferences.get(this).setServiceRunningStatus(false);
+                    break;
+                }
                 for (BluetoothDevice device : bluetoothDevices) {
 
                     String name = device.getName();
@@ -448,7 +455,6 @@ public class BluetoothReaderService extends IntentService {
         SharedPreferences.Editor preferencesEditor = preferences.edit();
         preferencesEditor.putBoolean(BluetoothConstants.PREFERENCE_KEY_GOING_TO_BLUETOOTH, true);
         preferencesEditor.apply();
-
     }
 
 

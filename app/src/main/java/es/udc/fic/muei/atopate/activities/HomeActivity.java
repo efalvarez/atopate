@@ -185,7 +185,7 @@ public class HomeActivity extends AppCompatActivity {
                 try {
                     fusedLocationClient.removeLocationUpdates(locationCallback);
                 } catch(NullPointerException npe) {
-                    Log.e(TAG, "onPause: Sin actualizaciones de localización");
+                    Log.e(TAG, "BroadcastReciver: Sin actualizaciones de localización");
                 }
 
             } else if (action.equalsIgnoreCase(BluetoothConstants.OBD_ACTION_CONNECTED)) {
@@ -599,7 +599,8 @@ public class HomeActivity extends AppCompatActivity {
             startService(startBluetoothService);
         }
 
-
+        // TODO Esta variable no debería cambiar, en el caso de que no encuentre dispositivos reconocibles.
+        //  (y si lo hace, entonces no pintar el botón)
         isBluetoothConnectionEstablished = !isBluetoothConnectionEstablished;
 
     }
@@ -629,11 +630,9 @@ public class HomeActivity extends AppCompatActivity {
                 for (Location actual : locationResult.getLocations()) {
                     LatLng latLngActual = new LatLng(actual.getLatitude(), actual.getLongitude());
                     try {
-                        Trayecto trayecto = trayectoService.getCurrentTrayecto();
                         trayecto.puntosTrayecto.coordenadas.add(latLngActual);
-                        trayectoService.insert(trayecto);
                     } catch(NullPointerException npe) {
-                        Log.e(TAG, "startLocationUpdate/onLocationResult: Intento de getCurrentTrayecto pero se halló vacío",npe);
+                        Log.e(TAG, "startLocationUpdate/onLocationResult: Sin trayecto",npe);
                     }
                 }
             }

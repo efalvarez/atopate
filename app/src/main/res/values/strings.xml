@@ -60,6 +60,7 @@
     <string name="eliminar_text">Eliminar registros</string>
 
     <!--Strings del OBD-->
+    <string name="bluetooth_without_available_devices">No hay dispositivos reconocidos al alcance del bluetooth</string>
     <string name="obd_not_found">Es necesario establecer conexion con el OBD antes</string>
     <string name="obd_not_available">El dispositivo OBD2 no esta disponible para conectarse</string>
     <string name="obd_reconnect">Es necesario reconectarse al dispositivo OBD</string>
