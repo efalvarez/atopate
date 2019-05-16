@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
@@ -25,7 +26,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         tableName = "puntos_trayecto")
 public class PuntosTrayecto {
 
-    public List<LatLng> coordenadas;
+    public List<LatLng> coordenadas = new ArrayList<>();
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "points_id")

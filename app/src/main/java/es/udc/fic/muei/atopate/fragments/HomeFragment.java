@@ -477,8 +477,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
             int height =  Math.round(150 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
-            RouteFinder.drawRoute(activity.trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height);
+            RouteFinder.drawRoute(activity.trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height, RouteFinder.WITH_MARKERS);
         }
-
     }
 }

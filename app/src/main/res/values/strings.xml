@@ -33,7 +33,11 @@
     <string name="title_activity_ajustes">Ajustes</string>
     <string name="ajustes">Ajustes</string>
     <string name="cargando_text">Cargando\&#8230;</string>
-    <string name="title_destingo">Destino</string>
+    <string name="title_ruta">Punto de partida</string>
+    <string name="direccion_ruta">Ahora en:</string>
+    <string name="sin_punto_de_partida">Aún no has empezado un trayecto</string>
+    <string name="regreso_a_coche">Fijando ruta de regreso a tu vehículo</string>
+    <string name="no_hay_posicion_de_coche">No se tiene la posición del vehículo</string>
 
     <!-- String del tema -->
     <string name="tema_oscuro">Oscuro</string>
@@ -57,6 +61,13 @@
     <string name="exportar_text">Exportar copia de seguridad</string>
     <string name="importar_text">Importar copia de seguridad</string>
     <string name="eliminar_text">Eliminar registros</string>
+
+    <!--Strings del OBD-->
+    <string name="bluetooth_without_available_devices">No hay dispositivos reconocidos al alcance del bluetooth</string>
+    <string name="obd_not_found">Es necesario establecer conexion con el OBD antes</string>
+    <string name="obd_not_available">El dispositivo OBD2 no esta disponible para conectarse</string>
+    <string name="obd_reconnect">Es necesario reconectarse al dispositivo OBD</string>
+    <string name="obd_running_vehicle_mandatory">Es necesario que el vehículo se encuentre arrancado</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

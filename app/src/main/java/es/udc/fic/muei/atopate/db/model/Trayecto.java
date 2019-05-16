@@ -7,6 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -30,6 +31,9 @@ public class Trayecto {
 
     public String foto;
 
+    @ColumnInfo(name = "is_current_trayecto")
+    public boolean esTrayectoActual;
+
     @Ignore
     public Bitmap fotoBitmap;
 
@@ -39,13 +43,17 @@ public class Trayecto {
     @Ignore
     public List<DatosOBD> datosOBD;
 
-    public Trayecto(String origen, String destino, Calendar horaInicio, Calendar horaFin, int distancia, String foto) {
+
+    public Trayecto(String origen, String destino, Calendar horaInicio, Calendar horaFin, int distancia, String foto, boolean esTrayectoActual) {
         this.origen = origen;
         this.destino = destino;
         this.horaFin = horaFin;
         this.horaInicio = horaInicio;
         this.distancia = distancia;
         this.foto = foto;
+        this.esTrayectoActual = esTrayectoActual;
+        this.datosOBD = new ArrayList<>();
+        this.puntosTrayecto = new PuntosTrayecto();
     }
 
 }
