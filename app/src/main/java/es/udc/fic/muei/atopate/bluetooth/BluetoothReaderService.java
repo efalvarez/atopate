@@ -231,10 +231,13 @@ public class BluetoothReaderService extends IntentService {
      * OBD2 e intenta establecer conexion con el mismo.
      */
     private void connectToDevice() {
-        while (!deviceIsConnected && Preferences.get(getApplicationContext()).getServiceRunningStatus()) {
+
+        boolean deviceFound = false;
+        int iteraciones = 0;
+
+        while (!deviceIsConnected && Preferences.get(getApplicationContext()).getServiceRunningStatus() && iteraciones < BluetoothConstants.OBD_MAXIMUS_ITERATIONS) {
 
             if (bthAdapter != null) {
-                boolean deviceFound = false;
 
                 // revisamos todos los dispositivos emparejados
                 Set<BluetoothDevice> bluetoothDevices = bthAdapter.getBondedDevices();
@@ -247,6 +250,7 @@ public class BluetoothReaderService extends IntentService {
                     Preferences.get(this).setServiceRunningStatus(false);
                     break;
                 }
+
                 for (BluetoothDevice device : bluetoothDevices) {
 
                     String name = device.getName();
@@ -268,12 +272,15 @@ public class BluetoothReaderService extends IntentService {
                     }
 
                 }
-
-                if (!deviceFound && (bthSocket == null || bthSocket.isConnected())) {
-                    // no caso de que non se encontrase algun dispositivo, mandamos un mensaje
-                    sendMessageToBroadcast(BluetoothConstants.OBD_ACTION_MESSAGE, getString(R.string.obd_not_found));
-                }
             }
+
+            iteraciones++;
+        }
+
+        if (!deviceFound && (bthSocket == null || bthSocket.isConnected())) {
+            // en caso de que no podamos conectarnos mandamos el mensaje correspondiente
+            sendMessageToBroadcast(BluetoothConstants.OBD_ACTION_MESSAGE, getString(R.string.obd_not_available));
+            establishDiconnectionStatus();
         }
 
     }
@@ -377,12 +384,6 @@ public class BluetoothReaderService extends IntentService {
 
                 // si nos damos conectado, actualizamos el estado de la tarea
                 establishConnectionStatus();
-
-            } else {
-
-                // en caso de que no podamos conectarnos mandamos el mensaje correspondiente
-                sendMessageToBroadcast(BluetoothConstants.OBD_ACTION_MESSAGE, getString(R.string.obd_not_available));
-                establishDiconnectionStatus();
 
             }
         }

@@ -16,6 +16,8 @@ public class BluetoothConstants {
     public static final String OBD_ACTION_DATA_READ = "OBD_DATA_READ";
     public static final String OBD_EXTRA_DATA = "obd_extra_data";
 
+    public static final int OBD_MAXIMUS_ITERATIONS = 3;
+
 
     public static final String SERVICE_NAME = "BluetoothReaderService";
 
