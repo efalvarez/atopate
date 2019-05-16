@@ -86,7 +86,7 @@ public class HistorialFragment extends Fragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 position = viewHolder.getAdapterPosition();
                 Long idTrayecto = historials.get(position).getId();
-                trayectoEliminado = trayectoService.getById(idTrayecto);
+                trayectoEliminado = trayectoService.getTrayectoById(idTrayecto);
                 trayectoService.delete(trayectoEliminado);
                 historials.remove(viewHolder.getAdapterPosition());
                 adapter.notifyItemRemoved(viewHolder.getAdapterPosition());

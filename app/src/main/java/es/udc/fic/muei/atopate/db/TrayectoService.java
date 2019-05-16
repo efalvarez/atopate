@@ -42,7 +42,7 @@ public class TrayectoService {
 
     public List<Trayecto> getAll() {
         try {
-            return new getAllAsyncTask(dao, puntosDao, datosOBDDao).execute().get();
+            return new getAllTrayectosAsyncTask(dao, puntosDao, datosOBDDao).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -85,8 +85,15 @@ public class TrayectoService {
     }
 
 
-    public void insert(Trayecto trayecto) {
-        new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto);
+    public Long insert(Trayecto trayecto) {
+        try {
+            return new insertAsyncTask(dao, puntosDao, datosOBDDao).execute(trayecto).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void delete() {
@@ -292,7 +299,7 @@ public class TrayectoService {
             List<Trayecto> result = mAsyncTaskDao.getAll();
 
             for (Trayecto t : result) {
-                t.puntosTrayecto = mAsyncTaskPuntosTrayectoDao.getByTrayecto(t.id);
+                t.puntosTrayecto = mAsyncTaskPuntosDao.getByTrayecto(t.id);
                 t.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(t.id);
             }
 
@@ -369,11 +376,11 @@ public class TrayectoService {
             for (Trayecto t : result) {
                 t.puntosTrayecto = mAsyncTaskPuntosTrayectoDao.getByTrayecto(t.id);
                 t.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(t.id);
-            for (Trayecto trayecto : result) {
-                trayecto.puntosTrayecto = mAsyncTaskPuntosDao.getByTrayecto(trayecto.id);
-                trayecto.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(trayecto.id);
+                for (Trayecto trayecto : result) {
+                    trayecto.puntosTrayecto = mAsyncTaskPuntosTrayectoDao.getByTrayecto(trayecto.id);
+                    trayecto.datosOBD = mAsyncTaskDatosOBDDao.getByTrayecto(trayecto.id);
+                }
             }
-
             return result;
         }
     }
@@ -459,5 +466,4 @@ public class TrayectoService {
             return null;
         }
     }
-
 }

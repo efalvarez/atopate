@@ -100,7 +100,7 @@ public class ItemHistorialHolder extends RecyclerView.ViewHolder implements View
         Trayecto trayecto = null;
         HomeActivity homeActivity = (HomeActivity) activity;
         if (item != null && item.getTrayectoId() != null) {
-            trayecto = homeActivity.trayectoService.getById(item.getTrayectoId());
+            trayecto = homeActivity.trayectoService.getTrayectoById(item.getTrayectoId());
         }
 
         if (trayecto != null && !trayecto.datosOBD.isEmpty()) {

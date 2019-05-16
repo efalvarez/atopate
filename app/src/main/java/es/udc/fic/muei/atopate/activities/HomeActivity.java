@@ -485,7 +485,7 @@ public class HomeActivity extends AppCompatActivity {
         Calendar inicio = Calendar.getInstance();
         Calendar fin = Calendar.getInstance();
         inicio.add(Calendar.HOUR, -1);
-        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "atopate"+inicio.getTimeInMillis());
+        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "atopate"+inicio.getTimeInMillis(), false);
         t.puntosTrayecto = new PuntosTrayecto();
         List<DatosOBD> listDatos = new ArrayList<DatosOBD>();
 

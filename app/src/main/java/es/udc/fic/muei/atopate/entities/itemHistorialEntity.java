@@ -75,26 +75,10 @@ public class itemHistorialEntity {
                 horas = TimeUnit.HOURS.convert(timeFromNow, TimeUnit.MILLISECONDS);
                 if (horas <= 0) {
                     minutos = TimeUnit.MINUTES.convert(timeFromNow, TimeUnit.MILLISECONDS);
-                    this.tiempo = "Hace " + minutos + ( minutos == 1 ? " minuto" : " minutos");
+                    this.tiempo = "Hace " + minutos + (minutos == 1 ? " minuto" : " minutos");
                 } else {
-                    this.tiempo = "Hace " + horas + ( horas == 1 ? " hora" : " horas");
+                    this.tiempo = "Hace " + horas + (horas == 1 ? " hora" : " horas");
                 }
-        Calendar now = Calendar.getInstance();
-        long timeFromNow = now.getTimeInMillis() - t.horaFin.getTimeInMillis();
-
-        /*SimpleDateFormat formato = new SimpleDateFormat("EEEE, dd/MM/yyyy");
-        this.tiempo = formato.format(t.horaFin.getTime());*/
-
-        if (timeFromNow >=  86400000) { // Si el trayecto fue hace  24 horas o más, poner fecha
-            SimpleDateFormat formato = new SimpleDateFormat("EEEE, dd/MM/yyyy");
-            this.tiempo = formato.format(t.horaFin.getTime());
-        } else {
-            horas = TimeUnit.HOURS.convert(timeFromNow, TimeUnit.MILLISECONDS);
-            if (horas <= 0) {
-                minutos = TimeUnit.MINUTES.convert(timeFromNow, TimeUnit.MILLISECONDS);
-                this.tiempo = "Hace " + minutos + ( minutos == 1 ? " minuto" : " minutos");
-            } else {
-                this.tiempo = "Hace " + horas + ( horas == 1 ? " hora" : " horas");
             }
         } catch(NullPointerException npe) {
             Log.d(TAG, "itemHistorialEntity: El trayecto se encuentra en curso...", npe);
