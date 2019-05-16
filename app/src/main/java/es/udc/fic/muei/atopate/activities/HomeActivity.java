@@ -212,16 +212,14 @@ public class HomeActivity extends AppCompatActivity {
                     trayectoInsercion.id = trayectoService.insert(trayectoInsercion);
 
                     trayecto = trayectoInsercion;
+
                 } else {
 
                     currentTrayecto.horaInicio = Calendar.getInstance();
                     trayectoService.insert(currentTrayecto);
-
                 }
-
                 // Carga el provedor de actualizaciones
                 startLocationUpdate();
-
             }
 
         }
@@ -630,9 +628,12 @@ public class HomeActivity extends AppCompatActivity {
                 for (Location actual : locationResult.getLocations()) {
                     LatLng latLngActual = new LatLng(actual.getLatitude(), actual.getLongitude());
                     try {
+                        trayecto = trayectoService.getCurrentTrayecto();
                         trayecto.puntosTrayecto.coordenadas.add(latLngActual);
+                        trayectoService.insert(trayecto);
                     } catch(NullPointerException npe) {
-                        Log.e(TAG, "startLocationUpdate/onLocationResult: Sin trayecto",npe);
+                        Log.d(TAG, "startLocationUpdate/onLocationResult: Sin trayecto",npe);
+                        break;
                     }
                 }
             }

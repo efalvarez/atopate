@@ -52,7 +52,8 @@ public class Trayecto {
         this.distancia = distancia;
         this.foto = foto;
         this.esTrayectoActual = esTrayectoActual;
-        datosOBD = new ArrayList<>();
+        this.datosOBD = new ArrayList<>();
+        this.puntosTrayecto = new PuntosTrayecto();
     }
 
 }
