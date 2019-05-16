@@ -35,6 +35,8 @@ import java.util.Locale;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
+import es.udc.fic.muei.atopate.db.TrayectoService;
+import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.maps.MapsConfigurer;
 import es.udc.fic.muei.atopate.maps.RouteFinder;
@@ -77,6 +79,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         activity = (HomeActivity) getActivity();
         camino = getCoordenadas();
         configureMaps(vistaTrayecto, savedInstanceState);
+
         return vistaTrayecto;
     }
 
@@ -144,6 +147,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         }
         //Configuración del boton de ruta
         directionButton = vista.findViewById(R.id.directionButton);
+
     }
 
     public String getAddress(LatLng punto) {
@@ -184,9 +188,37 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
             latLngActual = new LatLng(latitude, longitude);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngActual,16));
             // --------------------------------------------------
-            textViewLugar2.setText(getAddress(latLngActual));
+            textViewLugar2.setText(getAddress(latLngActual).split(",")[0]);
             mapaDrawing = new MapaDrawing(mMap, 20000);
             mapaDrawing.start();
+
+            directionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new CustomToast(v.getContext(), getString(R.string.regreso_a_coche), Toast.LENGTH_SHORT);
+                    mMap.clear();
+                    if (ActivityCompat.checkSelfPermission(v.getContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(v.getContext(),
+                                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    Trayecto ultimoTrayecto = new TrayectoService(v.getContext()).getLast();
+                    Location myLocation = locationManager.getLastKnownLocation(provider);
+                    LatLng tuPosicion = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                    LatLng posicionCoche = ultimoTrayecto.puntosTrayecto.coordenadas.get(
+                            ultimoTrayecto.puntosTrayecto.coordenadas.size() - 1);
+                    RouteFinder.drawRoute(
+                            tuPosicion,
+                            posicionCoche,
+                            mMap,
+                            v.getResources().getDisplayMetrics().widthPixels,
+                            v.getResources().getDisplayMetrics().heightPixels,
+                            RouteFinder.WITHOUT_MARKERS);
+                }
+            });
         }
     }
 
@@ -244,10 +276,8 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
             if (camino.size() != 0) {
                 //Dibujar la ruta cada segun el recorrido de cada actualización
                 RouteFinder.drawingRoute(camino, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
-                textViewLugar2.setText(getAddress(camino.get(camino.size() - 1)));
-            } else {
-                textViewLugar2.setText(getAddress(latLngActual));
             }
+            textViewLugar2.setText(getAddress(camino.get(camino.size() - 1)).split(",")[0]);
         }
     }
 /*

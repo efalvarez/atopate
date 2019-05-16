@@ -105,7 +105,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         estadisticasButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (estadisticas.getVisibility() == View.GONE) {
                     estadisticas.setVisibility(View.VISIBLE);
                 } else {
