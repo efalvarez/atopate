@@ -3,6 +3,7 @@ package es.udc.fic.muei.atopate.maps;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +22,8 @@ import com.google.maps.model.TravelMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class RouteFinder {
     public static final boolean WITHOUT_MARKERS = false;
@@ -64,7 +67,16 @@ public class RouteFinder {
     public static void drawingRoute(ArrayList<LatLng> caminoRecorrido, GoogleMap mMap, int width, int height) {
         if (caminoRecorrido.size() > 1) {
             mMap.clear();
-            mMap.addPolyline(new PolylineOptions().addAll(caminoRecorrido));
+
+            List<LatLng> caminoGenerado = getTotalRoute(caminoRecorrido);
+
+            try {
+                assert caminoGenerado != null;
+                mMap.addPolyline(new PolylineOptions().addAll(caminoGenerado));
+            } catch (NullPointerException npe) {
+                Log.e(TAG, "drawingRoute: No se genera un camino con el API de google", npe);
+                mMap.addPolyline(new PolylineOptions().addAll(caminoRecorrido));
+            }
 
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (LatLng pos : caminoRecorrido) {
@@ -103,6 +115,25 @@ public class RouteFinder {
             DirectionsResult result = DirectionsApi.newRequest(context)
                     .origin(from)
                     .destination(to)
+                    .mode(TravelMode.DRIVING)
+                    .language("es")
+                    .await();
+
+            return PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath());
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static List<LatLng> getTotalRoute(ArrayList<LatLng> caminoRecorrido) {
+        try {
+            List<com.google.maps.model.LatLng> caminoMaps = new ArrayList<>();
+            for (LatLng latLng : caminoRecorrido) {
+                caminoMaps.add(new com.google.maps.model.LatLng(latLng.latitude, latLng.longitude));
+            }
+            DirectionsResult result = DirectionsApi.newRequest(context)
+                    .waypoints(caminoMaps.toArray(new com.google.maps.model.LatLng[caminoRecorrido.size()]))
                     .mode(TravelMode.DRIVING)
                     .language("es")
                     .await();
