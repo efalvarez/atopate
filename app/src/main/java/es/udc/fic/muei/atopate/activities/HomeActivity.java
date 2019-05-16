@@ -346,8 +346,7 @@ public class HomeActivity extends AppCompatActivity {
             editor.apply();
 
             isBluetoothConnectionEstablished = false;
-
-            Toast.makeText(getApplicationContext(), R.string.obd_reconnect, Toast.LENGTH_LONG).show();
+            new CustomToast(getApplicationContext(),getString(R.string.obd_reconnect), Toast.LENGTH_LONG).show();
         }
 
     }
