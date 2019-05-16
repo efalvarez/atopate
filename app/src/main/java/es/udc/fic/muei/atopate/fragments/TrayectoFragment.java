@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
@@ -196,7 +195,6 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         try {
             arrayList = new ArrayList<>(activity.trayecto.puntosTrayecto.coordenadas);
         } catch (NullPointerException npe) {
-            new CustomToast(activity, "No has iniciado un trayecto", Toast.LENGTH_SHORT).show();
             arrayList = new ArrayList<>();
         }
         return arrayList;
