@@ -242,12 +242,6 @@ public class BluetoothReaderService extends IntentService {
                 // revisamos todos los dispositivos emparejados
                 Set<BluetoothDevice> bluetoothDevices = bthAdapter.getBondedDevices();
 
-                /*if (bluetoothDevices.isEmpty()) {
-                    sendMessageToBroadcast(BluetoothConstants.OBD_ACTION_MESSAGE, getString(R.string.bluetooth_without_available_devices));
-                    establishDiconnectionStatus();
-                    break;
-                }*/
-
                 for (BluetoothDevice device : bluetoothDevices) {
 
                     String name = device.getName();
