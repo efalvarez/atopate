@@ -48,6 +48,7 @@ public class itemHistorialEntity {
         this.icono = icono;
         this.horas = horas;
         this.trayectoId = trayectoId;
+        this.id = trayectoId;
     }
 
     public itemHistorialEntity(Trayecto t) {
@@ -105,10 +106,6 @@ public class itemHistorialEntity {
 
     public String getIcono() {
         return icono;
-    }
-
-    public Integer getItemId(){
-        return itemId;
     }
 
     public String getHoras() {

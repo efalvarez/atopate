@@ -137,7 +137,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View view) {
                 ImageView imagen = foto.findViewById(R.id.imageView);
                 BitmapDrawable drawable = (BitmapDrawable) imagen.getDrawable();
-                Bitmap bitmap = drawable.getBitmap();
+                Bitmap bitmap = null;
+                if (drawable != null) {
+                    bitmap = drawable.getBitmap();
+                }
 
                 if (bitmap != null) {
                     if (foto.getVisibility() == View.GONE || foto.getVisibility() == View.INVISIBLE) {
@@ -169,7 +172,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         configureCharts(viewinflated);
         configureMaps(viewinflated, savedInstanceState);
 
-        Trayecto trayecto = activity.trayecto;
+        Trayecto trayecto = activity.trayectoService.getLast();
         if (trayecto != null) {
             itemHistorialEntity item = new itemHistorialEntity(trayecto);
 
@@ -182,7 +185,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             TextView tiempo = viewinflated.findViewById(R.id.tiempo);
             tiempo.setText(item.getHoras() + " - " + item.getDistancia());
 
-            if (trayecto.foto != null) {
+            if (trayecto != null && trayecto.foto != null) {
                 try {
                     setPic(trayecto.foto, image);
                 } catch (FileNotFoundException e) {
@@ -256,14 +259,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{});
         LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[]{});
-        if (activity.trayecto != null && !activity.trayecto.datosOBD.isEmpty()) {
-            DataPoint[] dataPoints = new DataPoint[activity.trayecto.datosOBD.size()+1];
-            DataPoint[] dataPointsFuel = new DataPoint[activity.trayecto.datosOBD.size()+1];
+        if (activity.trayectoService.getLast() != null && !activity.trayectoService.getLast().datosOBD.isEmpty()) {
+            DataPoint[] dataPoints = new DataPoint[activity.trayectoService.getLast().datosOBD.size()+1];
+            DataPoint[] dataPointsFuel = new DataPoint[activity.trayectoService.getLast().datosOBD.size()+1];
             dataPoints[0] = new DataPoint(0, 0);
             dataPointsFuel[0] = new DataPoint(0, 0);
-            for (int i = 0; i < activity.trayecto.datosOBD.size(); i++) {
-                dataPoints[i+1] = new DataPoint(i+1, activity.trayecto.datosOBD.get(i).speed);
-                dataPointsFuel[i+1] = new DataPoint(i+1, activity.trayecto.datosOBD.get(i).fuelLevel);
+            for (int i = 0; i < activity.trayectoService.getLast().datosOBD.size(); i++) {
+                dataPoints[i+1] = new DataPoint(i+1, activity.trayectoService.getLast().datosOBD.get(i).speed);
+                dataPointsFuel[i+1] = new DataPoint(i+1, activity.trayectoService.getLast().datosOBD.get(i).fuelLevel);
             }
             series1 = new LineGraphSeries<>(dataPoints);
             series1.setColor(Color.RED);
@@ -304,12 +307,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         Double notPaintedRPM = 2.75;
         pieData.add(new SliceValue(notPaintedRPM.floatValue(), Color.TRANSPARENT).setLabel(""));
 
-        if (activity.trayecto != null && !activity.trayecto.datosOBD.isEmpty()) {
+        if (activity.trayectoService.getLast() != null && !activity.trayectoService.getLast().datosOBD.isEmpty()) {
             Double avgRPM = 0.0;
-            for (int i = 0; i < activity.trayecto.datosOBD.size(); i++) {
-                avgRPM += activity.trayecto.datosOBD.get(i).rpm;
+            for (int i = 0; i < activity.trayectoService.getLast().datosOBD.size(); i++) {
+                avgRPM += activity.trayectoService.getLast().datosOBD.get(i).rpm;
             }
-            Double paintedRPM = avgRPM / activity.trayecto.datosOBD.size();
+            Double paintedRPM = avgRPM / activity.trayectoService.getLast().datosOBD.size();
             Double rpmTo7 = 7 - paintedRPM;
             Double rpmLimitValue = 1.0;
 
@@ -456,8 +459,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             HomeActivity activity = (HomeActivity) getActivity();
             addToGallery();
             try {
-                activity.trayecto.foto = activity.getCurrentPhotoPath();
-                activity.trayectoService.setFoto(activity.trayecto);
+                activity.trayectoService.getLast().foto = activity.getCurrentPhotoPath();
+                activity.trayectoService.setFoto(activity.trayectoService.getLast());
                 setPic(activity.getCurrentPhotoPath(), image);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -473,11 +476,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
 
         HomeActivity activity = (HomeActivity) getActivity();
-        if (activity.trayecto != null && activity.trayecto.puntosTrayecto != null) {
+        if (activity.trayectoService.getLast() != null && activity.trayectoService.getLast().puntosTrayecto != null) {
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
             int height =  Math.round(150 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
-            RouteFinder.drawRoute(activity.trayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height, RouteFinder.WITH_MARKERS);
+            RouteFinder.drawRoute(activity.trayectoService.getLast().puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height, RouteFinder.WITH_MARKERS);
         }
     }
 }

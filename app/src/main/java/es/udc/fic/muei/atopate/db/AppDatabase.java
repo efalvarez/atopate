@@ -18,7 +18,7 @@ import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.PuntosTrayecto;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 
-@Database(entities = {Trayecto.class, PuntosTrayecto.class, DatosOBD.class}, version = 2)
+@Database(entities = {Trayecto.class, PuntosTrayecto.class, DatosOBD.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -74,28 +74,13 @@ public abstract class AppDatabase extends RoomDatabase {
             Calendar horaFin = Calendar.getInstance();
             horaInicio.set(2019, 4, 10, 11, 25);
             horaFin.set(2019, 4, 10, 14, 15);
-            Trayecto trayecto = new Trayecto("A Coruña", "Madrid", horaInicio, horaFin, 530, "atopate"+horaInicio.getTimeInMillis(), false);
+            Trayecto trayecto = new Trayecto("A Coruña", "Madrid", horaInicio, horaFin, 530, "pathFoto", false);
             horaInicio.set(2019, 3, 18, 11, 25);
             horaFin.set(2019, 3, 18, 14, 15);
 
             datos.trayectoId = trayectoDao.upsert(trayecto);
 
             datosOBDDao.upsert(datos);
-
-//            horaInicio.set(2019, 2, 18, 11, 25);
-//            horaFin.set(2019, 2, 18, 14, 15);
-//            Trayecto trayecto2 = new Trayecto("Av. dos Mallos", "Pza Pontevedra", horaInicio, horaFin, 2, "pathFoto", false);
-//            trayectoDao.upsert(trayecto2);
-//
-//            horaInicio.set(2019, 1, 18, 11, 25);
-//            horaFin.set(2019, 1, 18, 14, 15);
-//            Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "pathFoto", false);
-//            trayectoDao.upsert(trayecto3);
-
-            horaInicio.set(2019, 4, 11, 11, 25);
-            horaFin.set(2019, 4, 11, 14, 15);
-            Trayecto trayecto3 = new Trayecto("Ronda de outeiro", "Pza Pontevedra", horaInicio, horaFin, 1, "atopate"+horaInicio.getTimeInMillis(), false);
-            trayectoDao.upsert(trayecto3);
             return null;
         }
     }

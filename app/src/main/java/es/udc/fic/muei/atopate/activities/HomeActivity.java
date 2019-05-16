@@ -485,7 +485,7 @@ public class HomeActivity extends AppCompatActivity {
         Calendar inicio = Calendar.getInstance();
         Calendar fin = Calendar.getInstance();
         inicio.add(Calendar.HOUR, -1);
-        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "atopate"+inicio.getTimeInMillis(), false);
+        Trayecto t = new Trayecto("Lugo", "A Coruña", inicio, fin, 98, "pathfoto", false);
         t.puntosTrayecto = new PuntosTrayecto();
         List<DatosOBD> listDatos = new ArrayList<DatosOBD>();
 
@@ -502,7 +502,8 @@ public class HomeActivity extends AppCompatActivity {
         t.datosOBD = listDatos;
         t.puntosTrayecto.coordenadas = RouteFinder.getRoute("Lugo", "A Coruña");
         trayectoService.insert(t);
-        CustomToast toast = new CustomToast(this, "Trayecto de prueba", Toast.LENGTH_LONG);
+
+        CustomToast toast = new CustomToast(this, "Trayecto de prueba añadido", Toast.LENGTH_LONG);
         toast.show();
     }
 
