@@ -37,7 +37,7 @@ public class TrayectoService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public List<Trayecto> getAllToday() {
@@ -48,7 +48,7 @@ public class TrayectoService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public List<Trayecto> getAllYesterday() {
@@ -59,7 +59,7 @@ public class TrayectoService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public List<Trayecto> getAllLastWeek() {
@@ -70,7 +70,7 @@ public class TrayectoService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
 
@@ -85,7 +85,7 @@ public class TrayectoService {
         return null;
     }
 
-    public void delete() {
+    public void deleteAllTrayectos() {
         new deleteAsyncTask(dao).execute();
     }
 

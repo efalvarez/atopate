@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.transition.TransitionManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
@@ -31,17 +29,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.util.CollectionUtils;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LegendRenderer;
-import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +46,7 @@ import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
 import es.udc.fic.muei.atopate.activities.HomeActivity;
+import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
 import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
@@ -67,12 +64,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapaVista;
 
     static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_PICTURE_CAPTURE = 1;
 
     private ImageView image;
+    private TrayectoService trayectoService;
 
-    private String pictureFilePath;
-    private static final String TAG = HomeActivity.class.getSimpleName();
-    private int contador = 0;
+    private static final String TAG = HomeFragment.class.getSimpleName();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -85,21 +82,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         return fragment;
     }
 
-    private float screen_width = new Float(0);
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        screen_width = metrics.widthPixels;
+
+        trayectoService = new TrayectoService(this.getContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        contador = 0;
 
         View viewinflated = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -172,8 +167,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         configureCharts(viewinflated);
         configureMaps(viewinflated, savedInstanceState);
 
-        Trayecto trayecto = activity.trayectoService.getLast();
+        Trayecto trayecto = trayectoService.getLast();
+
         if (trayecto != null) {
+            // si tenemos algun trayecto que pintar
             itemHistorialEntity item = new itemHistorialEntity(trayecto);
 
             TextView fecha = viewinflated.findViewById(R.id.fecha);
@@ -185,16 +182,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             TextView tiempo = viewinflated.findViewById(R.id.tiempo);
             tiempo.setText(item.getHoras() + " - " + item.getDistancia());
 
-            if (trayecto != null && trayecto.foto != null) {
-                try {
-                    setPic(trayecto.foto, image);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+            if (trayecto.foto != null) {
 
-        // getInstallationIdentifier();
+                setPic(trayecto.foto, image);
+
+            } else {
+                Log.d(TAG, "No se ha encontrado ningun path de foto para el trayecto "+trayecto.id);
+            }
+
+
+        }
 
         return viewinflated;
     }
@@ -255,19 +252,24 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private void configureCharts(View vista) {
 
         GraphView graph1 = vista.findViewById(R.id.graph2);
-        HomeActivity activity = (HomeActivity) getActivity();
 
         LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(new DataPoint[]{});
         LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[]{});
-        if (activity.trayectoService.getLast() != null && !activity.trayectoService.getLast().datosOBD.isEmpty()) {
-            DataPoint[] dataPoints = new DataPoint[activity.trayectoService.getLast().datosOBD.size()+1];
-            DataPoint[] dataPointsFuel = new DataPoint[activity.trayectoService.getLast().datosOBD.size()+1];
+
+        Trayecto lastTrayecto = trayectoService.getLast();
+
+        if (lastTrayecto != null && !CollectionUtils.isEmpty(lastTrayecto.datosOBD)) {
+
+            DataPoint[] dataPoints = new DataPoint[lastTrayecto.datosOBD.size()+1];
+            DataPoint[] dataPointsFuel = new DataPoint[lastTrayecto.datosOBD.size()+1];
             dataPoints[0] = new DataPoint(0, 0);
             dataPointsFuel[0] = new DataPoint(0, 0);
-            for (int i = 0; i < activity.trayectoService.getLast().datosOBD.size(); i++) {
-                dataPoints[i+1] = new DataPoint(i+1, activity.trayectoService.getLast().datosOBD.get(i).speed);
-                dataPointsFuel[i+1] = new DataPoint(i+1, activity.trayectoService.getLast().datosOBD.get(i).fuelLevel);
+
+            for (int i = 0; i < lastTrayecto.datosOBD.size(); i++) {
+                dataPoints[i+1] = new DataPoint(i+1, lastTrayecto.datosOBD.get(i).speed);
+                dataPointsFuel[i+1] = new DataPoint(i+1, lastTrayecto.datosOBD.get(i).fuelLevel);
             }
+
             series1 = new LineGraphSeries<>(dataPoints);
             series1.setColor(Color.RED);
             series1.setThickness(10);
@@ -279,10 +281,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             series2.setThickness(10);
             series2.setDrawDataPoints(Boolean.TRUE);
             series2.setDataPointsRadius(10);
+
         } else {
             series1 = new LineGraphSeries<>(new DataPoint[]{
                     new DataPoint(0,0),
             });
+
             series2 = new LineGraphSeries<>(new DataPoint[]{
                     new DataPoint(0,0),
             });
@@ -293,39 +297,43 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         graph1.getLegendRenderer().setVisible(Boolean.TRUE);
         graph1.getLegendRenderer().setFixedPosition(0,0);
 
-        /*graph1.getGridLabelRenderer().setGridColor(Color.rgb(70,90,76));
-        graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(70,90,76));
-        graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(70,90,76)); */
         graph1.getGridLabelRenderer().setGridColor(Color.rgb(150,150,150));
         graph1.getGridLabelRenderer().setHorizontalLabelsColor(Color.rgb(150,150,150));
         graph1.getGridLabelRenderer().setVerticalLabelsColor(Color.rgb(150,150,150));
         graph1.getLegendRenderer().setBackgroundColor(Color.rgb(200,200,200));
-
 
         PieChartView pieChartView = vista.findViewById(R.id.chart);
         List<SliceValue> pieData = new ArrayList<>();
         Double notPaintedRPM = 2.75;
         pieData.add(new SliceValue(notPaintedRPM.floatValue(), Color.TRANSPARENT).setLabel(""));
 
-        if (activity.trayectoService.getLast() != null && !activity.trayectoService.getLast().datosOBD.isEmpty()) {
+        if (lastTrayecto != null && !CollectionUtils.isEmpty(lastTrayecto.datosOBD)) {
+
             Double avgRPM = 0.0;
-            for (int i = 0; i < activity.trayectoService.getLast().datosOBD.size(); i++) {
-                avgRPM += activity.trayectoService.getLast().datosOBD.get(i).rpm;
+
+            for (int i = 0; i < lastTrayecto.datosOBD.size(); i++) {
+                avgRPM += lastTrayecto.datosOBD.get(i).rpm;
             }
-            Double paintedRPM = avgRPM / activity.trayectoService.getLast().datosOBD.size();
+
+            Double paintedRPM = avgRPM / lastTrayecto.datosOBD.size();
             Double rpmTo7 = 7 - paintedRPM;
             Double rpmLimitValue = 1.0;
 
             if (paintedRPM < 4) {
                 pieData.add(new SliceValue(paintedRPM.floatValue(), Color.GREEN));
+
             } else if (paintedRPM < 8) {
                 pieData.add(new SliceValue(paintedRPM.floatValue(), Color.rgb(255,165,0)));
+
             } else {
                 pieData.add(new SliceValue(paintedRPM.floatValue(), Color.RED));
             }
+
+
             if (paintedRPM < 7) {
                 pieData.add(new SliceValue(rpmTo7.floatValue(), Color.LTGRAY).setLabel(""));
             }
+
             if (paintedRPM < 8) {
                 pieData.add(new SliceValue(rpmLimitValue.floatValue(), Color.RED).setLabel("8"));
             }
@@ -333,6 +341,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         } else {
             pieData.add(new SliceValue(7, Color.LTGRAY).setLabel(""));
             pieData.add(new SliceValue(1, Color.RED).setLabel("8"));
+
         }
 
         PieChartData pieChartData = new PieChartData(pieData);
@@ -341,56 +350,64 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         pieChartData.setCenterText1("RPM").setCenterText1FontSize(16).setCenterText1Color(Color.GRAY);
         pieChartView.setPieChartData(pieChartData);
         pieChartView.setChartRotationEnabled(false);
+
     }
 
     private void dispatchTakePictureIntent() {
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-// Ensure that there's a camera activity to handle the intent
         HomeActivity activity = (HomeActivity) getActivity();
+
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            File photoFile = null;
-            try { // Create the File where the photo should go
+
+            File photoFile;
+
+            try {
+                // Create the File where the photo should go
                 photoFile = createImageFile();
-            } catch (IOException ex) {// Error occurred while creating the File
-                CustomToast toast = new CustomToast(getContext(), "No es posible tomar fotos", Toast.LENGTH_LONG);
+
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+                CustomToast toast = new CustomToast(getContext(), "No es posible sacar la foto", Toast.LENGTH_LONG);
                 toast.show();
-                Log.e(TAG, "EXCEPCION: " + ex.toString());
+                Log.e(TAG, "Ha habido un error a la hora de recuperar la foto para asociarla al trayecto :: ", ex);
                 return;
             }
+
             if (photoFile != null) {
-                //Uri fileUri = Uri.fromFile(photoFile);
+
                 Uri fileUri = FileProvider.getUriForFile(getContext(),
                         getContext().getApplicationContext().getPackageName() + ".provider", photoFile);
+
                 activity.setCapturedImageURI(fileUri);
                 activity.setCurrentPhotoPath(photoFile.getAbsolutePath());
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        activity.getCapturedImageURI());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,activity.getCapturedImageURI());
                 HomeFragment homeFragment = this;
                 homeFragment.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
+
         }
     }
 
     private File createImageFile() throws IOException {
-// Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new
-                Date());
+        // Create an image file name
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
 
-        // File outputDir = getContext().getCacheDir();
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
+
         Log.d(TAG, "valor de imageFileName: " + imageFileName);
         Log.d(TAG, "valor de storageDir: " + storageDir);
-        File image = File.createTempFile(
-                imageFileName,
-                ".jpg",
-                storageDir
-        );
+
+        File image = File.createTempFile(imageFileName,".jpg",storageDir);
+
         // Save a file: path for use with ACTION_VIEW intents
-        pictureFilePath = image.getAbsolutePath();
+        String pictureFilePath = image.getAbsolutePath();
         HomeActivity activity = (HomeActivity) getActivity();
-        //activity.setCurrentPhotoPath("file:" + pictureFilePath);
+
         activity.setCurrentPhotoPath(pictureFilePath);
         Log.d(TAG, "valor de picture: " + pictureFilePath);
 
@@ -398,6 +415,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private View.OnClickListener capture = new View.OnClickListener() {
+
         @Override
         public void onClick(View view) {
             if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -405,23 +423,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     dispatchTakePictureIntent();
                 }
                 else {
-                    CustomToast toast = new CustomToast(getActivity(), "No consediste permisos de uso de la cámara", Toast.LENGTH_LONG);
+                    CustomToast toast = new CustomToast(getActivity(), "No se han concedido los permisos necesarios a la camara", Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
         }
+
     };
 
     private void addToGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+
         HomeActivity activity = (HomeActivity) getActivity();
         File f = new File(activity.getCurrentPhotoPath());
+
         Uri picUri = Uri.fromFile(f);
         galleryIntent.setData(picUri);
+
         this.getActivity().sendBroadcast(galleryIntent);
     }
 
-    private void setPic(String imagePath, ImageView imageView) throws FileNotFoundException {
+    private void setPic(String imagePath, ImageView imageView) {
         int targetW = imageView.getWidth(); // Get the dimensions of the View
         int targetH = imageView.getHeight();
 
@@ -438,9 +460,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         BitmapFactory.decodeFile(imagePath, bmOptions);
         int photoW = bmOptions.outWidth; // Get the dimensions of the bitmap
         int photoH = bmOptions.outHeight;
-// Determine how much to scale down the image
+        // Determine how much to scale down the image
         int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-// Decode the image file into a Bitmap sized to fill the View
+        // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
@@ -450,21 +472,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         imageView.setImageBitmap(bitmap);
     }
 
-    static final int REQUEST_PICTURE_CAPTURE = 1;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PICTURE_CAPTURE && resultCode == RESULT_OK) {
+
             HomeActivity activity = (HomeActivity) getActivity();
             addToGallery();
-            try {
-                activity.trayectoService.getLast().foto = activity.getCurrentPhotoPath();
-                activity.trayectoService.setFoto(activity.trayectoService.getLast());
+
+            Trayecto lastTrayecto = trayectoService.getLast();
+
+            if (lastTrayecto != null) {
+
+                lastTrayecto.foto = activity.getCurrentPhotoPath();
+                trayectoService.setFoto(lastTrayecto);
                 setPic(activity.getCurrentPhotoPath(), image);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+
+            } else {
+
+                Log.d(TAG, "Se ha intentado establecer una imagen a un trayecto que no existe");
+                new CustomToast(this.getContext(),"Es necesario que exista al menos un proyecto", Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 
@@ -475,12 +505,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
-        HomeActivity activity = (HomeActivity) getActivity();
-        if (activity.trayectoService.getLast() != null && activity.trayectoService.getLast().puntosTrayecto != null) {
+        Trayecto lastTrayecto = trayectoService.getLast();
+
+        if (lastTrayecto != null && lastTrayecto.puntosTrayecto != null) {
+
             DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
             int height =  Math.round(150 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
-            RouteFinder.drawRoute(activity.trayectoService.getLast().puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height, RouteFinder.WITH_MARKERS);
+            RouteFinder.drawRoute(lastTrayecto.puntosTrayecto.coordenadas, mMap, getResources().getDisplayMetrics().widthPixels, height, RouteFinder.WITH_MARKERS);
         }
     }
 }
