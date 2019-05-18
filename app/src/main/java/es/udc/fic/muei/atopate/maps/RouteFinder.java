@@ -34,7 +34,7 @@ public class RouteFinder {
     private static final int MAX_NUMBER_OF_WAYPOINTS = 20;
 
     private static void draw(List<LatLng> coordenadas, GoogleMap mMap, String markerTitle, String markerSnippet, int width, int height, boolean markers) {
-        if (coordenadas.size() > 1) {
+        if (!CollectionUtils.isEmpty(coordenadas)) {
             mMap.addPolyline(new PolylineOptions().addAll(coordenadas));
 
             if (markers) {

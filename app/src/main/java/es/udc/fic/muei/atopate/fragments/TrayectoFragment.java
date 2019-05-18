@@ -57,6 +57,9 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     FloatingActionButton directionButton;
 
     private TrayectoService trayectoService;
+    private int widthPixels;
+    private int heightPixels;
+    private Context fragmentContext;
 
     public TrayectoFragment() {
         // Required empty public constructor
@@ -104,6 +107,10 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         mapaVista.onResume();
         super.onResume();
+
+        widthPixels = getResources().getDisplayMetrics().widthPixels;
+        heightPixels = getResources().getDisplayMetrics().heightPixels;
+        fragmentContext = getContext();
     }
 
     @Override
@@ -152,7 +159,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
 
         if (!CollectionUtils.isEmpty(camino)) {
 
-            direccionInicio.setText(getAddress(camino.get(0)));
+            direccionInicio.setText(getAddress(camino.get(0),getContext()));
 
         } else {
 
@@ -164,12 +171,12 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    public String getAddress(LatLng punto) {
+    public String getAddress(LatLng punto, Context context) {
 
         Geocoder geocoder;
         List<Address> addresses;
         String address;
-        geocoder = new Geocoder(this.getContext(), Locale.getDefault());
+        geocoder = new Geocoder(context, Locale.getDefault());
 
         try {
             addresses = geocoder.getFromLocation(punto.latitude, punto.longitude, 1);
@@ -231,7 +238,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                 double longitude = myLocation.getLongitude();
                 LatLng latLngActual = new LatLng(latitude, longitude);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngActual, 16));
-                ubicacionActual.setText(getAddress(latLngActual).split(",")[0]);
+                ubicacionActual.setText(getAddress(latLngActual, getContext()).split(",")[0]);
             }
 
             // si somos capaces de recuperar las localizaciones podremos tirar de ellas
@@ -305,7 +312,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
 
         if (trayecto != null
                 && trayecto.puntosTrayecto != null
-                && CollectionUtils.isEmpty(trayecto.puntosTrayecto.coordenadas)) {
+                && !CollectionUtils.isEmpty(trayecto.puntosTrayecto.coordenadas)) {
             // o bien pintamos las coordenadas del trayecto en curso o bien las del ultimo trayecto
 
             arrayList.addAll(trayecto.puntosTrayecto.coordenadas);
@@ -390,9 +397,9 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
         private void startDrawingLocation(GoogleMap mMap) {
             if (!CollectionUtils.isEmpty(camino)) {
                 //Dibujar la ruta cada segun el recorrido de cada actualización
-                RouteFinder.drawingRoute(camino, mMap, getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().heightPixels);
+                RouteFinder.drawingRoute(camino, mMap, widthPixels, heightPixels);
             }
-            ubicacionActual.setText(getAddress(camino.get(camino.size() - 1)).split(",")[0]);
+            ubicacionActual.setText(getAddress(camino.get(camino.size() - 1),fragmentContext ).split(",")[0]);
         }
     }
 

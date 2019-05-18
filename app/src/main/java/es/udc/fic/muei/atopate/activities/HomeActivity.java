@@ -232,7 +232,7 @@ public class HomeActivity extends AppCompatActivity {
                 if (currentTrayecto == null) {
 
                     Calendar hora = Calendar.getInstance();
-                    Trayecto trayectoInsercion = new Trayecto("X" , "X", hora,
+                    Trayecto trayectoInsercion = new Trayecto("" , "", hora,
                             null, 0, null, true);
 
                     trayectoInsercion.id = trayectoService.insert(trayectoInsercion);
@@ -369,6 +369,7 @@ public class HomeActivity extends AppCompatActivity {
         boolean doWeComeFromBluetooth = sharedPreferences.getBoolean(BluetoothConstants.PREFERENCE_KEY_GOING_TO_BLUETOOTH, false);
 
         boolean isOBDDisconnected = !Preferences.get(getApplicationContext()).getIsOBDconnected();
+
 
         if (BluetoothAdapter.getDefaultAdapter().isEnabled() && doWeComeFromBluetooth &&
                 isOBDDisconnected) {

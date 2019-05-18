@@ -4,11 +4,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.sohrab.obd.reader.application.Preferences;
 
 import java.io.File;
 import java.io.IOException;
@@ -212,6 +215,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         mapaVista.onResume();
         super.onResume();
+
+        boolean isServiceRunning = Preferences.get(getContext()).getServiceRunningStatus();
+        if (isServiceRunning) {
+            Button bluetoothButton = getActivity().findViewById(R.id.bluetooth);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                bluetoothButton.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
+            }
+
+        }
+
     }
 
     @Override
