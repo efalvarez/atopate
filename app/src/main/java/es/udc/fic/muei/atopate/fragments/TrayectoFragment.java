@@ -2,6 +2,7 @@ package es.udc.fic.muei.atopate.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -11,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -116,8 +118,11 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         mapaVista.onPause();
-        mapaDrawing.detener();
-        mapaDrawing.interrupt();
+        try {
+            mapaDrawing.detener();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         super.onPause();
     }
 
@@ -183,25 +188,33 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
             Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider(criteria, true);
             Location myLocation = locationManager.getLastKnownLocation(provider);
-            double latitude = myLocation.getLatitude();
-            double longitude = myLocation.getLongitude();
-            latLngActual = new LatLng(latitude, longitude);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngActual,16));
-            // --------------------------------------------------
-            textViewLugar2.setText(getAddress(latLngActual).split(",")[0]);
+            try {
+                double latitude = myLocation.getLatitude();
+                double longitude = myLocation.getLongitude();
+                latLngActual = new LatLng(latitude, longitude);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngActual, 16));
+                textViewLugar2.setText(getAddress(latLngActual).split(",")[0]);
+            } catch (NullPointerException npe) {
+                Log.e(TAG, "onMapReady: La localización no se pudo obtener con el provider",npe);
+                new CustomToast(activity.getApplicationContext(), "La aplicación funciona mejor con gps activado", Toast.LENGTH_LONG).show();
+                /*Intent intentOpenLocationSettings = new Intent();
+                intentOpenLocationSettings.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                intentOpenLocationSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intentOpenLocationSettings);*/
+            }
             mapaDrawing = new MapaDrawing(mMap, 20000);
             mapaDrawing.start();
+            // --------------------------------------------------
+
 
             directionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (activity.trayectoEnCurso != null) {
+                        return;
+                    }
                     mMap.clear();
-                    if (ActivityCompat.checkSelfPermission(v.getContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(v.getContext(),
-                                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                                    != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(v.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         return;
                     }
                     try {
@@ -218,9 +231,10 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
                                 v.getResources().getDisplayMetrics().widthPixels,
                                 v.getResources().getDisplayMetrics().heightPixels,
                                 RouteFinder.WITHOUT_MARKERS);
+                        mapaDrawing.detener();
                     } catch (Exception e) {
                         Log.e(TAG, "onClick: No se tiene posición del auto", e);
-                        new CustomToast(v.getContext(), getString(R.string.no_hay_posicion_de_coche),Toast.LENGTH_SHORT);
+                        new CustomToast(v.getContext(), getString(R.string.no_hay_posicion_de_coche),Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -230,7 +244,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
     public ArrayList<LatLng> getCoordenadas() {
         ArrayList<LatLng> arrayList;
         try {
-            arrayList = new ArrayList<>(activity.trayecto.puntosTrayecto.coordenadas);
+            arrayList = new ArrayList<>(activity.trayectoEnCurso.puntosTrayecto.coordenadas);
         } catch (NullPointerException npe) {
             arrayList = new ArrayList<>();
         }
@@ -262,7 +276,7 @@ public class TrayectoFragment extends Fragment implements OnMapReadyCallback {
 
                 while(hilo) {
                     try {
-                        camino = new ArrayList<>(activity.trayecto.puntosTrayecto.coordenadas);
+                        camino = new ArrayList<>(activity.trayectoEnCurso.puntosTrayecto.coordenadas);
                     } catch (NullPointerException npe) {
                         new Handler(Looper.getMainLooper()).post(() -> new CustomToast(
                                 activity, "No has iniciado un trayecto. Conectate a OBD",

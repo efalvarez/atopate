@@ -46,6 +46,7 @@ import com.sohrab.obd.reader.application.Preferences;
 import com.sohrab.obd.reader.obdCommand.ObdCommand;
 import com.sohrab.obd.reader.obdCommand.ObdConfiguration;
 import com.sohrab.obd.reader.obdCommand.SpeedCommand;
+import com.sohrab.obd.reader.obdCommand.engine.RPMCommand;
 import com.sohrab.obd.reader.obdCommand.fuel.FuelLevelCommand;
 import com.sohrab.obd.reader.trip.TripRecord;
 
@@ -87,6 +88,7 @@ public class HomeActivity extends AppCompatActivity {
     private static int MULTIPLE_PERMISSIONS = 1;
     public TrayectoService trayectoService;
     public Trayecto trayecto;
+    public Trayecto trayectoEnCurso;
     private int cont = 0;
 
     private BottomNavigationView bottomNavigationView;
@@ -129,8 +131,13 @@ public class HomeActivity extends AppCompatActivity {
                 if (trayecto != null) {
                     DatosOBD datosOBD = new DatosOBD();
 
-
                     datosOBD.speed = Double.valueOf(tripRecord.getSpeed());
+                    if (tripRecord.getEngineRpm() != null){
+                        datosOBD.rpm = Double.valueOf(tripRecord.getEngineRpm());
+                    } else {
+                        datosOBD.rpm = 0D;
+                    }
+
 
                     Field field = null;
                     try {
@@ -145,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
                             fuelLevelValue = fuelLevelValue.replaceAll("\\,", "\\.");
                             datosOBD.fuelLevel = Double.valueOf(fuelLevelValue);
                         } else {
-                            datosOBD.fuelLevel = null;
+                            datosOBD.fuelLevel = 0D;
                         }
 
                     } catch (NoSuchFieldException e) {
@@ -167,7 +174,10 @@ public class HomeActivity extends AppCompatActivity {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Button bluetoothButton = findViewById(R.id.bluetooth);
-                    bluetoothButton.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
+                    if (bluetoothButton != null) {
+                        bluetoothButton.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
+                    }
+
                 }
 
                 Trayecto currentTrayecto = trayectoService.getCurrentTrayecto();
@@ -182,6 +192,7 @@ public class HomeActivity extends AppCompatActivity {
                     currentTrayecto.distancia = (int) record.getmDistanceTravel();
                     trayectoService.insert(trayecto);
                     trayecto = null;
+                    trayectoEnCurso = null;
                 }
 
                 //Para las actualizaciones
@@ -375,7 +386,7 @@ public class HomeActivity extends AppCompatActivity {
     private void configureODB2Receiver() {
         // establecemos los comandos que procederemos a leer del coche
         ArrayList<ObdCommand> obdComands = new ArrayList<>(Arrays.asList(
-                new SpeedCommand(),
+                new SpeedCommand(), new RPMCommand(),
                 new FuelLevelCommand()
         ));
 
@@ -647,9 +658,9 @@ public class HomeActivity extends AppCompatActivity {
                 for (Location actual : locationResult.getLocations()) {
                     LatLng latLngActual = new LatLng(actual.getLatitude(), actual.getLongitude());
                     try {
-                        trayecto = trayectoService.getCurrentTrayecto();
-                        trayecto.puntosTrayecto.coordenadas.add(latLngActual);
-                        trayectoService.insert(trayecto);
+                        trayectoEnCurso = trayectoService.getCurrentTrayecto();
+                        trayectoEnCurso.puntosTrayecto.coordenadas.add(latLngActual);
+                        trayectoService.insert(trayectoEnCurso);
                     } catch(NullPointerException npe) {
                         Log.d(TAG, "startLocationUpdate/onLocationResult: Sin trayecto",npe);
                         break;

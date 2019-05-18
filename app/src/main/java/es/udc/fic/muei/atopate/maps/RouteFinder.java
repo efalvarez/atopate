@@ -74,7 +74,7 @@ public class RouteFinder {
                 assert caminoGenerado != null;
                 mMap.addPolyline(new PolylineOptions().addAll(caminoGenerado));
             } catch (NullPointerException npe) {
-                Log.e(TAG, "drawingRoute: No se genera un camino con el API de google", npe);
+                Log.e(TAG, "drawingRoute: No se genera un camino correcto con el API de google", npe);
                 mMap.addPolyline(new PolylineOptions().addAll(caminoRecorrido));
             }
 
@@ -127,22 +127,29 @@ public class RouteFinder {
     }
 
     private static List<LatLng> getTotalRoute(ArrayList<LatLng> caminoRecorrido) {
+        List<com.google.maps.model.LatLng> caminoMaps = new ArrayList<>();
+        List<LatLng> resultado = new ArrayList<>();
         try {
-            List<com.google.maps.model.LatLng> caminoMaps = new ArrayList<>();
-            for (LatLng latLng : caminoRecorrido) {
-                caminoMaps.add(new com.google.maps.model.LatLng(latLng.latitude, latLng.longitude));
+            if(caminoRecorrido.size() > 1) {
+                for (LatLng latLng : caminoRecorrido) {
+                    caminoMaps.add(new com.google.maps.model.LatLng(latLng.latitude, latLng.longitude));
+                }
+                for (int i=1; i<caminoRecorrido.size();i++){
+                    com.google.maps.model.LatLng from = caminoMaps.get(i-1);
+                    com.google.maps.model.LatLng to = caminoMaps.get(i);
+                    DirectionsResult result = DirectionsApi.newRequest(context)
+                            .origin(from)
+                            .destination(to)
+                            .mode(TravelMode.DRIVING)
+                            .language("es")
+                            .await();
+                    resultado.addAll(PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath()));
+                }
             }
-            DirectionsResult result = DirectionsApi.newRequest(context)
-                    .waypoints(caminoMaps.toArray(new com.google.maps.model.LatLng[caminoRecorrido.size()]))
-                    .mode(TravelMode.DRIVING)
-                    .language("es")
-                    .await();
-
-            return PolyUtil.decode(result.routes[0].overviewPolyline.getEncodedPath());
-
         } catch (Exception e) {
-            return null;
+            e.printStackTrace();
         }
+        return resultado;
     }
 
 }
