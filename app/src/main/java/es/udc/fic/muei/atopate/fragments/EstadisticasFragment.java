@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,11 +25,9 @@ import java.util.Date;
 import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
-import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.DatosOBD;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
-import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -269,7 +265,7 @@ public class EstadisticasFragment extends Fragment {
         fuelGraph.getViewport().setMinX(0);
         fuelGraph.getViewport().setMaxX(4);
         fuelGraph.getViewport().setMinY(0);
-        fuelGraph.getViewport().setMaxY(40);
+        fuelGraph.getViewport().setMaxY(100);
         fuelGraph.setTitle("Combustible");
         fuelGraph.setTitleColor(Color.BLUE);
 

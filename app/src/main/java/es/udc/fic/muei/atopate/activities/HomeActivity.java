@@ -194,9 +194,11 @@ public class HomeActivity extends AppCompatActivity {
                     currentTrayecto.horaFin = Calendar.getInstance();
                     currentTrayecto.esTrayectoActual = false;
                     currentTrayecto.distancia = (int) record.getmDistanceTravel();
-                    trayectoService.insert(trayecto);
+                    trayectoService.insert(currentTrayecto);
                     trayecto = null;
                     trayectoEnCurso = null;
+
+                    new CustomToast(getApplicationContext(), "Se ha acabado el trayecto actual", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -561,6 +563,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void onEliminarClick(View view) {
+
+
+        Trayecto currenttrayecto = trayectoService.getCurrentTrayecto();
+
+        if (currenttrayecto != null) {
+            new CustomToast(getApplicationContext(), "No se pueden eliminar los registros porque hay un trayecto en curso.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         HomeActivity activity = this;
         new AlertDialog.Builder(this)
