@@ -38,6 +38,7 @@
     <string name="sin_punto_de_partida">Aún no has empezado un trayecto</string>
     <string name="regreso_a_coche">Fijando ruta de regreso a tu vehículo</string>
     <string name="no_hay_posicion_de_coche">No se tiene la posición del vehículo</string>
+    <string name="trayecto_en_curso">No puedes borrar mientras tengas un trayecto en curso</string>
 
     <!-- String del tema -->
     <string name="tema_oscuro">Oscuro</string>

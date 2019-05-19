@@ -6,20 +6,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import es.udc.fic.muei.atopate.R;
+import es.udc.fic.muei.atopate.activities.HomeActivity;
 import es.udc.fic.muei.atopate.adapter.ItemHistorialAdapter;
 import es.udc.fic.muei.atopate.db.TrayectoService;
 import es.udc.fic.muei.atopate.db.model.Trayecto;
+import es.udc.fic.muei.atopate.entities.CustomToast;
 import es.udc.fic.muei.atopate.entities.itemHistorialEntity;
 
 /**
@@ -84,6 +88,14 @@ public class HistorialFragment extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                Trayecto trayecto = new TrayectoService(getContext()).getCurrentTrayecto();
+                if(trayecto != null) {
+                    new CustomToast(getContext(),getString(R.string.trayecto_en_curso),Toast.LENGTH_LONG).show();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.general_fragment_container, HistorialFragment.getInstance());
+                    transaction.commit();
+                    return;
+                }
                 position = viewHolder.getAdapterPosition();
                 Long idTrayecto = historials.get(position).getId();
                 trayectoEliminado = trayectoService.getTrayectoById(idTrayecto);
